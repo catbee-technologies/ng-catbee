@@ -1,0 +1,25 @@
+{
+  "name": "@ng-catbee/monaco-editor",
+  "version": "20.3.0",
+  "author": "Hari G <hprasath.dev@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "monaco-editor",
+    "code-editor",
+    "catbee",
+    "ng-catbee",
+    "ng-catbee-monaco-editor",
+    "angular library",
+    "angular component",
+    "angular standalone"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/core": "^20.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

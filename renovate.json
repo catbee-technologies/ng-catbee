@@ -1,0 +1,44 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "group:monorepos"],
+  "onboarding": true,
+  "onboardingConfig": {
+    "extends": ["config:recommended"]
+  },
+  "timezone": "Asia/Kolkata",
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "groupName": "catbee packages",
+      "matchPackageNames": ["/^@catbee/"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-breaking updates"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "npm breaking updates"
+    }
+  ],
+  "addLabels": ["dependencies", "renovate"],
+  "reviewers": ["cyber-hari"],
+  "assignees": ["cyber-hari"],
+  "branchPrefix": "feature-dependency-",
+  "rangeStrategy": "bump",
+  "rebaseWhen": "behind-base-branch",
+  "baseBranchPatterns": ["feature-next"],
+  "dependencyDashboard": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "commitMessageLowerCase": "auto",
+  "ignoreDeps": [],
+  "enabledManagers": ["npm"]
+}
