@@ -19,7 +19,11 @@
     "lint:fix": "ng lint --fix",
     "prelint:fix": "npm run format",
     "prepare": "husky",
-    "format": "prettier --write **/*.{ts,html,scss,css}"
+    "format": "prettier --write **/*.{ts,html,scss,css}",
+    "release:utils": "node scripts/npm-release.mjs utils",
+    "release:monaco-editor": "node scripts/npm-release.mjs monaco-editor",
+    "prerelease:utils": "node scripts/npm-release.mjs utils prerelease",
+    "prerelease:monaco-editor": "node scripts/npm-release.mjs monaco-editor prerelease"
   },
   "private": true,
   "dependencies": {
