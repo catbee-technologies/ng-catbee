@@ -1,0 +1,61 @@
+import path from 'path';
+import karmaJasmine from 'karma-jasmine';
+import karmaChromeLauncher from 'karma-chrome-launcher';
+import karmaJasmineHtmlReporter from 'karma-jasmine-html-reporter';
+import karmaCoverage from 'karma-coverage';
+
+/** @param {import('karma').Config} config */
+export default function (config) {
+  config.set({
+    basePath: '',
+    frameworks: ['jasmine'],
+    plugins: [
+      karmaJasmine,
+      karmaChromeLauncher,
+      karmaJasmineHtmlReporter,
+      karmaCoverage,
+    ],
+    client: {
+      jasmine: {
+        random: false,
+      },
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
+    },
+    coverageReporter: {
+      dir: path.join(process.cwd(), './coverage'),
+      subdir: '.',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' },
+        { type: 'cobertura' },
+        { type: 'lcov' },
+      ],
+    },
+    reporters: ['progress', 'kjhtml'],
+    specReporter: {
+      maxLogLines: 5,
+      suppressErrorSummary: true,
+      suppressFailed: false,
+      suppressPassed: false,
+      suppressSkipped: true,
+      showSpecTiming: false,
+    },
+    port: 9876,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox'],
+      },
+    },
+    singleRun: false,
+    restartOnFileChange: true,
+    browserDisconnectTimeout: 1800000,
+    browserDisconnectTolerance: 3,
+    browserNoActivityTimeout: 3000000,
+    captureTimeout: 1800000
+  });
+}

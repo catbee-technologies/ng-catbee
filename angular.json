@@ -1,22 +1,22 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "packages",
   "projects": {
     "monaco-editor": {
       "projectType": "library",
-      "root": "projects/monaco-editor",
-      "sourceRoot": "projects/monaco-editor/src",
+      "root": "packages/monaco-editor",
+      "sourceRoot": "packages/monaco-editor/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/monaco-editor/tsconfig.lib.prod.json"
+              "tsConfig": "packages/monaco-editor/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/monaco-editor/tsconfig.lib.json"
+              "tsConfig": "packages/monaco-editor/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -24,7 +24,16 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "tsConfig": "projects/monaco-editor/tsconfig.spec.json"
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "tsConfig": "packages/monaco-editor/tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor/min",
+                "output": "/monaco-editor/min"
+              }
+            ]
           }
         },
         "lint": {
@@ -32,9 +41,9 @@
           "options": {
             "fix": true,
             "lintFilePatterns": [
-              "projects/**/*.html",
-              "projects/**/*.scss",
-              "projects/**/*.ts"
+              "packages/**/*.html",
+              "packages/**/*.scss",
+              "packages/**/*.ts"
             ]
           }
         }

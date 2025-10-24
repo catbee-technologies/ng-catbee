@@ -1,7 +1,8 @@
 {
   "name": "@ng-catbee/monaco-editor",
-  "version": "20.3.0",
+  "version": "20.0.0",
   "author": "Hari G <hprasath.dev@gmail.com>",
+  "description": "A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both single and diff editors.",
   "license": "MIT",
   "keywords": [
     "angular",
@@ -14,12 +15,5 @@
     "angular component",
     "angular standalone"
   ],
-  "peerDependencies": {
-    "@angular/common": "^20.3.0",
-    "@angular/core": "^20.3.0"
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  },
   "sideEffects": false
 }

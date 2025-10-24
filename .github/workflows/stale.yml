@@ -1,0 +1,26 @@
+name: 💤 Auto Mark Stale Issues & PRs
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  stale:
+    name: 💤 Mark Stale Issues & PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: 'This issue is stale because it has been open for 90 days with no activity.'
+          stale-pr-message: 'This pull request is stale because it has been open for 90 days with no activity.'
+          days-before-stale: 90
+          days-before-close: 7
+          close-issue-message: 'This issue was closed due to inactivity.'
+          close-pr-message: 'This pull request was closed due to inactivity.'

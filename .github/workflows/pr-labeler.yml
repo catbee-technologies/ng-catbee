@@ -1,0 +1,24 @@
+name: 🏷️ Auto PR Labeler
+
+on:
+  schedule:
+    - cron: "0 1 * * 1" # every Monday at 01:00 UTC
+  pull_request:
+    types: 
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+
+jobs:
+  label:
+    name: 🏷️ Apply Labels to PRs
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
