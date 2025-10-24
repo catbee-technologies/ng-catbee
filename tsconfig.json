@@ -1,11 +1,9 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
       "monaco-editor": [
-        "./dist/monaco-editor"
+        "./dist/@ng-catbee/monaco-editor"
       ]
     },
     "strict": true,
@@ -30,10 +28,10 @@
   "files": [],
   "references": [
     {
-      "path": "./projects/monaco-editor/tsconfig.lib.json"
+      "path": "./packages/monaco-editor/tsconfig.lib.json"
     },
     {
-      "path": "./projects/monaco-editor/tsconfig.spec.json"
+      "path": "./packages/monaco-editor/tsconfig.spec.json"
     }
   ]
 }

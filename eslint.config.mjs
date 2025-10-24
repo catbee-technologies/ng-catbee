@@ -5,6 +5,7 @@ import eslint from '@eslint/js';
 export default tseslint.config(
   {
     files: ["**/*.ts"],
+    ignores: ["**/*.spec.ts", "packages/monaco-editor/monaco.d.ts"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -17,7 +18,7 @@ export default tseslint.config(
         "error",
         {
           type: "attribute",
-          prefix: "catbee",
+          prefix: "ng-catbee",
           style: "camelCase",
         },
       ],
@@ -25,7 +26,7 @@ export default tseslint.config(
         "error",
         {
           type: "element",
-          prefix: "catbee",
+          prefix: "ng-catbee",
           style: "kebab-case",
         },
       ],
@@ -39,7 +40,9 @@ export default tseslint.config(
       ],
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-expressions": 'off',
-      "@angular-eslint/prefer-standalone": "off"
+      "@angular-eslint/prefer-standalone": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@angular-eslint/no-output-native": "off"
     },
   },
   {
