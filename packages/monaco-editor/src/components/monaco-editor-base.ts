@@ -73,7 +73,12 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
   });
 
   constructor() {
-    this._config = { baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor/min', autoFormatTime: 100, resizeDebounceTime: 100, ...this.config };
+    this._config = {
+      baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor/min',
+      autoFormatTime: 100,
+      resizeDebounceTime: 100,
+      ...this.config
+    };
     effect(() => this.updateOptions(this.computedOptions()));
   }
 
