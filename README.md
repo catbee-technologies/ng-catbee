@@ -1,59 +1,106 @@
-# ng-catbee
+# @ng-catbee
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+## Angular WorkSpace for Libraries by Catbee
+A collection of Angular libraries developed and maintained by the Catbee team.
 
-## Development server
+## Packages
+- `@ng-catbee/monaco-editor`: Angular components and services for integrating the Monaco Editor into Angular applications.
 
-To start a local development server, run:
+## Project Structure
+- `packages/`: Contains individual Angular libraries.
+- `dist/`: Compiled output of the libraries.
+- `coverage/`: Code coverage reports.
+- `scripts/`: Build and utility scripts.
+- `angular.json`: Angular workspace configuration file.
+- `eslint.config.mjs`: ESLint configuration for the workspace.
+- `karma.config.mjs`: Karma test runner configuration.
+- `codecov.yml`: Code coverage configuration.
+- `.prettierrc`: Prettier code formatting configuration.
+- `LICENSE`: License information for the project.
+- `renovate.json`: Renovate bot configuration for dependency updates.
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
+## Getting Started
+To get started with any of the libraries, navigate to the respective package directory in `packages/` and follow the README instructions provided there.
 
 ## Building
-
-To build the project run:
-
+To build all libraries in the workspace, use the following command:
 ```bash
-ng build
+npm run build
+```
+To build a specific library, navigate to its directory and run:
+```bash
+npm run build <library-name>
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Linting
+To lint the codebase, use the following command:
+```bash
+npm run lint
+```
+To automatically fix linting issues, use:
+```bash
+npm run lint:fix
+```
 
-## Running unit tests
+## Formatting
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+To format the codebase using Prettier, use the following command:
+```bash
+npm run format
+```
 
+## Testing
+To run tests for all libraries, use the following command:
 ```bash
 ng test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+To run tests for a specific library, navigate to its directory and run:
 ```bash
-ng e2e
+ng test <library-name>
+```
+To run tests with headless Chrome, use:
+```bash
+ng test --no-progress --code-coverage --no-watch --browsers=ChromeHeadless
+```
+or
+```bash
+npm run test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Release
+To release a new version of a library, use the following command:
+```bash
+npm run release:<library-name> patch|minor|major
+```
+or
+```bash
+npm run release:<library-name> <version>
+```
 
-## Additional Resources
+## PreReleases
+To create a prerelease version of a library, use the following command:
+```bash
+npm run pre:release:<library-name> <prerelease-identifier>
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Examples
+```bash
+ # Standard bumps:
+   npm run release:utils patch
+   npm run release:monaco minor
+   npm run release:utils major
+
+ # Explicit version:
+   npm run release:utils 1.2.5
+   npm run release:monaco 2.0.0
+
+ # Prerelease bumps:
+   npm run release:utils prepatch alpha
+   npm run release:monaco preminor beta
+   npm run release:utils premajor rc
+   npm run release:monaco prerelease next
+```
+
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
