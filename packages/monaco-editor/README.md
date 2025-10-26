@@ -13,11 +13,11 @@
   <!-- <img src="https://img.shields.io/npm/v/@ng-catbee/monaco-editor/next" alt="NPM Next Version" /> -->
   <img src="https://img.shields.io/npm/dt/@ng-catbee/monaco-editor" alt="NPM Downloads" />
   <img src="https://img.shields.io/maintenance/yes/2025" alt="Maintenance" />
-  <!-- <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=alert_status&token=93da835f2d48d37b41fa628cc7fc764c873bd700" alt="Quality Gate Status" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=ncloc&token=93da835f2d48d37b41fa628cc7fc764c873bd700" alt="Lines of Code" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=security_rating&token=93da835f2d48d37b41fa628cc7fc764c873bd700" alt="Security Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=sqale_rating&token=93da835f2d48d37b41fa628cc7fc764c873bd700" alt="Maintainability Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=vulnerabilities&token=93da835f2d48d37b41fa628cc7fc764c873bd700" alt="Vulnerabilities" /> -->
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=alert_status&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Quality Gate Status" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=ncloc&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Lines of Code" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=security_rating&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Security Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=sqale_rating&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Maintainability Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=vulnerabilities&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Vulnerabilities" />
   <img src="https://img.shields.io/npm/l/@ng-catbee/monaco-editor" alt="License" />
 </div>
 
@@ -173,7 +173,7 @@ import { CatbeeMonacoDiffEditorComponent, MonacoEditorOptions, CatbeeMonacoDiffE
       [options]="options"
       [original]="originalCode"
       [modified]="modifiedCode"
-      (diffUpdate)="onDiffUpdate($event)"
+      (editorDiffUpdate)="onDiffUpdate($event)"
     />
   `
 })
@@ -277,22 +277,22 @@ CatbeeMonacoEditorModule.forRoot({
 | `(init)` | Event emitted when the editor is initialized | `EventEmitter<MonacoEditor>` |
 | `(reInit)` | Event emitted when the editor is re-initialized | `EventEmitter<MonacoEditor>` |
 | `(initError)` | Event emitted when the editor initialization fails | `EventEmitter<unknown>` |
-| `(resize)` | Event emitted when the editor is resized | `EventEmitter<MonacoEditor>` |
+| `(editorResize)` | Event emitted when the editor is resized | `EventEmitter<{ width: number; height: number }>` |
 | `(optionsChange)` | Event emitted when the editor options are changed | `EventEmitter<MonacoEditorOptions>` |
-| `(focus)` | Event emitted when the text inside this editor gained focus | `EventEmitter<MonacoEditor>` |
-| `(blur)` | Event emitted when the text inside this editor lost focus | `EventEmitter<MonacoEditor>` |
-| `(scroll)` | Event emitted when the scroll in the editor has changed | `EventEmitter<MonacoEditorScrollEvent>` |
-| `(cursorPositionChange)` | Event emitted when the cursor position has changed | `EventEmitter<MonacoEditorCursorPositionChangedEvent>` |
-| `(cursorSelectionChange)` | Event emitted when the cursor selection has changed | `EventEmitter<MonacoEditorCursorSelectionChangedEvent>` |
-| `(contextmenu)` | Event emitted when a context menu is triggered in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(paste)` | Event emitted when a paste event occurs in the editor | `EventEmitter<MonacoEditorPasteEvent>` |
-| `(keyDown)` | Event emitted when a key is pressed down in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
-| `(keyUp)` | Event emitted when a key is released in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
-| `(mouseDown)` | Event emitted when the mouse button is pressed down in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(mouseUp)` | Event emitted when the mouse button is released in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(mouseMove)` | Event emitted when the mouse is moved in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(mouseLeave)` | Event emitted when the mouse leaves the editor | `EventEmitter<MonacoEditorPartialMouseEvent>` |
-| `(modelContentChange)` | Event emitted when the content of the current model has changed | `EventEmitter<MonacoModelContentChangedEvent>` |
+| `(editorFocus)` | Event emitted when the text inside this editor gained focus | `EventEmitter<void>` |
+| `(editorBlur)` | Event emitted when the text inside this editor lost focus | `EventEmitter<void>` |
+| `(editorScroll)` | Event emitted when the scroll in the editor has changed | `EventEmitter<MonacoEditorScrollEvent>` |
+| `(editorCursorPositionChange)` | Event emitted when the cursor position has changed | `EventEmitter<MonacoEditorCursorPositionChangedEvent>` |
+| `(editorCursorSelectionChange)` | Event emitted when the cursor selection has changed | `EventEmitter<MonacoEditorCursorSelectionChangedEvent>` |
+| `(editorContextmenu)` | Event emitted when a context menu is triggered in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
+| `(editorPaste)` | Event emitted when a paste event occurs in the editor | `EventEmitter<MonacoEditorPasteEvent>` |
+| `(editorKeyDown)` | Event emitted when a key is pressed down in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
+| `(editorKeyUp)` | Event emitted when a key is released in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
+| `(editorMouseDown)` | Event emitted when the mouse button is pressed down in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
+| `(editorMouseUp)` | Event emitted when the mouse button is released in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
+| `(editorMouseMove)` | Event emitted when the mouse is moved in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
+| `(editorMouseLeave)` | Event emitted when the mouse leaves the editor | `EventEmitter<MonacoEditorPartialMouseEvent>` |
+| `(editorModelContentChange)` | Event emitted when the content of the current model has changed | `EventEmitter<MonacoModelContentChangedEvent>` |
 
 ### `CatbeeMonacoDiffEditorComponent`: Diff editor
 
@@ -315,9 +315,9 @@ CatbeeMonacoEditorModule.forRoot({
 | `(init)` | Event emitted when the editor is initialized | `EventEmitter<MonacoEditor>` |
 | `(reInit)` | Event emitted when the editor is re-initialized | `EventEmitter<MonacoEditor>` |
 | `(initError)` | Event emitted when the editor initialization fails | `EventEmitter<unknown>` |
-| `(resize)` | Event emitted when the editor is resized | `EventEmitter<MonacoEditor>` |
+| `(editorResize)` | Event emitted when the editor is resized | `EventEmitter<{ width: number; height: number }>` |
 | `(optionsChange)` | Event emitted when the editor options are changed | `EventEmitter<MonacoEditorOptions>` |
-| `(diffUpdate)` | Event emitted when the diff information computed by this diff editor has been updated | `EventEmitter<CatbeeMonacoDiffEditorEvent>` |
+| `(editorDiffUpdate)` | Event emitted when the diff information computed by this diff editor has been updated | `EventEmitter<CatbeeMonacoDiffEditorEvent>` |
 
 ## 🧩 Type Definitions
 Below are the key exported types and interfaces available in @ng-catbee/monaco-editor for strong typing and IntelliSense support:
