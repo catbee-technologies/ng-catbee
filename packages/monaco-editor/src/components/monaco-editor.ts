@@ -76,33 +76,33 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
   /** Show placeholder when editor is empty but contains whitespace characters - default is `false`. */
   readonly showPlaceholderOnWhiteSpace = input(false, { transform: booleanAttribute });
   /** Emitted when the text inside this editor gained focus (i.e. cursor starts blinking). */
-  readonly focus = output<MonacoEditor>();
+  readonly editorFocus = output<void>();
   /** Emitted when the text inside this editor lost focus (i.e. cursor stops blinking). */
-  readonly blur = output<MonacoEditor>();
+  readonly editorBlur = output<void>();
   /** Emitted when the scroll in the editor has changed. */
-  readonly scroll = output<MonacoEditorScrollEvent>();
+  readonly editorScroll = output<MonacoEditorScrollEvent>();
   /** Emitted when the cursor position has changed. */
-  readonly cursorPositionChange = output<MonacoEditorCursorPositionChangedEvent>();
+  readonly editorCursorPositionChange = output<MonacoEditorCursorPositionChangedEvent>();
   /** Emitted when the cursor selection has changed. */
-  readonly cursorSelectionChange = output<MonacoEditorCursorSelectionChangedEvent>();
+  readonly editorCursorSelectionChange = output<MonacoEditorCursorSelectionChangedEvent>();
   /** Emitted when a context menu is triggered in the editor. */
-  readonly contextmenu = output<MonacoEditorMouseEvent>();
+  readonly editorContextMenu = output<MonacoEditorMouseEvent>();
   /** Emitted when a paste event occurs in the editor. */
-  readonly paste = output<MonacoEditorPasteEvent>();
+  readonly editorPaste = output<MonacoEditorPasteEvent>();
   /** Emitted when a key is pressed down in the editor. */
-  readonly keyDown = output<MonacoEditorKeyboardEvent>();
+  readonly editorKeyDown = output<MonacoEditorKeyboardEvent>();
   /** Emitted when a key is released in the editor. */
-  readonly keyUp = output<MonacoEditorKeyboardEvent>();
+  readonly editorKeyUp = output<MonacoEditorKeyboardEvent>();
   /** Emitted when the mouse button is pressed down in the editor. */
-  readonly mouseDown = output<MonacoEditorMouseEvent>();
+  readonly editorMouseDown = output<MonacoEditorMouseEvent>();
   /** Emitted when the mouse button is released in the editor. */
-  readonly mouseUp = output<MonacoEditorMouseEvent>();
+  readonly editorMouseUp = output<MonacoEditorMouseEvent>();
   /** Emitted when the mouse is moved in the editor. */
-  readonly mouseMove = output<MonacoEditorMouseEvent>();
+  readonly editorMouseMove = output<MonacoEditorMouseEvent>();
   /** Emitted when the mouse leaves the editor. */
-  readonly mouseLeave = output<MonacoEditorPartialMouseEvent>();
+  readonly editorMouseLeave = output<MonacoEditorPartialMouseEvent>();
   /** Emitted when the content of the current model has changed. */
-  readonly modelContentChange = output<MonacoModelContentChangedEvent>();
+  readonly editorModelContentChange = output<MonacoModelContentChangedEvent>();
 
   private editorValue = '';
   private placeholderWidget?: PlaceholderWidget;
@@ -148,23 +148,23 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
       this.editorValue = value;
       this.onChange(value);
       this.updatePlaceholder();
-      this.modelContentChange.emit(e);
+      this.editorModelContentChange.emit(e);
     });
     editor.onDidBlurEditorWidget(() => this.onTouched());
 
-    editor.onDidBlurEditorText(() => this.blur.emit(this._editor!));
-    editor.onDidFocusEditorText(() => this.focus.emit(this._editor!));
-    editor.onDidChangeCursorPosition(e => this.cursorPositionChange.emit(e));
-    editor.onDidChangeCursorSelection(e => this.cursorSelectionChange.emit(e));
-    editor.onContextMenu(e => this.contextmenu.emit(e));
-    editor.onDidScrollChange(e => this.scroll.emit(e));
-    editor.onDidPaste(e => this.paste.emit(e));
-    editor.onKeyDown(e => this.keyDown.emit(e));
-    editor.onKeyUp(e => this.keyUp.emit(e));
-    editor.onMouseDown(e => this.mouseDown.emit(e));
-    editor.onMouseUp(e => this.mouseUp.emit(e));
-    editor.onMouseMove(e => this.mouseMove.emit(e));
-    editor.onMouseLeave(e => this.mouseLeave.emit(e));
+    editor.onDidBlurEditorText(() => this.editorBlur.emit());
+    editor.onDidFocusEditorText(() => this.editorFocus.emit());
+    editor.onDidChangeCursorPosition(e => this.editorCursorPositionChange.emit(e));
+    editor.onDidChangeCursorSelection(e => this.editorCursorSelectionChange.emit(e));
+    editor.onContextMenu(e => this.editorContextMenu.emit(e));
+    editor.onDidScrollChange(e => this.editorScroll.emit(e));
+    editor.onDidPaste(e => this.editorPaste.emit(e));
+    editor.onKeyDown(e => this.editorKeyDown.emit(e));
+    editor.onKeyUp(e => this.editorKeyUp.emit(e));
+    editor.onMouseDown(e => this.editorMouseDown.emit(e));
+    editor.onMouseUp(e => this.editorMouseUp.emit(e));
+    editor.onMouseMove(e => this.editorMouseMove.emit(e));
+    editor.onMouseLeave(e => this.editorMouseLeave.emit(e));
 
     this.updatePlaceholder();
     this.registerResize();

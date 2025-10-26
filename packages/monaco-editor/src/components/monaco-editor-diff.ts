@@ -29,7 +29,7 @@ export class CatbeeMonacoDiffEditorComponent extends CatbeeMonacoEditorBase<Mona
   readonly originalEditable = input(false, { transform: booleanAttribute });
 
   /** Emitted when the diff information computed by this diff editor has been updated. */
-  readonly diffUpdate = output<CatbeeMonacoDiffEditorEvent>();
+  readonly editorDiffUpdate = output<CatbeeMonacoDiffEditorEvent>();
 
   get editor(): MonacoDiffEditor | null | undefined {
     return this._editor;
@@ -59,7 +59,7 @@ export class CatbeeMonacoDiffEditorComponent extends CatbeeMonacoEditorBase<Mona
     });
 
     editor.onDidUpdateDiff(() => {
-      this.diffUpdate.emit({
+      this.editorDiffUpdate.emit({
         original: editor.getOriginalEditor().getValue(),
         modified: editor.getModifiedEditor().getValue()
       });

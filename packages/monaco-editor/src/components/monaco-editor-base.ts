@@ -64,7 +64,7 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
   /** Emitted when the editor initialization fails. */
   readonly initError = output<unknown>();
   /** Emitted when the editor is resized. */
-  readonly resize = output<T>();
+  readonly editorResize = output<{ width: number; height: number }>();
   /** Emitted when the editor options are changed. */
   readonly optionsChange = output<MonacoEditorOptions>();
 
@@ -89,14 +89,10 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
 
   updateOptions(v: MonacoEditorOptions | undefined): void {
     if (!this._editor || !v) return;
-    if (this.reInitOnOptionsChange()) {
+    if (this.reInitOnOptionsChange() || this.previousLanguage !== v.language) {
       this.reInitMonaco(v);
     } else {
-      if (this.previousLanguage != v.language) {
-        this.reInitMonaco(v);
-      } else {
-        this._editor?.updateOptions(v);
-      }
+      this._editor?.updateOptions(v);
     }
     this.previousLanguage = v.language;
     this.optionsChange.emit(v);
@@ -117,7 +113,7 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
     }
 
     loadedMonaco = true;
-    loadPromise = new Promise<void>((resolve: () => void, reject: (err: string) => void) => {
+    loadPromise = new Promise<void>((resolve: () => void, reject: (err: Error) => void) => {
       if (this.doc?.defaultView == null) {
         resolve();
         return;
@@ -135,14 +131,21 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
       }
 
       const amdLoader = () => {
-        win.require.config({
-          paths: {
-            vs: baseUrl
-          }
-        });
+        if (!win.require || typeof win.require.config !== 'function') {
+          reject(
+            new Error(
+              `Failed to initialize Monaco AMD loader. The loader script at "${baseUrl}/loader.js" did not define "require". Please verify that "config.baseUrl" ("${this._config.baseUrl}") points to a valid Monaco Editor distribution containing the /vs directory.`
+            )
+          );
+          return;
+        }
+
+        win.require.config({ paths: { vs: baseUrl } });
+
         if (typeof this._config.monacoPreLoad === 'function') {
           this._config.monacoPreLoad();
         }
+
         win.require(
           ['vs/editor/editor.main'],
           () => {
@@ -153,7 +156,11 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
             resolve();
           },
           () => {
-            reject(`Unable to load editor/editor.main module, please check your network environment.`);
+            reject(
+              new Error(
+                `Failed to load module "vs/editor/editor.main". Please verify your network connection or check if the Monaco Editor assets are accessible at: ${baseUrl}`
+              )
+            );
           }
         );
       };
@@ -164,25 +171,40 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
         loaderScript.src = `${baseUrl}/loader.js`;
         loaderScript.onload = amdLoader;
         loaderScript.onerror = () =>
-          reject(`Unable to load ${loaderScript.src}, please check your network environment.`);
+          reject(
+            new Error(
+              `Failed to load Monaco loader script from "${loaderScript.src}". Please ensure that "config.baseUrl" ("${baseUrl}") points to a valid Monaco Editor distribution containing the /vs directory, and that it is accessible from the browser.`
+            )
+          );
         this.doc.getElementsByTagName('head')[0].appendChild(loaderScript);
       } else {
         amdLoader();
       }
     }).catch(error => {
-      console.error('Monaco Editor init error:', error);
+      console.error('[CatbeeMonacoEditor] Initialization Failed:', error);
       this.initError.emit(error);
     });
   }
 
+  private lastLayout?: { width: number; height: number };
   protected registerResize(): this {
     this.cleanResize();
     this._resize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(this._config.resizeDebounceTime ?? 100))
       .subscribe(() => {
-        this._editor?.layout();
-        this.resize.emit(this._editor as T);
+        if (!this._editor) return;
+
+        this._editor.layout();
+
+        const domNode = this._editor.getContainerDomNode();
+        const { clientWidth: width, clientHeight: height } = domNode;
+
+        if (!this.lastLayout || this.lastLayout.width !== width || this.lastLayout.height !== height) {
+          this.lastLayout = { width, height };
+          this.editorResize.emit(this.lastLayout);
+        }
       });
+
     return this;
   }
 

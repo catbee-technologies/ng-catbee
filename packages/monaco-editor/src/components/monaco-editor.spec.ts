@@ -13,25 +13,25 @@ import {
 
 const delay = (ms?: number) => new Promise(res => setTimeout(res, ms ?? 1000));
 
-describe('CatbeeMonacoEditorComponents', () => {
-  function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        provideCatbeeMonacoEditor({
-          baseUrl: `monaco-editor/min`,
-          monacoLoad: () => Promise.resolve(),
-          monacoPreLoad: () => Promise.resolve(),
-          resizeDebounceTime: 10,
-          autoFormatTime: 50
-        })
-      ],
-      imports: [FormsModule, TestComponent, TestDiffComponent]
-    });
-    if (html != null) TestBed.overrideTemplate(comp, html);
-    return TestBed.createComponent(comp);
-  }
+function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
+  TestBed.configureTestingModule({
+    providers: [
+      provideZonelessChangeDetection(),
+      provideCatbeeMonacoEditor({
+        baseUrl: `monaco-editor/min`,
+        monacoLoad: () => Promise.resolve(),
+        monacoPreLoad: () => Promise.resolve(),
+        resizeDebounceTime: 10,
+        autoFormatTime: 50
+      })
+    ],
+    imports: [FormsModule, TestComponent, TestDiffComponent]
+  });
+  if (html != null) TestBed.overrideTemplate(comp, html);
+  return TestBed.createComponent(comp);
+}
 
+describe('CatbeeMonacoEditorComponents', () => {
   describe('CatbeeMonacoEditorComponent', () => {
     it('should initialize and emit init', async () => {
       const fixture = create(TestComponent);
