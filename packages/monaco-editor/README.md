@@ -2,7 +2,7 @@
 
 ## Catbee Monaco Editor for Angular
 
-> A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both **single** and **diff** editors.
+> A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both **single** and **diff** editors — fully compatible with Reactive Forms, Template-driven Forms, and custom data models.
 
 
 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
@@ -23,16 +23,18 @@
 
 ## 📦 Demo
 
-- [Stackblitz](https://stackblitz.com/edit/ng-catbee-monaco-editor?file=src%2Fmain.ts)
-- [Codesandbox](https://codesandbox.io/p/sandbox/ng-catbee-monaco-editor-txmm59)
+- [Stackblitz](https://stackblitz.com/edit/ng-catbee-monaco-editor?file=src%2Fapp%2Fapp.component.ts)
+- [Codesandbox](https://codesandbox.io/p/sandbox/ng-catbee-monaco-editor-txmm59?file=%2Fsrc%2Fapp%2Fapp.component.ts)
 
 ## ✨ Features
 
 - 📝 **Single Editor**: Drop-in Monaco editor for Angular apps
 - 🔀 **Diff Editor**: Effortlessly compare code side-by-side
+- ⚙️ **Supports Reactive & Template-driven Forms**: (FormControl, ngModel)
 - 🎨 **Customizable**: Language, theme, and editor settings
-- ⚡ **Reactive Forms & Events**: Seamless integration
-- 🛡️ **TypeScript Typings**: Full type safety
+- 💡 **Custom Model Binding**: ([model] input for flexibility)
+- 🎨 **Highly Configurable**: theme, language, layout, options
+- 🧠 **Full Type Safety**: with rich TypeScript definitions
 
 ## 🛠️ Installation
 
@@ -115,13 +117,16 @@ export const appConfig: ApplicationConfig = {
 
 ### 2. CatbeeMonacoEditorComponent Example
 
+#### 2.1 Using [(ngModel)]
+
 ```ts
 import { Component } from '@angular/core';
 import { CatbeeMonacoEditorComponent, MonacoEditorOptions, MonacoEditor, MonacoKeyMod, MonacoKeyCode } from '@ng-catbee/monaco-editor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [CatbeeMonacoEditorComponent],
+  imports: [CatbeeMonacoEditorComponent, FormsModule],
   template: `
     <ng-catbee-monaco-editor
       [height]="'400px'"
@@ -155,8 +160,71 @@ export class AppComponent {
     console.log('Editor options changed:', newOptions);
   }
 }
-
 ```
+
+#### 2.2 Using Reactive Forms
+
+```ts
+import { Component } from '@angular/core';
+import { CatbeeMonacoEditorComponent, MonacoEditorOptions } from '@ng-catbee/monaco-editor';
+import { ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CatbeeMonacoEditorComponent, ReactiveFormsModule],
+  template: `
+    <form [formGroup]="form">
+      <ng-catbee-monaco-editor formControlName="code" [options]="options" />
+    </form>
+  `
+})
+export class AppComponent {
+  form = new FormGroup({
+    code: new FormControl('const x = 42;')
+  });
+
+  options: MonacoEditorOptions = {
+    language: 'javascript',
+    theme: 'vs-dark'
+  };
+}
+```
+
+#### 2.3 Using Custom Model
+
+```ts
+import { Component } from '@angular/core';
+import { CatbeeMonacoEditorComponent, MonacoEditorOptions, CatbeeMonacoEditorModel } from '@ng-catbee/monaco-editor';
+
+@Component({
+  selector: 'app-root',
+  imports: [CatbeeMonacoEditorComponent],
+  template: `
+    <ng-catbee-monaco-editor
+      [height]="'400px'"
+      [width]="'100%'"
+      [options]="options"
+      [model]="model"
+    />
+  `
+})
+export class AppComponent {
+  options: MonacoEditorOptions = {
+    language: 'typescript',
+    theme: 'vs-dark',
+    automaticLayout: true,
+    minimap: { enabled: false }
+  };
+
+  model: CatbeeMonacoEditorModel = {
+    value: `function hello() {\n  console.log('Hello, world!');\n}`,
+    language: 'typescript'
+  };
+}
+```
+
+
 ### 3. CatbeeMonacoDiffEditorComponent Example
 
 ```ts
@@ -165,15 +233,17 @@ import { CatbeeMonacoDiffEditorComponent, MonacoEditorOptions, CatbeeMonacoDiffE
 
 @Component({
   selector: 'app-root',
-  imports: [CatbeeMonacoDiffEditorComponent],
+  imports: [CatbeeMonacoDiffEditorComponent, FormsModule],
   template: `
     <ng-catbee-monaco-diff-editor
       [height]="'400px'"
       [width]="'100%'"
       [options]="options"
-      [original]="originalCode"
-      [modified]="modifiedCode"
+      [(ngModel)]="diffModel"
       (editorDiffUpdate)="onDiffUpdate($event)"
+      [originalEditable]="false"
+      [disabled]="false"
+      [language]="'javascript'"
     />
   `
 })
@@ -184,14 +254,9 @@ export class AppComponent {
     minimap: { enabled: false }
   };
 
-  originalCode: CatbeeMonacoDiffEditorModel = {
-    value: 'function hello() {\n\talert("Hello, world!");\n}',
-    language: 'javascript'
-  };
-
-  modifiedCode: CatbeeMonacoDiffEditorModel = {
-    value: 'function hello() {\n\talert("");\n}',
-    language: 'javascript'
+  diffModel: CatbeeMonacoDiffEditorModel = {
+    original: 'function hello() {\n\talert("Hello, world!");\n}',
+    modified: 'function hello() {\n\talert("");\n}',
   };
 
   onDiffUpdate(event: CatbeeMonacoDiffEditorEvent) {
@@ -301,13 +366,14 @@ CatbeeMonacoEditorModule.forRoot({
 |----------|-------------|------|---------|
 | `[height]` | Height of Monaco Editor | `string` | `300px` |
 | `[width]` | Width of Monaco Editor | `string` | `100%` |
-| `[disabled]` | Disabled of monaco editor | `boolean` | `false` |
-| `[options]` | Default options when creating editors | `MonacoEditorOptions` | - |
+| `[disabled]` | Disables Modified Editor | `boolean` | `false` |
+| `[options]` | Default options when creating editors | `MonacoDiffEditorOptions` | - |
+| `[language]` | Language of both original and modified models | `string` | `plaintext` |
 | `[initDelay]` | Delay initializing monaco editor in ms | `number` | `0` |
 | `[model]` | Model of monaco editor | `CatbeeMonacoEditorModel` | - |
-| `[original]` | The original model to compare | `CatbeeMonacoDiffEditorModel` | - |
-| `[modified]` | The modified model to compare against the original | `CatbeeMonacoDiffEditorModel` | - |
+|
 | `[originalEditable]` | Whether the original editor is editable | `boolean` | `false` |
+| `[reInitOnOptionsChange]` | Whether to re-initialize the editor instance when options change. By default, the editor will re-initialize only if the language option changes. Note: Some options (like language) may require re-initialization to take effect. | `boolean` | `false` |
 
 #### Events
 | Event  | Description | Type |

@@ -244,9 +244,10 @@ export interface CatbeeMonacoEditorModel {
 }
 /** Model for Catbee Monaco Diff Editor Component */
 export interface CatbeeMonacoDiffEditorModel {
-  value: string;
-  language?: string;
+  original: string;
+  modified: string;
 }
+
 /** Event emitted by Catbee Monaco Diff Editor Component */
 export interface CatbeeMonacoDiffEditorEvent {
   original: string;

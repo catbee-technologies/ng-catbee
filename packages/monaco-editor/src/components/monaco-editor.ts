@@ -212,11 +212,7 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
   }
 
   private emitInitEvent(init: boolean) {
-    if (init) {
-      this.init.emit(this._editor!);
-    } else {
-      this.reInit.emit(this._editor!);
-    }
+    init ? this.init.emit(this._editor!) : this.reInit.emit(this._editor!);
   }
 
   private async format(): Promise<void | null> {
