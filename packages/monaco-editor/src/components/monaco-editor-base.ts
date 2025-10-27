@@ -68,9 +68,11 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
   /** Emitted when the editor options are changed. */
   readonly optionsChange = output<MonacoEditorOptions>();
 
-  readonly computedOptions = computed<MonacoEditorOptions>(() => {
-    return { ...this.options(), readOnly: this.disabled(), domReadOnly: this.disabled() };
-  });
+  protected readonly computedOptions = computed<MonacoEditorOptions>(() => ({
+    ...this.options(),
+    readOnly: this.disabled(),
+    domReadOnly: this.disabled()
+  }));
 
   constructor() {
     this._config = {

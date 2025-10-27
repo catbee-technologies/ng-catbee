@@ -11,7 +11,7 @@ import {
   MonacoEditorOptions
 } from '../types/monaco-editor.types';
 
-const delay = (ms?: number) => new Promise(res => setTimeout(res, ms ?? 1000));
+const delay = (ms = 1000) => new Promise(res => setTimeout(res, ms));
 
 function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
   TestBed.configureTestingModule({
@@ -71,7 +71,7 @@ describe('CatbeeMonacoEditorComponents', () => {
       expect(spy).toHaveBeenCalledWith('updated text');
     });
 
-    it('should register onChange and call it on model change', async () => {
+    it('should register onChange and trigger it on value change', async () => {
       const fixture = create(TestComponent);
       await fixture.whenStable();
       await delay();
@@ -115,7 +115,7 @@ describe('CatbeeMonacoEditorComponents', () => {
       (comp as any).updatePlaceholder();
     });
 
-    it('should not reInit when updateOptions called with same language', async () => {
+    it('should not reInit when updating with same language', async () => {
       const fixture = create(TestComponent);
       await fixture.whenStable();
       await delay();
@@ -126,7 +126,7 @@ describe('CatbeeMonacoEditorComponents', () => {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should emit reInit when reInitOnOptionsChange is true', async () => {
+    it('should reInit when updateOptions returns true from reInitOnOptionsChange', async () => {
       const fixture = create(TestComponent);
       await fixture.whenStable();
       await delay();
@@ -146,7 +146,7 @@ describe('CatbeeMonacoEditorComponents', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should emit reinit event', async () => {
+    it('should emit reInit event', async () => {
       const fixture = create(TestComponent);
       const reInitSpy = spyOn(fixture.componentInstance, 'onReInit');
       await fixture.whenStable();
@@ -160,15 +160,15 @@ describe('CatbeeMonacoEditorComponents', () => {
       await fixture.whenStable();
       await delay();
       const comp = fixture.componentInstance.comp;
-      comp['reInitMonaco'](comp.computedOptions());
+      comp['reInitMonaco'](comp['computedOptions']());
       const spy = spyOn(comp.editor!, 'updateOptions');
-      comp.updateOptions(comp.computedOptions());
+      comp.updateOptions(comp['computedOptions']());
       expect(spy).toHaveBeenCalled();
     });
   });
 
-  describe('CatbeeMonacoEditorDiffComponent', () => {
-    it('should initialize diff editor', async () => {
+  describe('CatbeeMonacoDiffEditorComponent', () => {
+    it('should initialize diff editor and emit init', async () => {
       const fixture = create(TestDiffComponent);
       const spy = spyOn(fixture.componentInstance, 'onInit');
       await fixture.whenStable();
@@ -176,14 +176,38 @@ describe('CatbeeMonacoEditorComponents', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should reInit when updateOptions called with different language', async () => {
+    it('should update model and emit diff update event', async () => {
       const fixture = create(TestDiffComponent);
       await fixture.whenStable();
       await delay();
-      const comp = fixture.componentInstance.comp as any;
-      const spy = spyOn(comp, 'reInitMonaco');
-      comp.previousLanguage = 'html';
-      comp.updateOptions({ language: 'typescript' });
+      const comp = fixture.componentInstance.comp;
+      const emitSpy = spyOn(comp.editorDiffUpdate, 'emit');
+      (comp as any).currentValue = { original: 'old', modified: 'new' };
+      (comp as any).emitChange();
+      expect(emitSpy).toHaveBeenCalledWith({ original: 'old', modified: 'new' });
+    });
+
+    it('should write value correctly to both sides', async () => {
+      const fixture = create(TestDiffComponent);
+      await fixture.whenStable();
+      await delay();
+      const comp = fixture.componentInstance.comp;
+      const mockValue: CatbeeMonacoDiffEditorModel = { original: 'a', modified: 'b' };
+      const spyOriginal = spyOn(comp.editor!.getOriginalEditor().getModel()!, 'setValue');
+      const spyModified = spyOn(comp.editor!.getModifiedEditor().getModel()!, 'setValue');
+      comp.writeValue(mockValue);
+      expect(spyOriginal).toHaveBeenCalledWith('a');
+      expect(spyModified).toHaveBeenCalledWith('b');
+    });
+
+    it('should toggle originalEditable correctly', async () => {
+      const fixture = create(TestDiffComponent);
+      await fixture.whenStable();
+      await delay();
+      const comp = fixture.componentInstance.comp;
+      const spy = spyOn(comp.editor!, 'updateOptions');
+      fixture.componentInstance.originalEditable.set(true);
+      await delay();
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -223,26 +247,27 @@ class TestComponent {
   template: `
     <ng-catbee-monaco-diff-editor
       #comp
-      [original]="originalModel()"
-      [modified]="modifiedModel()"
-      [options]="options()"
+      [model]="model()"
+      [language]="language()"
       [height]="height"
       [initDelay]="initDelay"
-      [disabled]="disabled"
+      [originalEditable]="originalEditable()"
       (init)="onInit($event)"
-      (error)="onError($event)"
+      (editorDiffUpdate)="onDiffUpdate($event)"
     />
   `,
   imports: [FormsModule, CatbeeMonacoDiffEditorComponent]
 })
 class TestDiffComponent {
   @ViewChild('comp') comp!: CatbeeMonacoDiffEditorComponent;
-  options = signal<MonacoEditorOptions>({ theme: 'vs', readOnly: true });
-  originalModel = signal<CatbeeMonacoDiffEditorModel>({ value: 'const a = 1;', language: 'typescript' });
-  modifiedModel = signal<CatbeeMonacoDiffEditorModel | null>({ value: 'const a = 2;', language: 'typescript' });
+  model = signal<CatbeeMonacoDiffEditorModel>({
+    original: 'const a = 1;',
+    modified: 'const a = 2;'
+  });
+  language = signal('typescript');
+  originalEditable = signal(false);
   height = '100px';
   initDelay = 0;
-  disabled = false;
   onInit(_: MonacoEditor): void {}
-  onError(_: unknown): void {}
+  onDiffUpdate(_: CatbeeMonacoDiffEditorModel): void {}
 }
