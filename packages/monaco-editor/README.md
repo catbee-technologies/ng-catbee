@@ -36,6 +36,14 @@
 - 🎨 **Highly Configurable**: theme, language, layout, options
 - 🧠 **Full Type Safety**: with rich TypeScript definitions
 
+## 🧩 Angular Compatibility
+
+| Angular Version | Supported |
+| ---------------- | --------- |
+| `v17` and above | ✅ Fully supported |
+
+This library is built and tested with Angular `20.3.0`, and supports all modern standalone-based Angular projects (v17+).
+
 ## 🛠️ Installation
 
 ```bash
@@ -63,63 +71,21 @@ Or you can copy the `vs` folder from `node_modules/monaco-editor/min/` to your `
 Then set the `baseUrl` option in the module configuration to point to your local assets:
 
 ```typescript
-CatbeeMonacoEditorModule.forRoot({
-  baseUrl: 'assets/monaco-editor/'
-}),
-```
-
-## 📚 Usage
-
-### 1. Import the Module
-
-#### 1.1 Use in NgModule
-```typescript
 import { CatbeeMonacoEditorModule } from '@ng-catbee/monaco-editor';
 
 @NgModule({
-	imports: [
-      CatbeeMonacoEditorModule.forRoot({
-        // Customization options - OPTIONAL
-      }),
-  ]
+  imports: [
+    CatbeeMonacoEditorModule.forRoot({
+      baseUrl: 'assets/monaco-editor/' // Path to the folder containing `vs` folder
+    }),
+  ],
 })
 export class AppModule {}
 ```
-or
-#### 1.2 Use in Standalone Components
+
+## ⚡ Quick Example
+
 ```typescript
-import { provideCatbeeMonacoEditor } from '@ng-catbee/monaco-editor';
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideCatbeeMonacoEditor({
-      // Customization options - OPTIONAL
-    })
-  ]
-};
-```
-or
-#### 1.3 Use in ApplicationConfig
-```typescript
-import { importProvidersFrom } from '@angular/core';
-import { CatbeeMonacoEditorModule } from '@ng-catbee/monaco-editor';
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    importProvidersFrom(
-      CatbeeMonacoEditorModule.forRoot({
-        // Customization options - OPTIONAL
-      })
-    )
-  ]
-};
-```
-
-### 2. CatbeeMonacoEditorComponent Example
-
-#### 2.1 Using [(ngModel)]
-
-```ts
 import { Component } from '@angular/core';
 import { CatbeeMonacoEditorComponent, MonacoEditorOptions, MonacoEditor, MonacoKeyMod, MonacoKeyCode } from '@ng-catbee/monaco-editor';
 import { FormsModule } from '@angular/forms';
@@ -162,267 +128,22 @@ export class AppComponent {
 }
 ```
 
-#### 2.2 Using Reactive Forms
+## 📖 Documentation
 
-```ts
-import { Component } from '@angular/core';
-import { CatbeeMonacoEditorComponent, MonacoEditorOptions } from '@ng-catbee/monaco-editor';
-import { ReactiveFormsModule } from '@angular/forms';
+💡 Full documentation available at [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro)
 
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CatbeeMonacoEditorComponent, ReactiveFormsModule],
-  template: `
-    <form [formGroup]="form">
-      <ng-catbee-monaco-editor formControlName="code" [options]="options" />
-    </form>
-  `
-})
-export class AppComponent {
-  form = new FormGroup({
-    code: new FormControl('const x = 42;')
-  });
+- [Introduction](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro)
+- [Installation and Configuration](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/installation)
+- [Module Setup](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/module-setup)
+- [Single Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/single-editor)
+- [Diff Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/diff-editor)
+- [API Reference](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/api-reference)
+- [Type Definitions](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/types)
 
-  options: MonacoEditorOptions = {
-    language: 'javascript',
-    theme: 'vs-dark'
-  };
-}
-```
-
-#### 2.3 Using Custom Model
-
-```ts
-import { Component } from '@angular/core';
-import { CatbeeMonacoEditorComponent, MonacoEditorOptions, CatbeeMonacoEditorModel } from '@ng-catbee/monaco-editor';
-
-@Component({
-  selector: 'app-root',
-  imports: [CatbeeMonacoEditorComponent],
-  template: `
-    <ng-catbee-monaco-editor
-      [height]="'400px'"
-      [width]="'100%'"
-      [options]="options"
-      [model]="model"
-    />
-  `
-})
-export class AppComponent {
-  options: MonacoEditorOptions = {
-    language: 'typescript',
-    theme: 'vs-dark',
-    automaticLayout: true,
-    minimap: { enabled: false }
-  };
-
-  model: CatbeeMonacoEditorModel = {
-    value: `function hello() {\n  console.log('Hello, world!');\n}`,
-    language: 'typescript'
-  };
-}
-```
-
-
-### 3. CatbeeMonacoDiffEditorComponent Example
-
-```ts
-import { Component } from '@angular/core';
-import { CatbeeMonacoDiffEditorComponent, MonacoEditorOptions, CatbeeMonacoDiffEditorModel, CatbeeMonacoDiffEditorEvent } from '@ng-catbee/monaco-editor';
-
-@Component({
-  selector: 'app-root',
-  imports: [CatbeeMonacoDiffEditorComponent, FormsModule],
-  template: `
-    <ng-catbee-monaco-diff-editor
-      [height]="'400px'"
-      [width]="'100%'"
-      [options]="options"
-      [(ngModel)]="diffModel"
-      (editorDiffUpdate)="onDiffUpdate($event)"
-      [originalEditable]="false"
-      [disabled]="false"
-      [language]="'javascript'"
-    />
-  `
-})
-export class AppComponent {
-  options: MonacoEditorOptions = {
-    theme: 'vs-dark',
-    automaticLayout: true,
-    minimap: { enabled: false }
-  };
-
-  diffModel: CatbeeMonacoDiffEditorModel = {
-    original: 'function hello() {\n\talert("Hello, world!");\n}',
-    modified: 'function hello() {\n\talert("");\n}',
-  };
-
-  onDiffUpdate(event: CatbeeMonacoDiffEditorEvent) {
-    console.log('Diff updated:', event.original, event.modified);
-  }
-}
-```
-
-## ⚙️ Configuration Options
-The `CatbeeMonacoEditorGlobalConfig` interface defines the configuration options for the Monaco Editor module, which can be provided using the `forRoot()` method of `CatbeeMonacoEditorModule` or via the `provideCatbeeMonacoEditor()`, as shown below:
-
-```ts
-{
-  baseUrl: string; // Base URL for monaco-editor assets (default: 'https://cdn.jsdelivr.net/npm/monaco-editor/min')
-  defaultOptions: MonacoEditorOptions; // Default editor options
-  monacoPreLoad: () => void; // Callback before monaco is loaded
-  monacoLoad: (monaco: typeof monaco) => void; // Callback after monaco is loaded
-  autoFormatTime: number; // Time to auto format after init (default: 100ms)
-  resizeDebounceTime: number; // Debounce time for resize events (default: 100ms)
-}
-```
-
-### Example Configuration
-
-```ts
-CatbeeMonacoEditorModule.forRoot({
-  baseUrl: 'assets/monaco-editor/', // Use local assets
-  defaultOptions: { theme: 'vs-dark', language: 'typescript' },
-  monacoLoad: (monaco) => {
-    // Custom monaco configurations
-
-    // 1. Define a custom theme
-    monaco.editor.defineTheme('myCustomTheme', {
-      base: 'vs-dark',
-      inherit: true,
-      rules: [{ background: '1E1E1E' }],
-      colors: {
-        'editor.background': '#1E1E1E',
-      },
-    });
-
-    // 2. Set TypeScript compiler options
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-      target: monaco.languages.typescript.ScriptTarget.ES2020,
-      allowNonTsExtensions: true,
-    });
-
-    // 3. Add extra libraries
-    monaco.languages.typescript.typescriptDefaults.addExtraLibs([
-      {
-        content: 'declare var myGlobalVar: string;',
-        filePath: 'file:///node_modules/@types/my-global-var/index.d.ts',
-      },
-    ]);
-  },
-  autoFormatTime: 200,
-  resizeDebounceTime: 150,
-}),
-```
-
-## 📖 API Reference
-
-### `CatbeeMonacoEditorComponent`: Single editor
-
-#### Properties
-| Property | Description | Type | Default |
-|----------|-------------|------|---------|
-| `[height]` | Height of Monaco Editor | `string` | `300px` |
-| `[width]` | Width of Monaco Editor | `string` | `100%` |
-| `[disabled]` | Disabled of monaco editor | `boolean` | `false` |
-| `[placeholder]` | Placeholder of monaco editor, Can change the style via defining the `.monaco-editor-placeholder` CSS. | `string` | - |
-| `[placeholderColor]` | Color of the placeholder text | `string` | `rgba(128, 128, 128, 0.6)` |
-| `[showPlaceholderOnWhiteSpace]` | Show placeholder when editor is empty but contains whitespace characters | `boolean` | `false` |
-| `[autoFormat]` | Whether to automatically format the document | `boolean` | `true` |
-| `[options]` | Default options when creating editors | `MonacoEditorOptions` | - |
-| `[initDelay]` | Delay initializing monaco editor in ms | `number` | `0` |
-| `[model]` | Model of monaco editor | `CatbeeMonacoEditorModel` | - |
-| `[reInitOnOptionsChange]` | Whether to re-initialize the editor instance when options change. By default, the editor will re-initialize only if the language option changes. Note: Some options (like language) may require re-initialization to take effect. | `boolean` | `false` |
-
-#### Events
-| Event  | Description | Type |
-|--------|-------------|------|
-| `(init)` | Event emitted when the editor is initialized | `EventEmitter<MonacoEditor>` |
-| `(reInit)` | Event emitted when the editor is re-initialized | `EventEmitter<MonacoEditor>` |
-| `(initError)` | Event emitted when the editor initialization fails | `EventEmitter<unknown>` |
-| `(editorResize)` | Event emitted when the editor is resized | `EventEmitter<{ width: number; height: number }>` |
-| `(optionsChange)` | Event emitted when the editor options are changed | `EventEmitter<MonacoEditorOptions>` |
-| `(editorFocus)` | Event emitted when the text inside this editor gained focus | `EventEmitter<void>` |
-| `(editorBlur)` | Event emitted when the text inside this editor lost focus | `EventEmitter<void>` |
-| `(editorScroll)` | Event emitted when the scroll in the editor has changed | `EventEmitter<MonacoEditorScrollEvent>` |
-| `(editorCursorPositionChange)` | Event emitted when the cursor position has changed | `EventEmitter<MonacoEditorCursorPositionChangedEvent>` |
-| `(editorCursorSelectionChange)` | Event emitted when the cursor selection has changed | `EventEmitter<MonacoEditorCursorSelectionChangedEvent>` |
-| `(editorContextmenu)` | Event emitted when a context menu is triggered in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(editorPaste)` | Event emitted when a paste event occurs in the editor | `EventEmitter<MonacoEditorPasteEvent>` |
-| `(editorKeyDown)` | Event emitted when a key is pressed down in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
-| `(editorKeyUp)` | Event emitted when a key is released in the editor | `EventEmitter<MonacoEditorKeyboardEvent>` |
-| `(editorMouseDown)` | Event emitted when the mouse button is pressed down in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(editorMouseUp)` | Event emitted when the mouse button is released in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(editorMouseMove)` | Event emitted when the mouse is moved in the editor | `EventEmitter<MonacoEditorMouseEvent>` |
-| `(editorMouseLeave)` | Event emitted when the mouse leaves the editor | `EventEmitter<MonacoEditorPartialMouseEvent>` |
-| `(editorModelContentChange)` | Event emitted when the content of the current model has changed | `EventEmitter<MonacoModelContentChangedEvent>` |
-
-### `CatbeeMonacoDiffEditorComponent`: Diff editor
-
-#### Properties
-| Property | Description | Type | Default |
-|----------|-------------|------|---------|
-| `[height]` | Height of Monaco Editor | `string` | `300px` |
-| `[width]` | Width of Monaco Editor | `string` | `100%` |
-| `[disabled]` | Disables Modified Editor | `boolean` | `false` |
-| `[options]` | Default options when creating editors | `MonacoDiffEditorOptions` | - |
-| `[language]` | Language of both original and modified models | `string` | `plaintext` |
-| `[initDelay]` | Delay initializing monaco editor in ms | `number` | `0` |
-| `[model]` | Model of monaco editor | `CatbeeMonacoEditorModel` | - |
-|
-| `[originalEditable]` | Whether the original editor is editable | `boolean` | `false` |
-| `[reInitOnOptionsChange]` | Whether to re-initialize the editor instance when options change. By default, the editor will re-initialize only if the language option changes. Note: Some options (like language) may require re-initialization to take effect. | `boolean` | `false` |
-
-#### Events
-| Event  | Description | Type |
-|--------|-------------|------|
-| `(init)` | Event emitted when the editor is initialized | `EventEmitter<MonacoEditor>` |
-| `(reInit)` | Event emitted when the editor is re-initialized | `EventEmitter<MonacoEditor>` |
-| `(initError)` | Event emitted when the editor initialization fails | `EventEmitter<unknown>` |
-| `(editorResize)` | Event emitted when the editor is resized | `EventEmitter<{ width: number; height: number }>` |
-| `(optionsChange)` | Event emitted when the editor options are changed | `EventEmitter<MonacoEditorOptions>` |
-| `(editorDiffUpdate)` | Event emitted when the diff information computed by this diff editor has been updated | `EventEmitter<CatbeeMonacoDiffEditorEvent>` |
-
-## 🧩 Type Definitions
-Below are the key exported types and interfaces available in @ng-catbee/monaco-editor for strong typing and IntelliSense support:
-
-### Core Monaco Types
-- **`Monaco`** — The Monaco namespace.
-- **`MonacoEditor`** — The Monaco standalone code editor interface.
-- **`MonacoEditorOptions`** — Configuration options for the Monaco standalone code editor.
-- **`MonacoDiffEditor`** — The Monaco standalone diff editor interface.
-- **`MonacoDiffEditorOptions`** — Configuration options for the Monaco standalone diff editor.
-
-### Editor Events & Models
-- **`MonacoModelContentChangedEvent`** — Event for content changes in a Monaco model.
-- **`MonacoEditorKeyboardEvent`** — Event for keyboard interactions in the editor.
-- **`MonacoEditorMouseEvent`** — Event for mouse interactions in the editor.
-- **`MonacoEditorPartialMouseEvent`** — Partial mouse event type for editor mouse interactions.
-- **`MonacoEditorLanguageChangedEvent`** — Event fired when the language of a model changes.
-- **`MonacoEditorScrollEvent`** — Event for scroll position changes in the editor.
-- **`MonacoEditorCursorPositionChangedEvent`** — Event for cursor position changes.
-- **`MonacoEditorCursorSelectionChangedEvent`** — Event for cursor selection changes.
-- **`MonacoEditorPasteEvent`** — Event for paste operations in the editor.
-
-### Keyboard & Theme
-- **`MonacoKeyCode`** — Enumeration for key codes used by Monaco.
-- **`MonacoKeyMod`** — Enumeration for modifier keys (Ctrl, Alt, etc.).
-- **`MonacoBuiltinTheme`** — Built-in Monaco editor theme type.
-- **`MonacoEditorCustomThemeData`** — Interface for defining custom Monaco editor themes.
-
-### Catbee-Specific Types
-- **`CatbeeMonacoEditorModel`** — Model interface for the single editor component.
-- **`CatbeeMonacoDiffEditorModel`** — Model interface for the diff editor component.
-- **`CatbeeMonacoDiffEditorEvent`** — Event interface emitted by the diff editor component.
-
-### Configuration Interface
-- **`CatbeeMonacoEditorGlobalConfig`** — Global configuration options for the Catbee Monaco Editor module.
 
 ## 📜 License
 
-MIT © Catbee Technologies (see the [LICENSE](https://catbee-utils.npm.hprasath.com/license/) file for the full text)
+MIT © Catbee Technologies (see the [LICENSE](https://catbee.npm.hprasath.com/license/) file for the full text)
 
 ## 🔗 Links
 
