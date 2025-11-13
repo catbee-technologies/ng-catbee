@@ -1,0 +1,18 @@
+# CODEOWNERS assigns default reviewers/owners based on file path patterns.
+# Notes:
+# - The last matching rule wins (order matters).
+# - Patterns support *, **, and ?, and are relative to the repository root.
+# - Use GitHub usernames or org teams (teams must be in this org).
+# - Multiple owners can be listed to assign any of them: @owner1 @owner2
+# - To enforce code owner reviews, enable "Require review from Code Owners" in branch protection.
+
+# Default owners for everything in this repo:
+* @catbee-technologies/catbee-admins
+
+# Examples:
+# src/**                @catbee-technologies/engineering
+# src/packages/**       @catbee-technologies/pkg-maintainers
+# /README.md            @catbee-technologies/documentation
+# docs/**               @catbee-technologies/documentation
+# *.md                  @catbee-technologies/documentation
+# .github/workflows/**  @catbee-technologies/devops
