@@ -1,4 +1,4 @@
-name: 📦 Publish Angular Packages
+name: Publish Angular Packages
 
 on:
   push:
@@ -10,29 +10,30 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: ⬇️ Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: https://registry.npmjs.org
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: 📦 Set package name from tag
+      - name: Extract package name from tag
         run: |
           REF=${GITHUB_REF_NAME}
-          PACKAGE=${REF%%@v*}  # everything before "@v"
+          PACKAGE=${REF%%@v*}   # everything before "@v"
           echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
 
-      - name: 🛠️ Build the selected package
+      - name: Build the selected package
         run: npm run build $PACKAGE
 
-      - name: 🧹 Prepare package.json for publish
+      - name: Clean package.json before publishing
         run: |
           PKG_PATH=dist/@ng-catbee/$PACKAGE
           node -e "
@@ -44,21 +45,23 @@ jobs:
           console.log('Cleaned package.json for publish');
           "
 
-      - name: 🚀 Publish to npm
+      - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           PKG_PATH=dist/@ng-catbee/$PACKAGE
           VERSION=${GITHUB_REF_NAME##*@v}
-          echo "Publishing $PKG_PATH at version $VERSION"
 
-          cd $PKG_PATH
+          echo "Publishing package: $PKG_PATH"
+          echo "Version: $VERSION"
+
+          cd "$PKG_PATH"
 
           if [[ "$VERSION" == *-* ]]; then
-            TAG=$(echo $VERSION | sed 's/^[0-9.]*-//' | cut -d. -f1)
-            echo "Detected prerelease: tag=$TAG"
+            TAG=$(echo "$VERSION" | sed 's/^[0-9.]*-//' | cut -d. -f1)
+            echo "Detected prerelease. Tag: $TAG"
             npm publish --access public --tag "$TAG"
           else
-            echo "Stable release"
+            echo "Stable release detected. Tag: latest"
             npm publish --access public --tag latest
           fi

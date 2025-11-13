@@ -1,11 +1,11 @@
-name: 📝 Conventional Commit Lint
+name: Conventional Commit Lint
 
-on: 
+on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - '**'
   workflow_dispatch:
 
@@ -14,30 +14,35 @@ permissions:
 
 jobs:
   commit-message-lint:
-    name: 🔍 Check Commit Message Format
+    name: Check Commit Message Format
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: 🟢 Setup Node.js
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: 📦 Install Commitlint Dependencies
+
+      - name: Install commitlint dependencies
         run: npm install -D @commitlint/cli @commitlint/config-conventional
-      - name: 🛠️ Print Tool Versions
+
+      - name: Print tool versions
         run: |
           git --version
           node --version
           npm --version
           npx commitlint --version
 
-      - name: ✅ Lint Last Commit Message (Push)
+      - name: Lint last commit message (push)
         if: github.event_name == 'push'
         run: npx commitlint --last --verbose
 
-      - name: ✅ Lint All PR Commit Messages
+      - name: Lint all PR commit messages
         if: github.event_name == 'pull_request'
         run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

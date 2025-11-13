@@ -1,8 +1,8 @@
-name: 💤 Auto Mark Stale Issues & PRs
+name: Auto Mark Stale Issues and PRs
 
 on:
   schedule:
-    - cron: '0 0 * * *' # every day
+    - cron: '0 0 * * *' # Every day at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -12,10 +12,12 @@ permissions:
 
 jobs:
   stale:
-    name: 💤 Mark Stale Issues & PRs
+    name: Mark Stale Issues and PRs
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/stale@v9
+      - name: Run stale action
+        uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue is stale because it has been open for 90 days with no activity.'

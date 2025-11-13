@@ -14,6 +14,10 @@
       "matchPackageNames": ["/^@catbee/"]
     },
     {
+      "groupName": "ng catbee packages",
+      "matchPackageNames": ["/^@ng-catbee/"]
+    },
+    {
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "npm non-breaking updates"
@@ -25,8 +29,8 @@
     }
   ],
   "addLabels": ["dependencies", "renovate"],
-  "reviewers": ["cyber-hari"],
-  "assignees": ["cyber-hari"],
+  "reviewers": ["catbee-technologies/catbee-admins"],
+  "assignees": ["catbee-technologies/catbee-admins"],
   "branchPrefix": "feature-dependency-",
   "rangeStrategy": "bump",
   "rebaseWhen": "behind-base-branch",
