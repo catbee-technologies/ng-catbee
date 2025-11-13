@@ -31,10 +31,10 @@
   "addLabels": ["dependencies", "renovate"],
   "reviewers": ["catbee-technologies/catbee-admins"],
   "assignees": ["catbee-technologies/catbee-admins"],
-  "branchPrefix": "feature-dependency-",
+  "branchPrefix": "dependency/",
   "rangeStrategy": "bump",
   "rebaseWhen": "behind-base-branch",
-  "baseBranchPatterns": ["feature-next"],
+  "baseBranchPatterns": ["main"],
   "dependencyDashboard": true,
   "lockFileMaintenance": {
     "enabled": true
