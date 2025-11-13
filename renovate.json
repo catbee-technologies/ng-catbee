@@ -10,12 +10,9 @@
   "prConcurrentLimit": 5,
   "packageRules": [
     {
-      "groupName": "catbee packages",
-      "matchPackageNames": ["/^@catbee/"]
-    },
-    {
-      "groupName": "ng catbee packages",
-      "matchPackageNames": ["/^@ng-catbee/"]
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "npm breaking updates"
     },
     {
       "matchManagers": ["npm"],
@@ -23,18 +20,51 @@
       "groupName": "npm non-breaking updates"
     },
     {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "npm breaking updates"
+      "groupName": "angular packages",
+      "matchPackageNames": ["^@angular", "^angular", "^ng-", "^ngx-"]
+    },
+    {
+      "groupName": "eslint packages",
+      "matchPackageNames": [
+        "^eslint", 
+        "^@eslint", 
+        "^@angular-eslint", 
+        "^@typescript-eslint", 
+        "^typescript-eslint", 
+        "eslint-.*", 
+        "eslint-plugin-.*"
+      ]
+    },
+    {
+      "groupName": "rxjs packages",
+      "matchPackageNames": ["^rxjs"]
+    },
+    {
+      "groupName": "test packages",
+      "matchPackageNames": [
+        "^karma", 
+        "karma-.*", 
+        "^jasmine", 
+        "jasmine-.*", 
+        "^@types/jasmine" 
+      ]
+    },
+    {
+      "groupName": "catbee packages",
+      "matchPackageNames": ["^@catbee"]
+    },
+    {
+      "groupName": "ng catbee packages",
+      "matchPackageNames": ["^@ng-catbee"]
     }
   ],
-  "addLabels": ["dependencies", "renovate"],
+  "addLabels": ["dependency", "renovate"],
   "reviewers": ["catbee-technologies/catbee-admins"],
   "assignees": ["catbee-technologies/catbee-admins"],
-  "branchPrefix": "feature-dependency-",
+  "branchPrefix": "dependency/",
   "rangeStrategy": "bump",
   "rebaseWhen": "behind-base-branch",
-  "baseBranchPatterns": ["feature-next"],
+  "baseBranchPatterns": ["main"],
   "dependencyDashboard": true,
   "lockFileMaintenance": {
     "enabled": true
