@@ -1,0 +1,142 @@
+name: Bug Report
+description: File a bug report to help us improve the project.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug!  
+        Please fill in the details below to help us resolve it faster.
+
+  - type: checkboxes
+    id: prechecks
+    attributes:
+      label: Pre-checks
+      description: Help us triage faster by confirming the following.
+      options:
+        - label: I searched existing issues and discussions to avoid duplicates.
+          required: true
+        - label: I read the documentation and FAQs.
+          required: true
+        - label: I am using the latest version of the affected package(s).
+          required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package(s)
+      options:
+        - "@ng-catbee/monaco-editor"
+        # - "@ng-catbee/utils"
+      multiple: true
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package Version
+      placeholder: e.g., 12.1.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Node version, Angular version, and browser.
+      placeholder: |
+        - OS: macOS 15
+        - Node: 20.x
+        - Angular: 18.x
+        - Browser: Chrome 128
+    validations:
+      required: true
+
+  - type: input
+    id: summary
+    attributes:
+      label: Bug Summary
+      description: Short and clear description of the problem.
+      placeholder: e.g., Monaco editor not rendering inside Angular zone.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Include code snippets, commands, or repo links.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error ...
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction
+    attributes:
+      label: Minimal Reproduction
+      description: Link to StackBlitz, a minimal repo, or gist that reproduces the issue.
+      placeholder: https://stackblitz.com/...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Is this a regression?
+      options:
+        - Yes
+        - No
+        - Unsure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (blocks usage)
+        - Major (significant impact)
+        - Minor (workaround exists)
+        - Trivial (cosmetic)
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: Describe what should have happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: Describe what actually happened. Include errors/logs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste logs or stack traces. Wrap logs in triple backticks.
+      placeholder: |
+        ```
+        <paste logs here>
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional Context
+      placeholder: Screenshots, related issues, or anything else useful.

@@ -1,0 +1,125 @@
+name: Feature Request
+description: Suggest an idea or improvement.
+title: "[Feature]: "
+labels: ["enhancement", "feature-request", "improvement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea? We'd love to hear it!  
+        Please provide as much detail as possible to help us evaluate your request.
+
+  - type: checkboxes
+    id: prechecks
+    attributes:
+      label: Pre-checks
+      description: Help us triage faster by confirming the following.
+      options:
+        - label: I searched existing issues and discussions to avoid duplicates.
+          required: true
+        - label: I read the documentation and FAQs.
+          required: true
+        - label: I am using the latest version of the affected package(s).
+          required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package(s)
+      options:
+        - "@ng-catbee/monaco-editor"
+        # - "@ng-catbee/utils"
+      multiple: true
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Feature Summary
+      description: A short, clear summary of the requested feature.
+      placeholder: e.g. Add support for custom Monaco editor workers
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement (Optional)
+      description: Is your feature request related to a problem?
+      placeholder: |
+        Explain the issue you're facing that this feature would solve.
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this work? Provide detailed behavior if possible.
+      placeholder: |
+        Describe the approach or API you’d like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use Cases / Motivation
+      description: Describe who this helps and why it matters.
+      placeholder: |
+        - As a developer, I want ...
+        - This enables ...
+        - This improves ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Low
+        - Medium
+        - High
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: breaking_change
+    attributes:
+      label: Breaking Change
+      description: Does this feature require changes that break existing usage?
+      options:
+        - label: This feature introduces a breaking change.
+          required: false
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Bullet points describing how we'll know this feature is complete.
+      placeholder: |
+        - [ ] New API is available
+        - [ ] Supports X scenario
+        - [ ] Documentation updated
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: List any alternative solutions or workarounds you've tried.
+      placeholder: |
+        - Alternative 1
+        - Alternative 2
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional Context
+      placeholder: Mockups, references, links, diagrams, or anything else.
