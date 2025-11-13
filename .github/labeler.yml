@@ -1,41 +1,71 @@
+# Branch based labels
+feat:
+  - head-branch:
+    - "^feat/"
+
+feature:
+  - head-branch:
+    - "^feature/"
+
+hotfix:
+  - head-branch:
+    - "^hotfix/"
+
+fix:
+  - head-branch:
+    - "^fix/"
+
+docs:
+  - head-branch:
+    - "^docs/"
+
+refactor:
+  - head-branch:
+    - "^refactor/"
+
+chore:
+  - head-branch:
+    - "^chore/"
+
+security:
+  - head-branch:
+    - "^security/"
+
+# Folder based labels
+
 ci:
   - changed-files:
-      - any-glob-to-any-file: '.github/workflows/**'
+    - any-glob-to-any-file: ".github/workflows/**"
+  - head-branch:
+    - "^ci/"
 
 monaco-editor:
   - changed-files:
-      - any-glob-to-any-file: 'packages/monaco-editor/**'
+    - any-glob-to-any-file: "packages/monaco-editor/**"
 
 monaco-editor-readme:
   - changed-files:
-      - any-glob-to-any-file: 'packages/monaco-editor/README.md'
+    - any-glob-to-any-file: "packages/monaco-editor/README.md"
 
 test:
   - changed-files:
-      - any-glob-to-any-file: '**.spec.ts'
+    - any-glob-to-any-file: "**/*.spec.ts"
+  - head-branch:
+    - "^test/"
 
 readme:
   - changed-files:
-      - any-glob-to-any-file: 'README.md'
+    - any-glob-to-any-file: "README.md"
 
 changelog:
   - changed-files:
-      - any-glob-to-any-file: 'CHANGELOG.md'
+    - any-glob-to-any-file: "CHANGELOG.md"
 
 dependency:
   - changed-files:
-      - any-glob-to-any-file: 'package.json'
-      - any-glob-to-any-file: 'package-lock.json'
+    - any-glob-to-any-file: "package.json"
+    - any-glob-to-any-file: "package-lock.json"
 
 scripts:
   - changed-files:
-      - any-glob-to-any-file: 'scripts/**'
-
-feature:
-  - head-branch: ['^feature-']
-
-hotfix:
-  - head-branch: ['^hotfix-']
-
-refactor:
-  - head-branch: ['^refactor-']
+    - any-glob-to-any-file: "scripts/**"

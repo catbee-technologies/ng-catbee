@@ -1,0 +1,62 @@
+name: CI
+run-name: CI for ${{ github.repository }} on ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: 
+      - opened
+      - synchronize
+      - reopened
+      - edited
+    branches: 
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build, Lint, Test, Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application
+        run: npm run build
+
+      - name: TypeScript type checking for all packages
+        run: |
+          for config in packages/*/tsconfig*.json; do
+            echo "Running TypeScript check for $config..."
+            npx tsc --noEmit -p "$config"
+          done
+
+      - name: Check outdated dependencies
+        run: |
+          echo "Checking for outdated dependencies..."
+          OUTDATED=$(npm outdated --json || true)
+
+          if [ -n "$OUTDATED" ] && [ "$OUTDATED" != "{}" ]; then
+            echo "Outdated dependencies detected:"
+            echo "$OUTDATED"
+          else
+            echo "All dependencies are up to date."
+          fi
