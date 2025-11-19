@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { CatbeeMonacoEditorComponent } from './components/monaco-editor';
+import { CatbeeMonacoEditorComponent } from './components/v1/monaco-editor';
 import { CATBEE_MONACO_EDITOR_GLOBAL_CONFIG, CatbeeMonacoEditorGlobalConfig } from './monaco-editor.config';
-import { CatbeeMonacoDiffEditorComponent } from './components/monaco-editor-diff';
+import { CatbeeMonacoDiffEditorComponent } from './components/v1/monaco-editor-diff';
 
 const components = [CatbeeMonacoEditorComponent, CatbeeMonacoDiffEditorComponent];
 

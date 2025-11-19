@@ -4,5 +4,5 @@
 export * from './monaco-editor.config';
 export * from './types/monaco-editor.types';
 export * from './monaco-editor.module';
-export * from './components/monaco-editor';
-export * from './components/monaco-editor-diff';
+export * from './components/v1/monaco-editor';
+export * from './components/v1/monaco-editor-diff';
