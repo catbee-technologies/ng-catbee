@@ -11,8 +11,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { take, timer } from 'rxjs';
-import { CatbeeMonacoEditorBase } from './monaco-editor-base';
-import { PlaceholderWidget } from '../utils/placeholder.utils';
+import { CatbeeMonacoEditorBase } from '../monaco-editor-base';
+import { PlaceholderWidget } from '../../utils/placeholder.utils';
 import {
   MonacoEditor,
   CatbeeMonacoEditorModel,
@@ -25,7 +25,7 @@ import {
   MonacoEditorKeyboardEvent,
   MonacoEditorPartialMouseEvent,
   MonacoModelContentChangedEvent
-} from '../types/monaco-editor.types';
+} from '../../types/monaco-editor.types';
 
 /** @ng-catbee: Monaco Editor Component - A powerful code editor component for Angular applications using Monaco Editor.
  *

@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const dtsFile = join('dist', '@ng-catbee', 'monaco-editor', 'index.d.ts');
-const refLine = '/// <reference types="./monaco.d.ts" />\n';
+const dtsFile = join('dist', '@ng-catbee', 'monaco-editor', 'types', 'ng-catbee-monaco-editor.d.ts');
+const refLine = '/// <reference types="../monaco.d.ts" />\n';
 
 if (existsSync(dtsFile)) {
   const content = readFileSync(dtsFile, 'utf8');
