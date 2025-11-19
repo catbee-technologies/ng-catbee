@@ -1,7 +1,7 @@
 import { Component, provideZonelessChangeDetection, signal, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { provideCatbeeMonacoEditor } from '../monaco-editor.config';
+import { provideCatbeeMonacoEditor } from '../../monaco-editor.config';
 import { CatbeeMonacoEditorComponent } from './monaco-editor';
 import { CatbeeMonacoDiffEditorComponent } from './monaco-editor-diff';
 import {
@@ -9,7 +9,7 @@ import {
   CatbeeMonacoEditorModel,
   MonacoEditor,
   MonacoEditorOptions
-} from '../types/monaco-editor.types';
+} from '../../types/monaco-editor.types';
 
 const delay = (ms = 1000) => new Promise(res => setTimeout(res, ms));
 

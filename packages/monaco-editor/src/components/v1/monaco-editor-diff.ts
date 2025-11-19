@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, forwardRef, input, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CatbeeMonacoEditorBase } from './monaco-editor-base';
+import { CatbeeMonacoEditorBase } from '../monaco-editor-base';
 import {
   MonacoDiffEditor,
   MonacoDiffEditorOptions,
   CatbeeMonacoDiffEditorModel,
   CatbeeMonacoDiffEditorEvent
-} from '../types/monaco-editor.types';
+} from '../../types/monaco-editor.types';
 
 /**
  * @ng-catbee: Monaco Diff Editor Component - A side-by-side code comparison editor.
