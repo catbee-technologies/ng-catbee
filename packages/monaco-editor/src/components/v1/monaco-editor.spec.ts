@@ -2,8 +2,8 @@ import { Component, provideZonelessChangeDetection, signal, Type, ViewChild } fr
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { provideCatbeeMonacoEditor } from '../../monaco-editor.config';
-import { CatbeeMonacoEditorComponent } from './monaco-editor';
-import { CatbeeMonacoDiffEditorComponent } from './monaco-editor-diff';
+import { CatbeeMonacoEditor } from './monaco-editor';
+import { CatbeeMonacoDiffEditor } from './monaco-editor-diff';
 import {
   CatbeeMonacoDiffEditorModel,
   CatbeeMonacoEditorModel,
@@ -228,10 +228,10 @@ describe('CatbeeMonacoEditorComponents', () => {
       (reInit)="onReInit($event)"
     />
   `,
-  imports: [FormsModule, CatbeeMonacoEditorComponent]
+  imports: [FormsModule, CatbeeMonacoEditor]
 })
 class TestComponent {
-  @ViewChild('comp') comp!: CatbeeMonacoEditorComponent;
+  @ViewChild('comp') comp!: CatbeeMonacoEditor;
   options = signal<MonacoEditorOptions>({ theme: 'vs', readOnly: true });
   model: CatbeeMonacoEditorModel = { value: '<h1>Title</h1>', language: 'html' };
   height = '100px';
@@ -256,10 +256,10 @@ class TestComponent {
       (editorDiffUpdate)="onDiffUpdate($event)"
     />
   `,
-  imports: [FormsModule, CatbeeMonacoDiffEditorComponent]
+  imports: [FormsModule, CatbeeMonacoDiffEditor]
 })
 class TestDiffComponent {
-  @ViewChild('comp') comp!: CatbeeMonacoDiffEditorComponent;
+  @ViewChild('comp') comp!: CatbeeMonacoDiffEditor;
   model = signal<CatbeeMonacoDiffEditorModel>({
     original: 'const a = 1;',
     modified: 'const a = 2;'

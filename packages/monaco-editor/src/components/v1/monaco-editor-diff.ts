@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, forwardRef, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, forwardRef, input, model, output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CatbeeMonacoEditorBase } from '../monaco-editor-base';
 import {
@@ -38,18 +38,15 @@ import {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CatbeeMonacoDiffEditorComponent),
+      useExisting: forwardRef(() => CatbeeMonacoDiffEditor),
       multi: true
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatbeeMonacoDiffEditorComponent
-  extends CatbeeMonacoEditorBase<MonacoDiffEditor>
-  implements ControlValueAccessor
-{
+export class CatbeeMonacoDiffEditor extends CatbeeMonacoEditorBase<MonacoDiffEditor> implements ControlValueAccessor {
   /** Combined diff model containing original and modified values. */
-  readonly model = input<CatbeeMonacoDiffEditorModel | undefined>();
+  readonly model = model<CatbeeMonacoDiffEditorModel>();
 
   /** Emitted when the diff information computed by this diff editor has been updated. */
   readonly diffUpdate = output<CatbeeMonacoDiffEditorEvent>();
@@ -170,3 +167,19 @@ export class CatbeeMonacoDiffEditorComponent
     this.editorDiffUpdate.emit({ ...this.currentValue });
   }
 }
+
+/**
+ * @deprecated Use `CatbeeMonacoDiffEditor` instead.
+ *
+ * Old:
+ * ```ts
+ * import { CatbeeMonacoDiffEditorComponent } from '@ng-catbee/monaco-editor';
+ * ```
+ * New:
+ * ```ts
+ * import { CatbeeMonacoDiffEditor } from '@ng-catbee/monaco-editor';
+ * ```
+ *
+ * This alias will be removed in a future release.
+ */
+export const CatbeeMonacoDiffEditorComponent = CatbeeMonacoDiffEditor;
