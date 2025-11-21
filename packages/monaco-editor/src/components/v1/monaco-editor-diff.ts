@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, effect, forwardRef, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, forwardRef, input, model, output, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CatbeeMonacoEditorBase } from '../monaco-editor-base';
-import {
+import type {
   MonacoDiffEditor,
   MonacoDiffEditorOptions,
   CatbeeMonacoDiffEditorModel,
@@ -59,23 +59,28 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoEditorBase<MonacoDiffEdi
   /** Fires when the diff content changes (on either side). */
   readonly editorDiffUpdate = output<CatbeeMonacoDiffEditorEvent>();
 
-  /** Internal state for ControlValueAccessor. */
-  private currentValue: CatbeeMonacoDiffEditorModel = { original: '', modified: '' };
+  /** Internal state using signals for better reactivity. */
+  private readonly currentValue = signal<CatbeeMonacoDiffEditorModel>({ original: '', modified: '' });
+
+  /** Used by the ControlValueAccessor */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange = (_: CatbeeMonacoDiffEditorModel) => {};
+  /** Used by the ControlValueAccessor */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched = () => {};
 
   constructor() {
     super();
 
-    // React to language changes
     effect(() => {
       const lang = this.language();
-      if (!this._editor) return;
-      const originalModel = this._editor.getOriginalEditor().getModel();
-      const modifiedModel = this._editor.getModifiedEditor().getModel();
+      if (!this._editor()) return;
+      const originalModel = this._editor()!.getOriginalEditor().getModel();
+      const modifiedModel = this._editor()!.getModifiedEditor().getModel();
       if (originalModel) monaco.editor.setModelLanguage(originalModel, lang);
       if (modifiedModel) monaco.editor.setModelLanguage(modifiedModel, lang);
     });
+
     effect(() => {
       const editable = this.originalEditable();
       if (!this.editor) return;
@@ -84,7 +89,7 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoEditorBase<MonacoDiffEdi
   }
 
   get editor(): MonacoDiffEditor | null | undefined {
-    return this._editor;
+    return this._editor();
   }
 
   /** Initialize the Monaco Diff Editor */
@@ -97,74 +102,81 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoEditorBase<MonacoDiffEdi
 
     const model = this.model();
     const language = this.language();
+    const current = this.currentValue();
 
-    const originalValue = model?.original ?? this.currentValue.original ?? '';
-    const modifiedValue = model?.modified ?? this.currentValue.modified ?? '';
+    const originalValue = model?.original ?? current.original ?? '';
+    const modifiedValue = model?.modified ?? current.modified ?? '';
 
     const originalModel = monaco.editor.createModel(originalValue, language);
     const modifiedModel = monaco.editor.createModel(modifiedValue, language);
 
-    const editor = (this._editor = monaco.editor.createDiffEditor(this.el.nativeElement, options));
+    this._editor.set(monaco.editor.createDiffEditor(this.el.nativeElement, options));
+    const editor = this._editor()!;
 
     editor.setModel({ original: originalModel, modified: modifiedModel });
 
-    // Listen for changes on both editors
     editor.getOriginalEditor().onDidChangeModelContent(() => {
-      this.currentValue.original = editor.getOriginalEditor().getValue();
+      this.currentValue.update(v => ({ ...v, original: editor.getOriginalEditor().getValue() }));
       this.emitChange();
     });
 
     editor.getModifiedEditor().onDidChangeModelContent(() => {
-      this.currentValue.modified = editor.getModifiedEditor().getValue();
+      this.currentValue.update(v => ({ ...v, modified: editor.getModifiedEditor().getValue() }));
       this.emitChange();
     });
 
     editor.getModifiedEditor().onDidBlurEditorWidget(() => this.onTouched());
 
     editor.onDidUpdateDiff(() => {
-      this.editorDiffUpdate.emit({ ...this.currentValue });
+      this.editorDiffUpdate.emit({ ...this.currentValue() });
     });
 
-    this.registerResize();
-    init ? this.init.emit(editor) : this.reInit.emit(editor);
+    if (init) {
+      this.init.emit(editor);
+    } else {
+      this.reInit.emit(editor);
+    }
   }
 
   /** ControlValueAccessor: write value */
   writeValue(value: CatbeeMonacoDiffEditorModel | null): void {
     if (!value) return;
-    this.currentValue = { ...value };
+    this.currentValue.set({ ...value });
 
-    if (this._editor) {
-      this._editor
-        .getOriginalEditor()
-        ?.getModel()
-        ?.setValue(value.original ?? '');
-      this._editor
-        .getModifiedEditor()
-        ?.getModel()
-        ?.setValue(value.modified ?? '');
-    }
+    if (!this._editor()) return;
+
+    this._editor()!
+      .getOriginalEditor()
+      ?.getModel()
+      ?.setValue(value.original ?? '');
+    this._editor()!
+      .getModifiedEditor()
+      ?.getModel()
+      ?.setValue(value.modified ?? '');
   }
 
   /** ControlValueAccessor: register change handler */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
   /** ControlValueAccessor: register touch handler */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
   /** ControlValueAccessor: set disabled state */
   setDisabledState(isDisabled: boolean): void {
-    this._editor?.updateOptions({ readOnly: isDisabled });
+    this._editor()?.updateOptions({ readOnly: isDisabled });
   }
 
   /** Emit change to both form and output */
   private emitChange(): void {
-    this.onChange({ ...this.currentValue });
-    this.editorDiffUpdate.emit({ ...this.currentValue });
+    const value = this.currentValue();
+    this.onChange({ ...value });
+    this.editorDiffUpdate.emit({ ...value });
   }
 }
 
