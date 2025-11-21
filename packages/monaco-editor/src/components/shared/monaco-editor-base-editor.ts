@@ -147,30 +147,14 @@ export abstract class CatbeeMonacoEditorBaseEditor extends CatbeeMonacoEditorCom
     }
   }
 
-  /**
-   * Emits the appropriate init event (init or reInit).
-   * @param init - Whether this is the initial initialization
-   */
-  protected emitInitEvent(init: boolean): void {
-    if (init) {
-      this.init.emit(this._editor()!);
-    } else {
-      this.reInit.emit(this._editor()!);
-    }
-  }
-
-  /**
-   * Formats the document using Monaco's format action.
-   */
+  /** Formats the document using Monaco's format action. */
   protected async format(): Promise<void | null> {
     const action = this.editor?.getAction('editor.action.formatDocument');
     if (!action) return null;
     return action.run();
   }
 
-  /**
-   * Updates the placeholder widget based on current value and configuration.
-   */
+  /** Updates the placeholder widget based on current value and configuration. */
   protected updatePlaceholder(): void {
     const placeholder = this.placeholder();
     const editor = this.editor;

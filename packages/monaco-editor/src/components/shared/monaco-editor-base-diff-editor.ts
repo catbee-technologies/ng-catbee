@@ -46,11 +46,6 @@ export abstract class CatbeeMonacoDiffEditorBaseEditor extends CatbeeMonacoEdito
     });
   }
 
-  protected emitInitEvent(init: boolean): void {
-    if (init) this.init.emit(this._editor()!);
-    else this.reInit.emit(this._editor()!);
-  }
-
   protected createDiffModels(
     originalValue: string,
     modifiedValue: string,

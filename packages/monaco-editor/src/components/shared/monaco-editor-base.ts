@@ -87,7 +87,7 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
     domReadOnly: this.disabled()
   }));
 
-  private windowResize: Signal<void>;
+  private readonly windowResize: Signal<void>;
 
   constructor() {
     this._config.set({
@@ -125,6 +125,7 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
     setTimeout(() => this.initEditor(), +this.initDelay());
   }
 
+  /** Updates the editor options, re-initializing if necessary. */
   updateOptions(v: MonacoEditorOptions | undefined): void {
     if (!this._editor() || !v) return;
 
@@ -144,6 +145,7 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
     this.optionsChange.emit(v);
   }
 
+  /** Initializes the Monaco editor with the given options. */
   protected abstract initMonaco(options: MonacoEditorOptions | undefined, init: boolean): void;
 
   private initEditor(): void {
@@ -233,7 +235,17 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
     });
   }
 
-  reInitMonaco(options: MonacoEditorOptions | undefined): void {
+  /** Emits the appropriate init event (init or reInit). */
+  protected emitInitEvent(init: boolean): void {
+    if (init) {
+      this.init.emit(this._editor()!);
+    } else {
+      this.reInit.emit(this._editor()!);
+    }
+  }
+
+  /** Re-initializes the Monaco editor with new options. */
+  protected reInitMonaco(options: MonacoEditorOptions | undefined): void {
     this._editor()!.dispose();
     this.initMonaco(options, false);
     this.reInit.emit(this._editor() as T);

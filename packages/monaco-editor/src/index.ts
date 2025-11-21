@@ -6,3 +6,5 @@ export * from './types/monaco-editor.types';
 export * from './monaco-editor.module';
 export * from './components/v1/monaco-editor';
 export * from './components/v1/monaco-editor-diff';
+export * from './components/v2/monaco-editor';
+export * from './components/v2/monaco-editor-diff';
