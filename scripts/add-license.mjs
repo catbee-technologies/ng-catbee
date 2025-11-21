@@ -9,6 +9,10 @@ const includePaths = [
   './dist',
 ];
 
+const excludePaths = [
+  './dist/test-out',
+];
+
 // Extensions to include
 const includeExtensions = ['.js', '.ts', '.d.ts', '.mjs', '.cjs'];
 
@@ -44,7 +48,8 @@ function getFiles(dir) {
 
 // Check if file should be skipped
 function isExcluded(file) {
-  return excludePatterns.some(pattern => file.endsWith(pattern));
+  return excludePatterns.some(pattern => file.endsWith(pattern)) ||
+         excludePaths.some(excludePath => file.startsWith(path.resolve(excludePath)));
 }
 
 // Process files

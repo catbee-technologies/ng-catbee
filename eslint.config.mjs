@@ -38,11 +38,11 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: '^_'
         }
       ],
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-expressions": 'off',
-      "@angular-eslint/prefer-standalone": "off",
-      "@typescript-eslint/no-empty-function": "off",
-      "@angular-eslint/no-output-native": "off"
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-unused-expressions": "error",
+      "@angular-eslint/prefer-standalone": "warn",
+      "@typescript-eslint/no-empty-function": "error",
+      "@angular-eslint/no-output-native": "error"
     },
   },
   {
