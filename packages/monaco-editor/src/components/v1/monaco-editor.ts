@@ -5,6 +5,7 @@ import {
   effect,
   forwardRef,
   input,
+  model,
   output,
   untracked
 } from '@angular/core';
@@ -58,15 +59,15 @@ import {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CatbeeMonacoEditorComponent),
+      useExisting: forwardRef(() => CatbeeMonacoEditor),
       multi: true
     }
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEditor> implements ControlValueAccessor {
+export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> implements ControlValueAccessor {
   /** The editor model. */
-  readonly model = input<CatbeeMonacoEditorModel>();
+  readonly model = model<CatbeeMonacoEditorModel>();
   /** Whether to automatically format the document on save - default is `true`. */
   readonly autoFormat = input(true, { transform: booleanAttribute });
   /** The placeholder text to show when the editor is empty. */
@@ -244,3 +245,19 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
     }
   }
 }
+
+/**
+ * @deprecated Use `CatbeeMonacoEditor` instead.
+ *
+ * Old:
+ * ```ts
+ * import { CatbeeMonacoEditorComponent } from '@ng-catbee/monaco-editor';
+ * ```
+ * New:
+ * ```ts
+ * import { CatbeeMonacoEditor } from '@ng-catbee/monaco-editor';
+ * ```
+ *
+ * This alias will be removed in a future release.
+ */
+export const CatbeeMonacoEditorComponent = CatbeeMonacoEditor;
