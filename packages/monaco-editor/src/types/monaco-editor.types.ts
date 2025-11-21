@@ -236,12 +236,6 @@ export enum MonacoKeyMod {
 export type MonacoBuiltinTheme = monaco.editor.BuiltinTheme;
 /** Monaco Editor Theme Data */
 export type MonacoEditorCustomThemeData = monaco.editor.IStandaloneThemeData;
-/** Model for Catbee Monaco Editor Component */
-export interface CatbeeMonacoEditorModel {
-  value?: string;
-  language?: string;
-  uri?: monaco.Uri;
-}
 /** Model for Catbee Monaco Diff Editor Component */
 export interface CatbeeMonacoDiffEditorModel {
   original: string;

@@ -1,7 +1,6 @@
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 import {
   AfterViewInit,
-  booleanAttribute,
   Component,
   computed,
   DestroyRef,
@@ -9,21 +8,33 @@ import {
   ElementRef,
   inject,
   input,
-  numberAttribute,
+  model,
   OnDestroy,
   output,
-  PLATFORM_ID
+  PLATFORM_ID,
+  Signal,
+  signal
 } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { MonacoDiffEditor, MonacoEditor, MonacoEditorOptions } from '../types/monaco-editor.types';
-import { CATBEE_MONACO_EDITOR_GLOBAL_CONFIG, CatbeeMonacoEditorGlobalConfig } from '../monaco-editor.config';
+import { MonacoDiffEditor, MonacoEditor, MonacoEditorOptions } from '../../types/monaco-editor.types';
+import { CATBEE_MONACO_EDITOR_GLOBAL_CONFIG, CatbeeMonacoEditorGlobalConfig } from '../../monaco-editor.config';
 
 let loadedMonaco = false;
 let loadPromise: Promise<void>;
 
-@Component({ selector: 'ng-catbee-monaco-base', template: `` })
-export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiffEditor>
+@Component({
+  selector: 'ng-catbee-monaco-common-base',
+  template: ``,
+  host: {
+    '[style.display]': `'block'`,
+    '[style.height]': 'height()',
+    '[style.width]': 'width()',
+    '[class.catbee-monaco-editor]': 'true'
+  }
+})
+export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | MonacoDiffEditor>
   implements AfterViewInit, OnDestroy
 {
   protected readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -32,30 +43,32 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
   protected readonly destroy$ = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
 
-  private previousLanguage: string | undefined;
+  protected _editor = signal<T | null>(null);
+  protected _config = signal<CatbeeMonacoEditorGlobalConfig>({});
 
-  protected _editor?: T;
-  protected _resize$: Subscription | null = null;
-  protected _config: CatbeeMonacoEditorGlobalConfig;
+  private readonly previousOptions = signal<MonacoEditorOptions | undefined>(undefined);
+  protected readonly disabledByFormControl = signal<boolean>(false);
 
   /** The height of the editor. - default is `300px`. */
   readonly height = input('300px');
   /** The width of the editor. - default is `100%`. */
   readonly width = input('100%');
   /** The delay in milliseconds before initializing the editor. - default is `0`. */
-  readonly initDelay = input(0, { transform: numberAttribute });
+  readonly initDelay = input<number>(0);
   /** Whether the editor is disabled (read-only). - default is `false`. */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly disabled = input<boolean>(false);
   /** The options for the editor instance. */
-  readonly options = input<MonacoEditorOptions>();
+  readonly options = model<MonacoEditorOptions>();
+  /** Single language used for both sides of the diff. */
+  readonly language = model<string>('plaintext');
+
   /**
    * Whether to re-initialize the editor instance when options change. - default is `false`.
    * If set to `true`, the editor will be fully re-initialized on options change.
    * If set to `false`, only the options will be updated.
-   * By default, the editor will re-initialize only if the language option changes.
-   * Note: Some options (like language) may require re-initialization to take effect.
+   * Note: Some options may require re-initialization to take effect.
    */
-  readonly reInitOnOptionsChange = input(false, { transform: booleanAttribute });
+  readonly reInitOnOptionsChange = input<boolean>(false);
 
   /** Emitted when the editor is initialized. */
   readonly init = output<T>();
@@ -70,33 +83,63 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
 
   protected readonly computedOptions = computed<MonacoEditorOptions>(() => ({
     ...this.options(),
-    readOnly: this.disabled(),
-    domReadOnly: this.disabled()
+    language: this.language(),
+    readOnly: this.disabled() || this.disabledByFormControl(),
+    domReadOnly: this.disabled() || this.disabledByFormControl()
   }));
 
+  private windowResize: Signal<void>;
+
   constructor() {
-    this._config = {
+    this._config.set({
       baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor/min',
       autoFormatTime: 100,
       resizeDebounceTime: 100,
       ...this.config
-    };
+    });
+
+    this.windowResize = toSignal(
+      fromEvent(isPlatformServer(this.platformId) ? new EventTarget() : window, 'resize').pipe(
+        debounceTime(this._config().resizeDebounceTime ?? 100)
+      )
+    );
+
     effect(() => this.updateOptions(this.computedOptions()));
+
+    effect(() => {
+      this.windowResize();
+      const editor = this._editor();
+
+      if (!editor) return;
+
+      editor.layout();
+
+      const domNode = editor.getContainerDomNode();
+      const { clientWidth: width, clientHeight: height } = domNode;
+
+      this.editorResize.emit({ width, height });
+    });
   }
 
   ngAfterViewInit(): void {
-    this.previousLanguage = this.computedOptions()?.language;
+    this.previousOptions.set(this.computedOptions());
     setTimeout(() => this.initEditor(), +this.initDelay());
   }
 
   updateOptions(v: MonacoEditorOptions | undefined): void {
-    if (!this._editor || !v) return;
-    if (this.reInitOnOptionsChange() || this.previousLanguage !== v.language) {
+    if (!this._editor() || !v) return;
+
+    const prevOptions = this.previousOptions();
+    const optionsChanged = JSON.stringify(prevOptions) !== JSON.stringify(v);
+    if (!optionsChanged) return;
+
+    if (this.reInitOnOptionsChange()) {
       this.reInitMonaco(v);
     } else {
-      this._editor?.updateOptions(v);
+      this._editor()?.updateOptions(v);
     }
-    this.previousLanguage = v.language;
+
+    this.previousOptions.set(v);
     this.optionsChange.emit(v);
   }
 
@@ -121,13 +164,14 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
         return;
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const win = this.doc.defaultView as any;
       if (win.monaco) {
         resolve();
         return;
       }
 
-      let baseUrl = `${this._config.baseUrl}/vs`;
+      let baseUrl = `${this._config().baseUrl}/vs`;
       if (!/^https?:\/\//g.test(baseUrl)) {
         baseUrl = `${window.location.origin}/${baseUrl.startsWith('/') ? baseUrl.substring(1) : baseUrl}`;
       }
@@ -136,7 +180,7 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
         if (!win.require || typeof win.require.config !== 'function') {
           reject(
             new Error(
-              `Failed to initialize Monaco AMD loader. The loader script at "${baseUrl}/loader.js" did not define "require". Please verify that "config.baseUrl" ("${this._config.baseUrl}") points to a valid Monaco Editor distribution containing the /vs directory.`
+              `Failed to initialize Monaco AMD loader. The loader script at "${baseUrl}/loader.js" did not define "require". Please verify that "config.baseUrl" ("${this._config().baseUrl}") points to a valid Monaco Editor distribution containing the /vs directory.`
             )
           );
           return;
@@ -144,15 +188,15 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
 
         win.require.config({ paths: { vs: baseUrl } });
 
-        if (typeof this._config.monacoPreLoad === 'function') {
-          this._config.monacoPreLoad();
+        if (typeof this._config().monacoPreLoad === 'function') {
+          this._config()?.monacoPreLoad?.();
         }
 
         win.require(
           ['vs/editor/editor.main'],
           () => {
-            if (typeof this._config.monacoLoad === 'function') {
-              this._config.monacoLoad(win.monaco);
+            if (typeof this._config()?.monacoLoad === 'function') {
+              this._config()?.monacoLoad?.(win.monaco);
             }
             this.initMonaco(this.computedOptions(), true);
             resolve();
@@ -188,41 +232,12 @@ export abstract class CatbeeMonacoEditorBase<T extends MonacoEditor | MonacoDiff
     });
   }
 
-  private lastLayout?: { width: number; height: number };
-  protected registerResize(): this {
-    this.cleanResize();
-    this._resize$ = fromEvent(window, 'resize')
-      .pipe(debounceTime(this._config.resizeDebounceTime ?? 100))
-      .subscribe(() => {
-        if (!this._editor) return;
-
-        this._editor.layout();
-
-        const domNode = this._editor.getContainerDomNode();
-        const { clientWidth: width, clientHeight: height } = domNode;
-
-        if (!this.lastLayout || this.lastLayout.width !== width || this.lastLayout.height !== height) {
-          this.lastLayout = { width, height };
-          this.editorResize.emit(this.lastLayout);
-        }
-      });
-
-    return this;
-  }
-
-  protected cleanResize(): this {
-    this._resize$?.unsubscribe();
-    return this;
-  }
-
   reInitMonaco(options: MonacoEditorOptions | undefined): void {
-    this._editor!.dispose();
+    this._editor()!.dispose();
     this.initMonaco(options, false);
-    this.reInit.emit(this._editor as T);
   }
 
   ngOnDestroy(): void {
-    this.cleanResize();
-    this._editor?.dispose();
+    this._editor()?.dispose();
   }
 }
