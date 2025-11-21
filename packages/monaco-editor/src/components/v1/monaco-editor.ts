@@ -7,6 +7,7 @@ import {
   input,
   model,
   output,
+  signal,
   untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,7 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { take, timer } from 'rxjs';
 import { CatbeeMonacoEditorBase } from '../monaco-editor-base';
 import { PlaceholderWidget } from '../../utils/placeholder.utils';
-import {
+import type {
   MonacoEditor,
   CatbeeMonacoEditorModel,
   MonacoEditorOptions,
@@ -105,19 +106,30 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> imp
   /** Emitted when the content of the current model has changed. */
   readonly editorModelContentChange = output<MonacoModelContentChangedEvent>();
 
-  private editorValue = '';
+  // Use signal for editor value for better reactivity
+  private readonly editorValue = signal('');
   private placeholderWidget?: PlaceholderWidget;
 
   constructor() {
     super();
+
+    // React to placeholder changes
     effect(() => {
       const placeholder = this.placeholder();
       this.placeholderWidget?.update(placeholder);
     });
+
+    // React to model changes
     effect(() => {
       const model = this.model();
       if (!model) return;
       this.updateOptions(untracked(() => this.computedOptions()));
+    });
+
+    // Update placeholder when editor value changes
+    effect(() => {
+      this.editorValue();
+      this.updatePlaceholder();
     });
   }
 
@@ -130,25 +142,25 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> imp
       const model = monaco.editor.getModel(this.model()!.uri! || '');
       if (model) {
         options.model = model;
-        options.model.setValue(this.editorValue);
+        options.model.setValue(this.editorValue());
       } else {
         const { value, language, uri } = this.model()!;
-        options.model = monaco.editor.createModel(value || this.editorValue, language, uri);
+        options.model = monaco.editor.createModel(value || this.editorValue(), language, uri);
       }
-      this.editorValue = options.model.getValue();
+      this.editorValue.set(options.model.getValue());
     }
 
-    const editor = (this._editor = monaco.editor.create(this.el.nativeElement, options));
+    this._editor.set(monaco.editor.create(this.el.nativeElement, options));
+    const editor = this._editor()!;
 
     if (!hasModel) {
-      editor.setValue(this.editorValue);
+      editor.setValue(this.editorValue());
     }
 
     editor.onDidChangeModelContent(e => {
       const value = editor.getValue();
-      this.editorValue = value;
+      this.editorValue.set(value);
       this.onChange(value);
-      this.updatePlaceholder();
       this.editorModelContentChange.emit(e);
     });
     editor.onDidBlurEditorWidget(() => this.onTouched());
@@ -186,8 +198,8 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> imp
 
   /** Used by the ControlValueAccessor */
   writeValue(value: string): void {
-    this.editorValue = value || '';
-    this._editor?.setValue(this.editorValue);
+    this.editorValue.set(value || '');
+    this._editor()?.setValue(this.editorValue());
     if (this.autoFormat()) {
       this.format();
     }
@@ -209,11 +221,11 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> imp
   }
 
   get editor(): MonacoEditor | null | undefined {
-    return this._editor;
+    return this._editor();
   }
 
   private emitInitEvent(init: boolean) {
-    init ? this.init.emit(this._editor!) : this.reInit.emit(this._editor!);
+    init ? this.init.emit(this._editor()!) : this.reInit.emit(this._editor()!);
   }
 
   private async format(): Promise<void | null> {
@@ -225,7 +237,7 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBase<MonacoEditor> imp
   private updatePlaceholder() {
     const placeholder = this.placeholder();
     const editor = this.editor;
-    const value = this.editorValue ?? '';
+    const value = this.editorValue();
 
     if (!placeholder || !editor) return;
 
