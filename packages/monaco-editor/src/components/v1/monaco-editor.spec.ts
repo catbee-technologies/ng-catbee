@@ -417,8 +417,7 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
       it('should reuse existing model when available', async () => {
         const uriString = 'file:///v1-existing.js';
         const uri = monaco.Uri.parse(uriString);
-        const existingModel = monaco.editor.getModel(uri);
-        if (!existingModel) {
+        if (!monaco.editor.getModel(uri)) {
           monaco.editor.createModel('existing', 'javascript', uri);
         }
         const fixture = create(
