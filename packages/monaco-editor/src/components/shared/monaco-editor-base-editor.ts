@@ -1,21 +1,10 @@
-import {
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  forwardRef,
-  input,
-  output,
-  untracked
-} from '@angular/core';
+import { Component, effect, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { take, timer } from 'rxjs';
-import { CatbeeMonacoEditorBase } from './monaco-editor-base';
-import { PlaceholderWidget } from '../utils/placeholder.utils';
-import {
+import { CatbeeMonacoEditorCommonBase } from './monaco-editor-base';
+import { PlaceholderWidget } from '../../utils/placeholder.utils';
+import type {
   MonacoEditor,
-  CatbeeMonacoEditorModel,
   MonacoEditorOptions,
   MonacoEditorScrollEvent,
   MonacoEditorCursorPositionChangedEvent,
@@ -25,56 +14,22 @@ import {
   MonacoEditorKeyboardEvent,
   MonacoEditorPartialMouseEvent,
   MonacoModelContentChangedEvent
-} from '../types/monaco-editor.types';
+} from '../../types/monaco-editor.types';
 
-/** @ng-catbee: Monaco Editor Component - A powerful code editor component for Angular applications using Monaco Editor.
- *
- * ## Usage
- * ```html
- * <ng-catbee-monaco-editor
- *   [model]="{ value: code, language: 'typescript' }"
- *   [options]="{ theme: 'vs-dark' }"
- *   (init)="onInit($event)"
- * ></ng-catbee-monaco-editor>
- * ```
- * Or use with `ngModel`:
- * ```html
- * <ng-catbee-monaco-editor
- *   [(ngModel)]="code"
- *   [model]="{ language: 'typescript' }"
- * ></ng-catbee-monaco-editor>
- * ```
- */
-@Component({
-  selector: 'ng-catbee-monaco-editor',
-  template: ``,
-  exportAs: 'ngCatbeeMonacoEditor',
-  host: {
-    '[style.display]': `'block'`,
-    '[style.height]': 'height()',
-    '[style.width]': 'width()',
-    '[class.catbee-monaco-editor]': 'true'
-  },
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CatbeeMonacoEditorComponent),
-      multi: true
-    }
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEditor> implements ControlValueAccessor {
-  /** The editor model. */
-  readonly model = input<CatbeeMonacoEditorModel>();
+/** Common base class for Monaco Editor (both V1 and V2). */
+@Component({ selector: 'ng-catbee-monaco-editor-base', template: `` })
+export abstract class CatbeeMonacoEditorBaseEditor extends CatbeeMonacoEditorCommonBase<MonacoEditor> {
+  /** The URI of the editor model. */
+  readonly uri = input<monaco.Uri | string | undefined>();
   /** Whether to automatically format the document on save - default is `true`. */
-  readonly autoFormat = input(true, { transform: booleanAttribute });
+  readonly autoFormat = input<boolean>(true);
   /** The placeholder text to show when the editor is empty. */
   readonly placeholder = input<string | null>(null);
   /** The color of the placeholder text - default is `rgba(128, 128, 128, 0.6)`. */
   readonly placeholderColor = input<string>();
   /** Show placeholder when editor is empty but contains whitespace characters - default is `false`. */
-  readonly showPlaceholderOnWhiteSpace = input(false, { transform: booleanAttribute });
+  readonly showPlaceholderOnWhiteSpace = input<boolean>(false);
+
   /** Emitted when the text inside this editor gained focus (i.e. cursor starts blinking). */
   readonly editorFocus = output<void>();
   /** Emitted when the text inside this editor lost focus (i.e. cursor stops blinking). */
@@ -104,54 +59,65 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
   /** Emitted when the content of the current model has changed. */
   readonly editorModelContentChange = output<MonacoModelContentChangedEvent>();
 
-  private editorValue = '';
-  private placeholderWidget?: PlaceholderWidget;
+  protected placeholderWidget?: PlaceholderWidget;
 
   constructor() {
     super();
+
+    // Update placeholder when placeholder text changes
     effect(() => {
       const placeholder = this.placeholder();
       this.placeholderWidget?.update(placeholder);
     });
+
     effect(() => {
-      const model = this.model();
-      if (!model) return;
-      this.updateOptions(untracked(() => this.computedOptions()));
+      const lang = this.language();
+      if (!this._editor()) return;
+      const model = this._editor()!.getModel();
+      if (model) monaco.editor.setModelLanguage(model, lang);
     });
   }
 
-  /** Initialize the Monaco Editor instance with the provided options. */
-  protected initMonaco(options: MonacoEditorOptions, init: boolean): void {
-    const hasModel = !!this.model();
-    options = { ...this.config?.defaultOptions, ...options };
+  /**
+   * Gets the Monaco editor instance.
+   */
+  get editor(): MonacoEditor | null | undefined {
+    return this._editor();
+  }
 
-    if (hasModel) {
-      const model = monaco.editor.getModel(this.model()!.uri! || '');
-      if (model) {
-        options.model = model;
-        options.model.setValue(this.editorValue);
-      } else {
-        const { value, language, uri } = this.model()!;
-        options.model = monaco.editor.createModel(value || this.editorValue, language, uri);
+  /**
+   * Abstract method to get the current editor value.
+   * Must be implemented by subclasses (V1 and V2).
+   */
+  protected abstract getCurrentValue(): string;
+
+  /**
+   * Creates or retrieves a Monaco model for the editor.
+   * @param currentValue - The current value to set in the model
+   * @param options - Monaco editor options to update
+   */
+  protected createOrGetModel(currentValue: string, options: MonacoEditorOptions): void {
+    const uri = this.uri();
+    if (!uri) return;
+
+    const parsedUri = typeof uri === 'string' ? monaco.Uri.parse(uri) : uri;
+    const existingModel = monaco.editor.getModel(parsedUri);
+
+    if (existingModel) {
+      if (existingModel.getValue() !== currentValue) {
+        existingModel.setValue(currentValue);
       }
-      this.editorValue = options.model.getValue();
+      options.model = existingModel;
+    } else {
+      options.model = monaco.editor.createModel(currentValue, this.language(), parsedUri);
     }
+  }
 
-    const editor = (this._editor = monaco.editor.create(this.el.nativeElement, options));
-
-    if (!hasModel) {
-      editor.setValue(this.editorValue);
-    }
-
-    editor.onDidChangeModelContent(e => {
-      const value = editor.getValue();
-      this.editorValue = value;
-      this.onChange(value);
-      this.updatePlaceholder();
-      this.editorModelContentChange.emit(e);
-    });
-    editor.onDidBlurEditorWidget(() => this.onTouched());
-
+  /**
+   * Registers common Monaco editor event handlers.
+   * @param editor - The Monaco editor instance
+   */
+  protected registerEditorEvents(editor: MonacoEditor): void {
     editor.onDidBlurEditorText(() => this.editorBlur.emit());
     editor.onDidFocusEditorText(() => this.editorFocus.emit());
     editor.onDidChangeCursorPosition(e => this.editorCursorPositionChange.emit(e));
@@ -165,66 +131,34 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
     editor.onMouseUp(e => this.editorMouseUp.emit(e));
     editor.onMouseMove(e => this.editorMouseMove.emit(e));
     editor.onMouseLeave(e => this.editorMouseLeave.emit(e));
+  }
 
-    this.updatePlaceholder();
-    this.registerResize();
-
+  /**
+   * Handles auto-formatting if enabled, then emits init event.
+   * @param init - Whether this is the initial initialization
+   */
+  protected handleAutoFormat(init: boolean): void {
     if (this.autoFormat()) {
-      timer(this._config.autoFormatTime!)
+      timer(this._config().autoFormatTime!)
         .pipe(takeUntilDestroyed(this.destroy$), take(1))
         .subscribe(() => this.format()?.then(() => this.emitInitEvent(init)));
-      return;
-    }
-    this.emitInitEvent(init);
-  }
-
-  /** Used by the ControlValueAccessor */
-  private onChange = (_: string) => {};
-  /** Used by the ControlValueAccessor */
-  private onTouched = () => {};
-
-  /** Used by the ControlValueAccessor */
-  writeValue(value: string): void {
-    this.editorValue = value || '';
-    this._editor?.setValue(this.editorValue);
-    if (this.autoFormat()) {
-      this.format();
+    } else {
+      this.emitInitEvent(init);
     }
   }
 
-  /** Used by the ControlValueAccessor */
-  registerOnChange(fn: (_: string) => void): void {
-    this.onChange = fn;
-  }
-
-  /** Used by the ControlValueAccessor */
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  /** Used by the ControlValueAccessor */
-  setDisabledState(isDisabled: boolean): void {
-    this.updateOptions({ ...this.computedOptions(), readOnly: isDisabled, domReadOnly: isDisabled });
-  }
-
-  get editor(): MonacoEditor | null | undefined {
-    return this._editor;
-  }
-
-  private emitInitEvent(init: boolean) {
-    init ? this.init.emit(this._editor!) : this.reInit.emit(this._editor!);
-  }
-
-  private async format(): Promise<void | null> {
+  /** Formats the document using Monaco's format action. */
+  protected async format(): Promise<void | null> {
     const action = this.editor?.getAction('editor.action.formatDocument');
     if (!action) return null;
     return action.run();
   }
 
-  private updatePlaceholder() {
+  /** Updates the placeholder widget based on current value and configuration. */
+  protected updatePlaceholder(): void {
     const placeholder = this.placeholder();
     const editor = this.editor;
-    const value = this.editorValue ?? '';
+    const currentValue = this.getCurrentValue();
 
     if (!placeholder || !editor) return;
 
@@ -232,9 +166,10 @@ export class CatbeeMonacoEditorComponent extends CatbeeMonacoEditorBase<MonacoEd
       this.placeholderWidget = new PlaceholderWidget(editor, placeholder, this.placeholderColor());
     }
 
-    const trimmed = value.trim();
-    const shouldShow = value.length === 0 || (trimmed.length === 0 && this.showPlaceholderOnWhiteSpace());
+    const trimmed = currentValue.trim();
+    const shouldShow = currentValue.length === 0 || (trimmed.length === 0 && this.showPlaceholderOnWhiteSpace());
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const alreadyAttached = (editor as any)?._contentWidgets?.[this.placeholderWidget.getId()];
 
     if (shouldShow && !alreadyAttached) {
