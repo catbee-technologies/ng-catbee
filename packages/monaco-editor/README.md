@@ -85,6 +85,7 @@ export class AppModule {}
 
 ## ⚡ Quick Example
 
+### Using `ng-catbee-monaco-editor` with `ngModel`
 ```typescript
 import { Component } from '@angular/core';
 import { CatbeeMonacoEditor, MonacoEditorOptions, MonacoEditor, MonacoKeyMod, MonacoKeyCode } from '@ng-catbee/monaco-editor';
@@ -94,15 +95,22 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-root',
   imports: [CatbeeMonacoEditor, FormsModule],
   template: `
+    <-- Using [(ngModel)] -->
     <ng-catbee-monaco-editor
       [height]="'400px'"
       [width]="'100%'"
       [options]="options"
-      [(ngModel)]="code"  or [(value)]="code" or formControlName="code"
+      [(ngModel)]="code"
       [language]="'typescript'"
       [placeholder]="'Start typing your code here...'"
       (init)="onInit($event)"
       (optionsChange)="onOptionsChange($event)"
+    />
+
+    <-- Using [(value)] -->
+    <ng-catbee-monaco-editor
+      [(value)]="code"
+      [language]="'javascript'"
     />
   `,
 })
@@ -110,7 +118,7 @@ export class AppComponent {
   options: MonacoEditorOptions = {
     theme: 'vs-dark',
     automaticLayout: true,
-    minimap: { enabled: false }
+    minimap: { enabled: true }
   };
 
   code = `function hello() {\n  console.log('Hello, world!');\n}`;
@@ -125,6 +133,60 @@ export class AppComponent {
   onOptionsChange(newOptions: MonacoEditorOptions) {
     console.log('Editor options changed:', newOptions);
   }
+}
+```
+
+### Using `ng-catbee-monaco-editor` with Reactive Forms
+```typescript
+import { Component } from '@angular/core';
+import { CatbeeMonacoEditor } from '@ng-catbee/monaco-editor';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  imports: [CatbeeMonacoEditor, ReactiveFormsModule],
+  template: `
+    <form [formGroup]="form">
+      <ng-catbee-monaco-editor
+        formControlName="code"
+        [language]="'typescript'"
+      />
+    </form>
+  `,
+})
+export class AppComponent {
+  form = new FormGroup({
+    code: new FormControl(`function hello() {\n  console.log('Hello, world!');\n}`, [
+      Validators.required,
+      Validators.minLength(10)
+    ])
+  });
+}
+```
+
+### Using `ng-catbee-monaco-editor-v2` with Signal Forms(Angular v21+)
+```typescript
+import { Component } from '@angular/core';
+import { CatbeeMonacoEditorV2 } from '@ng-catbee/monaco-editor';
+import { Field, form, required, minLength } from '@angular/forms/signals';
+
+@Component({
+  selector: 'app-root',
+  imports: [CatbeeMonacoEditorV2, Field],
+  template: `
+    <ng-catbee-monaco-editor-v2
+      [field]="myForm"
+      [language]="'typescript'"
+    />
+  `,
+})
+export class AppComponent {
+  singleModel = signal(`function hello() {\n  console.log('Hello, world!');\n}`);
+
+  myForm = form(this.singleModel, (path)=> {
+    required(path, { message: 'Code is required'  });
+    minLength(path, 10, { message: 'Code must be at least 10 characters long' });
+  });
 }
 ```
 
