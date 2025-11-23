@@ -2,8 +2,7 @@
 
 ## Catbee Monaco Editor for Angular
 
-> A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both **single** and **diff** editors — fully compatible with Reactive Forms, Template-driven Forms, and custom data models.
-
+> A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both **single** and **diff** editors — fully compatible with Reactive Forms, Template-driven Forms, and Signal Forms.
 
 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">
   <img src="https://github.com/catbee-technologies/ng-catbee/actions/workflows/ci.yml/badge.svg?label=Build" alt="Build Status" />
@@ -31,19 +30,19 @@
 
 - 📝 **Single Editor**: Drop-in Monaco editor for Angular apps
 - 🔀 **Diff Editor**: Effortlessly compare code side-by-side
-- ⚙️ **Supports Reactive & Template-driven Forms**: (FormControl, ngModel)
+- ⚙️ **Supports Reactive, Template-driven & Signal Forms**: (FormControl, ngModel, Signal)
 - 🎨 **Customizable**: Language, theme, and editor settings
-- 💡 **Custom Model Binding**: ([model] input for flexibility)
 - 🎨 **Highly Configurable**: theme, language, layout, options
 - 🧠 **Full Type Safety**: with rich TypeScript definitions
 
 ## 🧩 Angular Compatibility
 
-| Angular Version | Supported |
-| ---------------- | --------- |
-| `v17` and above | ✅ Fully supported |
+| Angular Version | Supported                                                    |
+| --------------- | ------------------------------------------------------------ |
+| `v17` and above | ✅ Fully supported                                           |
+| `v20` & `v21`   | ✅ v21 release fully supports both Angular 20 and Angular 21 |
 
-This library is built and tested with Angular `20.3.0`, and supports all modern standalone-based Angular projects (v17+).
+This library is built and tested with Angular **20.3.0** and **21.x**, and supports all modern standalone-based Angular projects (v17+).
 
 ## 🛠️ Installation
 
@@ -88,18 +87,19 @@ export class AppModule {}
 
 ```typescript
 import { Component } from '@angular/core';
-import { CatbeeMonacoEditorComponent, MonacoEditorOptions, MonacoEditor, MonacoKeyMod, MonacoKeyCode } from '@ng-catbee/monaco-editor';
+import { CatbeeMonacoEditor, MonacoEditorOptions, MonacoEditor, MonacoKeyMod, MonacoKeyCode } from '@ng-catbee/monaco-editor';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [CatbeeMonacoEditorComponent, FormsModule],
+  imports: [CatbeeMonacoEditor, FormsModule],
   template: `
     <ng-catbee-monaco-editor
       [height]="'400px'"
       [width]="'100%'"
       [options]="options"
-      [(ngModel)]="code"
+      [(ngModel)]="code"  or [(value)]="code" or formControlName="code"
+      [language]="'typescript'"
       [placeholder]="'Start typing your code here...'"
       (init)="onInit($event)"
       (optionsChange)="onOptionsChange($event)"
@@ -108,7 +108,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   options: MonacoEditorOptions = {
-    language: 'typescript',
     theme: 'vs-dark',
     automaticLayout: true,
     minimap: { enabled: false }
