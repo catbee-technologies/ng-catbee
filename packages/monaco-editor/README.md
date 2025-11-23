@@ -23,8 +23,8 @@
 
 ## 📦 Demo
 
-- [Stackblitz](https://stackblitz.com/edit/ng-catbee-monaco-editor?file=src%2Fapp%2Fapp.component.ts)
-- [Codesandbox](https://codesandbox.io/p/sandbox/ng-catbee-monaco-editor-txmm59?file=%2Fsrc%2Fapp%2Fapp.component.ts)
+- [Stackblitz](https://stackblitz.com/edit/ng-catbee-monaco-editor-v21?file=src%2Fapp%2Fapp.component.ts)
+- [Codesandbox](https://codesandbox.io/p/devbox/ng-catbee-monaco-editor-forked-fs62z7?file=%2Fsrc%2Fapp%2Fapp.component.ts)
 
 ## ✨ Features
 
