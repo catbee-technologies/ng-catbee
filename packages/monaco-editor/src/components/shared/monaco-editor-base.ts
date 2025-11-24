@@ -43,8 +43,8 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
   protected readonly destroy$ = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
 
-  protected _editor = signal<T | null>(null);
-  protected _config = signal<CatbeeMonacoEditorGlobalConfig>({});
+  protected readonly _editor = signal<T | null>(null);
+  protected readonly _config = signal<CatbeeMonacoEditorGlobalConfig>({});
 
   private readonly previousOptions = signal<MonacoEditorOptions | undefined>(undefined);
   protected readonly disabledByFormControl = signal<boolean>(false);

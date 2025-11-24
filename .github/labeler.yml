@@ -32,7 +32,6 @@ security:
     - "^security/"
 
 # Folder based labels
-
 ci:
   - changed-files:
     - any-glob-to-any-file: ".github/workflows/**"
@@ -43,19 +42,65 @@ monaco-editor:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/**"
 
-monaco-editor-readme:
+monaco-editor/readme:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/README.md"
 
-test:
+monaco-editor/tests:
   - changed-files:
-    - any-glob-to-any-file: "**/*.spec.ts"
-  - head-branch:
-    - "^test/"
+    - any-glob-to-any-file: "packages/monaco-editor/**/*.spec.ts"
 
-readme:
+utils:
   - changed-files:
-    - any-glob-to-any-file: "README.md"
+    - any-glob-to-any-file: "packages/utils/**"
+
+utils/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/README.md"
+
+utils/components:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/components/**"
+    - any-glob-to-any-file: "packages/utils/**/*.component.ts"
+
+utils/directives:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/directives/**"
+    - any-glob-to-any-file: "packages/utils/**/*.directive.ts"
+
+utils/guards:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/guards/**"
+    - any-glob-to-any-file: "packages/utils/**/*.guard.ts"
+
+utils/interceptors:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/interceptors/**"
+    - any-glob-to-any-file: "packages/utils/**/*.interceptor.ts"
+
+utils/pipes:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/pipes/**"
+    - any-glob-to-any-file: "packages/utils/**/*.pipe.ts"
+
+utils/services:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/services/**"
+    - any-glob-to-any-file: "packages/utils/**/*.service.ts"
+
+utils/utils:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/utils/**"
+    - any-glob-to-any-file: "packages/utils/**/*.utils.ts"
+
+utils/modules:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/src/modules/**"
+    - any-glob-to-any-file: "packages/utils/**/*.module.ts"
+
+utils/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/**/*.spec.ts"
 
 changelog:
   - changed-files:

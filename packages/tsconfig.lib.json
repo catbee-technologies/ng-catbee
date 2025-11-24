@@ -1,13 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/lib",
+    "baseUrl": "./",
+    "outDir": "../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
     "types": []
   },
   "include": [
-    "src/**/*.ts"
+    "**/*.ts"
   ],
   "exclude": [
     "**/*.spec.ts"

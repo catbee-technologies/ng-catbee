@@ -1,17 +1,24 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import { join, dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
 
-const dtsFile = join('dist', '@ng-catbee', 'monaco-editor', 'types', 'ng-catbee-monaco-editor.d.ts');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT = resolve(__dirname, '..');
+
+const dtsFile = join(ROOT, 'dist', '@ng-catbee', 'monaco-editor', 'types', 'ng-catbee-monaco-editor.d.ts');
 const refLine = '/// <reference types="../monaco.d.ts" />\n';
 
 if (existsSync(dtsFile)) {
   const content = readFileSync(dtsFile, 'utf8');
+
   if (!content.startsWith(refLine)) {
     writeFileSync(dtsFile, refLine + content, 'utf8');
-    console.log('✅ Added monaco reference line to index.d.ts');
+    console.log('✅ Added monaco reference to .d.ts');
   } else {
-    console.log('ℹ️ monaco reference already present.');
+    console.log('ℹ Reference already present — no change.');
   }
+
 } else {
-  console.error('❌ index.d.ts not found at', dtsFile);
+  console.error('❌ .d.ts not found at:', dtsFile);
 }

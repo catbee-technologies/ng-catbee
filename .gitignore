@@ -43,3 +43,5 @@ __screenshots__/
 Thumbs.db
 
 *.tgz
+
+packages/**/src/package.json

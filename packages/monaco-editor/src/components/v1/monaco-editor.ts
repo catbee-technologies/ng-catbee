@@ -81,9 +81,9 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBaseEditor implements 
 
   /** Used by the ControlValueAccessor */
   /* eslint-disable @typescript-eslint/no-empty-function */
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   private onChange = (_: string) => {};
   private onTouched = () => {};
+  /* eslint-enable @typescript-eslint/no-empty-function */
   writeValue(value: string): void {
     this.value.set(value || '');
     this._editor()?.setValue(this.value());
@@ -94,15 +94,13 @@ export class CatbeeMonacoEditor extends CatbeeMonacoEditorBaseEditor implements 
   registerOnChange(fn: (_: string) => void): void {
     this.onChange = fn;
   }
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+  registerOnTouched(fn: unknown): void {
+    this.onTouched = fn as () => void;
   }
   setDisabledState(isDisabled: boolean): void {
     this.disabledByFormControl.set(isDisabled);
     this.options.update(prev => ({ ...prev, readOnly: isDisabled, domReadOnly: isDisabled }));
   }
-  /* eslint-enable @typescript-eslint/no-empty-function */
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**

@@ -28,7 +28,7 @@ body:
       label: Affected Package(s)
       options:
         - "@ng-catbee/monaco-editor"
-        # - "@ng-catbee/utils"
+        - "@ng-catbee/utils"
       multiple: true
     validations:
       required: true

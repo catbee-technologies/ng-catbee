@@ -46,11 +46,11 @@ jobs:
       - name: Run linting
         run: npm run lint
 
+      - name: Build all packages
+        run: npm run build
+
       - name: Run tests
         run: npm test
-
-      - name: Build application
-        run: npm run build
 
       - name: TypeScript type checking for all packages
         run: |
