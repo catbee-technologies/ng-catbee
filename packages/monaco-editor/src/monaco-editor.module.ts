@@ -3,8 +3,15 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CatbeeMonacoEditor } from './components/v1/monaco-editor';
 import { CATBEE_MONACO_EDITOR_GLOBAL_CONFIG, CatbeeMonacoEditorGlobalConfig } from './monaco-editor.config';
 import { CatbeeMonacoDiffEditor } from './components/v1/monaco-editor-diff';
+import { CatbeeMonacoEditorV2 } from './components/v2/monaco-editor';
+import { CatbeeMonacoDiffEditorV2 } from './components/v2/monaco-editor-diff';
 
-const components = [CatbeeMonacoEditor, CatbeeMonacoDiffEditor];
+const components = [
+  CatbeeMonacoEditor,
+  CatbeeMonacoDiffEditor,
+  CatbeeMonacoEditorV2,
+  CatbeeMonacoDiffEditorV2
+];
 
 /** @ng-catbee: Monaco Editor Module
  * ```typescript
