@@ -19,6 +19,16 @@ jobs:
   build:
     name: Build, Lint, Test, Type Check
     runs-on: ubuntu-latest
+    if: >
+      (
+        github.event_name != 'pull_request' ||
+        (
+          github.event.pull_request.draft == false &&
+          !contains(github.event.pull_request.title, 'WIP') &&
+          !contains(github.event.pull_request.title, 'Work in progress') &&
+          !contains(github.event.pull_request.title, '🚧')
+        )
+      )
 
     steps:
       - name: Checkout repository
