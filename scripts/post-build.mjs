@@ -42,7 +42,7 @@ async function run() {
     // REMOVE ALL FOLDERS EXCEPT: fesm2022 & types
     // ------------------------------------------------------------
 
-    const allowedFolders = ["fesm2022", "types"];
+    const allowedFolders = ["fesm2022", "types", "styles"];
 
     const distItems = await fs.readdir(distTarget);
     for (const item of distItems) {

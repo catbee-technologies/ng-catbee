@@ -60,9 +60,7 @@ declare namespace monaco {
     dispose(): void;
   }
 
-  export interface IEvent<T> {
-    (listener: (e: T) => any, thisArg?: any): IDisposable;
-  }
+  export type IEvent<T> = (listener: (e: T) => any, thisArg?: any) => IDisposable;
 
   /**
    * A helper that allows to emit and listen to typed events
@@ -483,9 +481,7 @@ declare namespace monaco {
     readonly supportThemeIcons?: boolean;
     readonly supportHtml?: boolean;
     readonly baseUri?: UriComponents;
-    uris?: {
-      [href: string]: UriComponents;
-    };
+    uris?: Record<string, UriComponents>;
   }
 
   export interface MarkdownStringTrustedOptions {
@@ -1210,9 +1206,7 @@ declare namespace monaco.editor {
     colors: IColors;
   }
 
-  export type IColors = {
-    [colorId: string]: string;
-  };
+  export type IColors = Record<string, string>;
 
   export interface ITokenThemeRule {
     token: string;
@@ -1452,9 +1446,7 @@ declare namespace monaco.editor {
     getOriginalEditor(): IStandaloneCodeEditor;
     getModifiedEditor(): IStandaloneCodeEditor;
   }
-  export interface ICommandHandler {
-    (...args: any[]): void;
-  }
+  export type ICommandHandler = (...args: any[]) => void;
   export interface ILocalizedString {
     original: string;
     value: string;
@@ -1475,12 +1467,10 @@ declare namespace monaco.editor {
     | boolean
     | number
     | string
-    | Array<null | undefined | boolean | number | string>
+    | (null | undefined | boolean | number | string)[]
     | Record<string, null | undefined | boolean | number | string>;
 
-  export interface IEditorOverrideServices {
-    [index: string]: any;
-  }
+  export type IEditorOverrideServices = Record<string, any>;
 
   export interface IMarker {
     owner: string;
@@ -1994,12 +1984,10 @@ declare namespace monaco.editor {
   /**
    * A callback that can compute the cursor state after applying a series of edit operations.
    */
-  export interface ICursorStateComputer {
-    /**
-     * A callback that can compute the resulting cursors state after some edit operations have been executed.
-     */
-    (inverseEditOperations: IValidEditOperation[]): Selection[] | null;
-  }
+  /**
+   * A callback that can compute the resulting cursors state after some edit operations have been executed.
+   */
+  export type ICursorStateComputer = (inverseEditOperations: IValidEditOperation[]) => Selection[] | null;
 
   export class TextModelResolvedOptions {
     _textModelResolvedOptionsBrand: void;
@@ -2728,9 +2716,7 @@ declare namespace monaco.editor {
   export interface ICodeEditorViewState {
     cursorState: ICursorState[];
     viewState: IViewState;
-    contributionsState: {
-      [id: string]: any;
-    };
+    contributionsState: Record<string, any>;
   }
 
   /**
@@ -6678,7 +6664,7 @@ declare namespace monaco.languages {
     readonly pattern: string;
   }
 
-  export type LanguageSelector = string | LanguageFilter | ReadonlyArray<string | LanguageFilter>;
+  export type LanguageSelector = string | LanguageFilter | readonly (string | LanguageFilter)[];
 
   export interface LanguageFilter {
     readonly language?: string;
@@ -7112,10 +7098,10 @@ declare namespace monaco.languages {
      * such as `["quickfix.removeLine", "source.fixAll" ...]`.
      */
     readonly providedCodeActionKinds?: readonly string[];
-    readonly documentation?: ReadonlyArray<{
+    readonly documentation?: readonly {
       readonly kind: string;
       readonly command: Command;
-    }>;
+    }[];
   }
 
   /**
@@ -7541,7 +7527,7 @@ declare namespace monaco.languages {
      * A modifier to the `kind` which affect how the item
      * is rendered, e.g. Deprecated is rendered with a strikeout
      */
-    tags?: ReadonlyArray<CompletionItemTag>;
+    tags?: readonly CompletionItemTag[];
     /**
      * A human-readable string with additional information
      * about this item, like type or symbol information.
@@ -7812,10 +7798,10 @@ declare namespace monaco.languages {
     readonly enableForwardStability?: boolean | undefined;
   }
 
-  export type InlineCompletionCommand = {
+  export interface InlineCompletionCommand {
     command: Command;
     icon?: editor.ThemeIcon;
-  };
+  }
 
   export type InlineCompletionProviderGroupId = string;
 
@@ -7881,9 +7867,9 @@ declare namespace monaco.languages {
     toString?(): string;
   }
 
-  export type InlineCompletionsDisposeReason = {
+  export interface InlineCompletionsDisposeReason {
     kind: 'lostRace' | 'tokenCancellation' | 'other' | 'empty' | 'notTaken';
-  };
+  }
 
   export enum InlineCompletionEndOfLifeReasonKind {
     Accepted = 0,
@@ -7904,7 +7890,7 @@ declare namespace monaco.languages {
         userTypingDisagreed: boolean;
       };
 
-  export type LifetimeSummary = {
+  export interface LifetimeSummary {
     requestUuid: string;
     correlationId: string | undefined;
     partiallyAccepted: number;
@@ -7936,7 +7922,7 @@ declare namespace monaco.languages {
     typingIntervalCharacterCount: number;
     selectedSuggestionInfo: boolean;
     availableProviders: string;
-  };
+  }
 
   export interface CodeAction {
     title: string;
@@ -7956,7 +7942,7 @@ declare namespace monaco.languages {
   }
 
   export interface CodeActionList extends IDisposable {
-    readonly actions: ReadonlyArray<CodeAction>;
+    readonly actions: readonly CodeAction[];
   }
 
   /**
@@ -8046,8 +8032,8 @@ declare namespace monaco.languages {
    * the [parameter hints](https://code.visualstudio.com/docs/editor/intellisense)-feature.
    */
   export interface SignatureHelpProvider {
-    readonly signatureHelpTriggerCharacters?: ReadonlyArray<string>;
-    readonly signatureHelpRetriggerCharacters?: ReadonlyArray<string>;
+    readonly signatureHelpTriggerCharacters?: readonly string[];
+    readonly signatureHelpRetriggerCharacters?: readonly string[];
     /**
      * Provide help for the signature at the given position and document.
      */
@@ -8346,7 +8332,7 @@ declare namespace monaco.languages {
     name: string;
     detail: string;
     kind: SymbolKind;
-    tags: ReadonlyArray<SymbolTag>;
+    tags: readonly SymbolTag[];
     containerName?: string;
     range: IRange;
     selectionRange: IRange;
@@ -8665,7 +8651,7 @@ declare namespace monaco.languages {
   }
 
   export interface WorkspaceEdit {
-    edits: Array<IWorkspaceTextEdit | IWorkspaceFileEdit | ICustomEdit>;
+    edits: (IWorkspaceTextEdit | IWorkspaceFileEdit | ICustomEdit)[];
   }
 
   export interface ICustomEdit {
@@ -8861,9 +8847,7 @@ declare namespace monaco.languages {
     /**
      * map from string to ILanguageRule[]
      */
-    tokenizer: {
-      [name: string]: IMonarchLanguageRule[];
-    };
+    tokenizer: Record<string, IMonarchLanguageRule[]>;
     /**
      * is the language case insensitive?
      */
@@ -8943,7 +8927,7 @@ declare namespace monaco.languages {
     /**
      * map from string to ILanguageAction
      */
-    cases?: Object;
+    cases?: object;
     /**
      * token class (ie. css class) (or "@brackets" or "@rematch")
      */
@@ -9180,9 +9164,7 @@ declare namespace monaco.languages.css {
     /**
      * Provides a set of custom data providers.
      */
-    dataProviders?: {
-      [providerId: string]: CSSDataV1;
-    };
+    dataProviders?: Record<string, CSSDataV1>;
   }
   /**
    * Custom CSS properties, at-directives, pseudoClasses and pseudoElements
@@ -9266,9 +9248,7 @@ declare namespace monaco.languages.html {
     readonly extraLiners: string;
     readonly wrapAttributes: 'auto' | 'force' | 'force-aligned' | 'force-expand-multiline';
   }
-  export interface CompletionConfiguration {
-    readonly [providerId: string]: boolean;
-  }
+  export type CompletionConfiguration = Readonly<Record<string, boolean>>;
   export interface Options {
     /**
      * Settings for the HTML formatter.
@@ -9370,9 +9350,7 @@ declare namespace monaco.languages.html {
     /**
      * Provides a set of custom data providers.
      */
-    readonly dataProviders?: {
-      [providerId: string]: HTMLDataV1;
-    };
+    readonly dataProviders?: Record<string, HTMLDataV1>;
   }
   /**
    * Custom HTML tags attributes and attribute values
@@ -9473,14 +9451,12 @@ declare namespace monaco.languages.json {
     | NumberASTNode
     | BooleanASTNode
     | NullASTNode;
-  export type JSONDocument = {
+  export interface JSONDocument {
     root: ASTNode | undefined;
     getNodeFromOffset(offset: number, includeRightBound?: boolean): ASTNode | undefined;
-  };
-  export type JSONSchemaRef = JSONSchema | boolean;
-  export interface JSONSchemaMap {
-    [name: string]: JSONSchemaRef;
   }
+  export type JSONSchemaRef = JSONSchema | boolean;
+  export type JSONSchemaMap = Record<string, JSONSchemaRef>;
   export interface JSONSchema {
     id?: string;
     $id?: string;
@@ -9488,20 +9464,14 @@ declare namespace monaco.languages.json {
     type?: string | string[];
     title?: string;
     default?: any;
-    definitions?: {
-      [name: string]: JSONSchema;
-    };
+    definitions?: Record<string, JSONSchema>;
     description?: string;
     properties?: JSONSchemaMap;
     patternProperties?: JSONSchemaMap;
     additionalProperties?: boolean | JSONSchemaRef;
     minProperties?: number;
     maxProperties?: number;
-    dependencies?:
-      | JSONSchemaMap
-      | {
-          [prop: string]: string[];
-        };
+    dependencies?: JSONSchemaMap | Record<string, string[]>;
     items?: JSONSchemaRef | JSONSchemaRef[];
     minItems?: number;
     maxItems?: number;
@@ -9708,9 +9678,7 @@ declare namespace monaco.languages.typescript {
     Classic = 1,
     NodeJs = 2
   }
-  interface MapLike<T> {
-    [index: string]: T;
-  }
+  type MapLike<T> = Record<string, T>;
   type CompilerOptionsValue =
     | string
     | number
@@ -9831,9 +9799,7 @@ declare namespace monaco.languages.typescript {
     content: string;
     version: number;
   }
-  export interface IExtraLibs {
-    [path: string]: IExtraLib;
-  }
+  export type IExtraLibs = Record<string, IExtraLib>;
   /**
    * A linked list of formatted diagnostic messages to be used as part of a multiline message.
    * It is built from the bottom up, leaving the head to be the "main" diagnostic.
@@ -10056,12 +10022,12 @@ declare namespace monaco.languages.typescript {
       fileName: string,
       position: number,
       filesToSearch: string[]
-    ): Promise<ReadonlyArray<any> | undefined>;
+    ): Promise<readonly any[] | undefined>;
     /**
      * Get the definition of the item at the given position in the file.
      * @returns `Promise<ReadonlyArray<typescript.DefinitionInfo> | undefined>`
      */
-    getDefinitionAtPosition(fileName: string, position: number): Promise<ReadonlyArray<any> | undefined>;
+    getDefinitionAtPosition(fileName: string, position: number): Promise<readonly any[] | undefined>;
     /**
      * Get references to the item at the given position in the file.
      * @returns `Promise<typescript.ReferenceEntry[] | undefined>`
@@ -10123,13 +10089,13 @@ declare namespace monaco.languages.typescript {
       end: number,
       errorCodes: number[],
       formatOptions: any
-    ): Promise<ReadonlyArray<any>>;
+    ): Promise<readonly any[]>;
     /**
      * Get inlay hints in the range of the file.
      * @param fileName
      * @returns `Promise<typescript.InlayHint[]>`
      */
-    provideInlayHints(fileName: string, start: number, end: number): Promise<ReadonlyArray<any>>;
+    provideInlayHints(fileName: string, start: number, end: number): Promise<readonly any[]>;
   }
   export const typescriptVersion: string;
   export const typescriptDefaults: LanguageServiceDefaults;
