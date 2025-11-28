@@ -7,7 +7,7 @@ A collection of Angular libraries developed and maintained by the Catbee team.
 - `@ng-catbee/utils`: A modern Angular utility library providing a collection of helpful functions and services.
 - `@ng-catbee/monaco-editor`: Angular components and services for integrating the Monaco Editor into Angular applications.
 - `@ng-catbee/loader`: An Angular library for displaying loading indicators and spinners.
-- `@ng-catbee/jwt`: An Angular library for handling JSON Web Tokens (JWT) in client-side applications.
+- `@ng-catbee/jwt`: A modern, type-safe Angular library for decoding, validating, and managing JSON Web Tokens (JWT) in client-side applications — fully compatible with Server-Side Rendering (SSR) and offering comprehensive token utilities including expiration tracking, claim extraction, and reactive observables.
 - `@ng-catbee/storage`: An Angular library for simplified interaction with web storage APIs (localStorage and sessionStorage) and SSR support.
 - `@ng-catbee/cookie`: A modern, type-safe Angular library for managing browser cookies with ease — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, and enum validation.
 - `@ng-catbee/indexed-db`: An Angular library for IndexedDB operations.
