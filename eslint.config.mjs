@@ -1,3 +1,4 @@
+import eslintPluginAngular from '@angular-eslint/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
 import eslint from '@eslint/js';
@@ -5,7 +6,7 @@ import eslint from '@eslint/js';
 export default tseslint.config(
   {
     files: ["**/*.ts"],
-    ignores: ["**/*.spec.ts", "packages/monaco-editor/monaco.d.ts"],
+    ignores: ["**/*.spec.ts", "packages/monaco-editor/**/monaco.d.ts"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -18,7 +19,7 @@ export default tseslint.config(
         "error",
         {
           type: "attribute",
-          prefix: "ng-catbee",
+          prefix: "",
           style: "camelCase",
         },
       ],
@@ -42,8 +43,12 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-expressions": "error",
       "@angular-eslint/prefer-standalone": "warn",
       "@typescript-eslint/no-empty-function": "error",
-      "@angular-eslint/no-output-native": "error"
+      "@angular-eslint/no-output-native": "error",
+      '@angular-eslint/prefer-signals': 'error', 
     },
+    plugins: {
+      '@angular-eslint': eslintPluginAngular,
+    }
   },
   {
     files: ["**/*.html"],

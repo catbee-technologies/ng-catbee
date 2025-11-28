@@ -43,19 +43,13 @@ monaco-editor:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/**"
 
-monaco-editor-readme:
+monaco-editor/readme:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/README.md"
 
-test:
+monaco-editor/tests:
   - changed-files:
-    - any-glob-to-any-file: "**/*.spec.ts"
-  - head-branch:
-    - "^test/"
-
-readme:
-  - changed-files:
-    - any-glob-to-any-file: "README.md"
+    - any-glob-to-any-file: "packages/monaco-editor/**/*.spec.ts"
 
 changelog:
   - changed-files:

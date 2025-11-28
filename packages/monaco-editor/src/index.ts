@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../monaco.d.ts" preserve="true" />
+/// <reference path="./monaco.d.ts" preserve="true" />
 
 export * from './monaco-editor.config';
 export * from './types/monaco-editor.types';
