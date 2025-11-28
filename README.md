@@ -10,7 +10,7 @@ A collection of Angular libraries developed and maintained by the Catbee team.
 - `@ng-catbee/jwt`: A modern, type-safe Angular library for decoding, validating, and managing JSON Web Tokens (JWT) in client-side applications — fully compatible with Server-Side Rendering (SSR) and offering comprehensive token utilities including expiration tracking, claim extraction, and reactive observables.
 - `@ng-catbee/storage`: A modern, type-safe Angular library for simplified interaction with web storage APIs (localStorage and sessionStorage) — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, enum validation, reactive observables, and configurable encoding strategies.
 - `@ng-catbee/cookie`: A modern, type-safe Angular library for managing browser cookies with ease — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, and enum validation.
-- `@ng-catbee/indexed-db`: An Angular library for IndexedDB operations.
+- `@ng-catbee/indexed-db`: A comprehensive, type-safe Angular library for IndexedDB operations — providing full CRUD functionality, advanced querying with indexes and cursors, bulk operations, database migrations, and reactive RxJS observables, SSR safe.
 
 ## Project Structure
 - `packages/`: Contains individual Angular libraries.
