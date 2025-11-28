@@ -23,6 +23,14 @@
     "add-monaco-ref": "node ../../scripts/add-monaco-ref.mjs",
     "add-license": "node ../../scripts/add-license.mjs"
   },
+  "optionalDependencies": {
+    "@ng-catbee/storage": "*",
+    "@ng-catbee/cookie": "*",
+    "@ng-catbee/indexed-db": "*",
+    "@ng-catbee/loader": "*",
+    "@ng-catbee/jwt": "*",
+    "@ng-catbee/monaco-editor": "*"
+  },
   "keywords": [
     "angular",
     "utils",
