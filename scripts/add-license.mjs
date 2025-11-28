@@ -1,16 +1,21 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT = path.resolve(__dirname, '..');
 
 // Path to LICENSE file
-const licensePath = path.resolve('./LICENSE');
+const licensePath = path.join(ROOT, 'LICENSE');
 
 // Directories/files to include
 const includePaths = [
-  './dist',
+  path.join(ROOT, 'dist'),
 ];
 
 const excludePaths = [
-  './dist/test-out',
+  path.join(ROOT, 'dist/test-out'),
 ];
 
 // Extensions to include
@@ -49,31 +54,23 @@ function getFiles(dir) {
 // Check if file should be skipped
 function isExcluded(file) {
   return excludePatterns.some(pattern => file.endsWith(pattern)) ||
-         excludePaths.some(excludePath => file.startsWith(path.resolve(excludePath)));
+    excludePaths.some(excludePath => file.startsWith(excludePath));
 }
 
 // Process files
 for (const basePath of includePaths) {
-  const absBase = path.resolve(basePath);
-  if (!fs.existsSync(absBase)) continue;
-
-  const files = getFiles(absBase).filter(file => 
+  const files = getFiles(basePath).filter(file =>
     includeExtensions.some(ext => file.endsWith(ext)) && !isExcluded(file)
   );
 
   for (const filePath of files) {
     const content = fs.readFileSync(filePath, 'utf-8');
-
     // Skip if license is already present
     if (content.startsWith('/*\n * The MIT License')) {
-      console.log(`LICENSE already present in ${filePath}`);
+      console.log(`✔ LICENSE already present in ${filePath} - skipping.`);
       continue;
     }
-
     fs.writeFileSync(filePath, formattedLicense + '\n' + content, 'utf-8');
-
-    console.log(`LICENSE attached to ${filePath}`);
+    console.log(`✔ LICENSE attached to ${filePath}`);
   }
 }
-
-console.log('✅ LICENSE attachment completed.');

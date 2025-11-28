@@ -7,16 +7,17 @@
       "projectType": "library",
       "root": "packages/monaco-editor",
       "sourceRoot": "packages/monaco-editor/src",
-      "prefix": "lib",
+      "prefix": "ng-catbee",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "packages/monaco-editor/tsconfig.lib.prod.json"
+              "project": "packages/monaco-editor/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "packages/monaco-editor/tsconfig.lib.json"
+              "tsConfig": "packages/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,7 +28,7 @@
             "karmaConfig": "karma.config.mjs",
             "codeCoverage": true,
             "codeCoverageExclude": [],
-            "tsConfig": "packages/monaco-editor/tsconfig.spec.json",
+            "tsConfig": "packages/tsconfig.spec.json",
             "assets": [
               {
                 "glob": "**/*",

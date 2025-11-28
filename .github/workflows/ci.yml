@@ -46,15 +46,16 @@ jobs:
       - name: Run linting
         run: npm run lint
 
+      - name: Build all packages
+        run: npm run build
+
       - name: Run tests
         run: npm test
 
-      - name: Build application
-        run: npm run build
-
-      - name: TypeScript type checking for all packages
+      - name: TypeScript type checking
         run: |
-          for config in packages/*/tsconfig*.json; do
+          npx tsc --noEmit
+          for config in packages/tsconfig*.json; do
             echo "Running TypeScript check for $config..."
             npx tsc --noEmit -p "$config"
           done

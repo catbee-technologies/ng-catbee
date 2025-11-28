@@ -12,6 +12,13 @@
   "bugs": {
     "url": "https://github.com/catbee-technologies/ng-catbee/issues"
   },
+  "scripts": {
+    "prebuild": "node ./scripts/prebuild.mjs",
+    "build": "ng build monaco-editor",
+    "postbuild": "node ../../scripts/post-build.mjs && npm run add-monaco-ref && npm run add-license",
+    "add-monaco-ref": "node ../../scripts/add-monaco-ref.mjs",
+    "add-license": "node ../../scripts/add-license.mjs"
+  },
   "keywords": [
     "angular",
     "monaco-editor",

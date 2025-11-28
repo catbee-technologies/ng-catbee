@@ -2,10 +2,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "esModuleInterop": true,
+    "baseUrl": "./",
     "paths": {
-      "monaco-editor": [
-        "./dist/@ng-catbee/monaco-editor"
-      ]
+      "@ng-catbee/monaco-editor/*": ["./packages/monaco-editor/src/index"]
     },
     "strict": true,
     "noImplicitOverride": true,
@@ -25,15 +24,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-    "strictTemplates": true
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./packages/monaco-editor/tsconfig.lib.json"
-    },
-    {
-      "path": "./packages/monaco-editor/tsconfig.spec.json"
-    }
-  ]
+    "strictTemplates": true,
+    "strictStandalone": true
+  }
 }

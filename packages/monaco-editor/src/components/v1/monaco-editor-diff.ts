@@ -98,9 +98,9 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoDiffEditorBaseEditor imp
 
   /** Used by the ControlValueAccessor */
   /* eslint-disable @typescript-eslint/no-empty-function */
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   private onChange = (_: CatbeeMonacoDiffEditorModel) => {};
   private onTouched = () => {};
+  /* eslint-enable @typescript-eslint/no-empty-function */
   writeValue(value: CatbeeMonacoDiffEditorModel | null): void {
     if (!value) return;
     this.currentValue.set({ ...value });
@@ -112,11 +112,11 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoDiffEditorBaseEditor imp
     originalModel?.setValue(value.original ?? '');
     modifiedModel?.setValue(value.modified ?? '');
   }
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
+  registerOnChange(fn: unknown): void {
+    this.onChange = fn as (_: CatbeeMonacoDiffEditorModel) => void;
   }
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+  registerOnTouched(fn: unknown): void {
+    this.onTouched = fn as () => void;
   }
   setDisabledState(isDisabled: boolean): void {
     this.disabledByFormControl.set(isDisabled);
@@ -127,8 +127,6 @@ export class CatbeeMonacoDiffEditor extends CatbeeMonacoDiffEditorBaseEditor imp
       originalEditable: this.originalEditable()
     }));
   }
-  /* eslint-enable @typescript-eslint/no-empty-function */
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**

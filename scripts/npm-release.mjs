@@ -75,7 +75,7 @@ if (allowedBumps.includes(bump)) {
 
   if (dryRunMode) {
     newVersion = execSync(cmd + ' --json', { encoding: 'utf8' });
-    console.log(`✅ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️ ${newVersion}`);
+    console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️ ${newVersion}`);
     execSync(`git checkout -- ${pkgJsonPath}`);
     process.exit(0);
   } else {
@@ -88,7 +88,7 @@ if (allowedBumps.includes(bump)) {
     pkgJson.version = newVersion;
     fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
   } else {
-    console.log(`✅ [DRY-RUN] ${pkgName} would be set from ${currentVersion} ➡️ ${newVersion}`);
+    console.log(`✔ [DRY-RUN] ${pkgName} would be set from ${currentVersion} ➡️ ${newVersion}`);
     process.exit(0);
   }
 }

@@ -22,6 +22,12 @@ A collection of Angular libraries developed and maintained by the Catbee team.
 ## Getting Started
 To get started with any of the libraries, navigate to the respective package directory in `packages/` and follow the README instructions provided there.
 
+## Creating a New Library
+To create a new Angular library within this workspace, use the Angular CLI command:
+```bash
+ng generate library <library-name>
+```
+
 ## Building
 To build all libraries in the workspace, use the following command:
 ```bash
@@ -80,7 +86,7 @@ npm run release:<library-name> <version>
 ## PreReleases
 To create a prerelease version of a library, use the following command:
 ```bash
-npm run pre:release:<library-name> <prerelease-identifier>
+npm run release:<library-name> prepatch|preminor|premajor|prerelease <prerelease-identifier>
 ```
 
 ### Examples
