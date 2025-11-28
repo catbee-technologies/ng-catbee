@@ -5,6 +5,11 @@ on:
     tags:
       - 'utils@v*.*.*'
       - 'monaco-editor@v*.*.*'
+      - 'loader@v*.*.*'
+      - 'jwt@v*.*.*'
+      - 'storage@v*.*.*'
+      - 'cookie@v*.*.*'
+      - 'indexed-db@v*.*.*'
   workflow_dispatch:
 
 permissions:
@@ -34,7 +39,7 @@ jobs:
           echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
 
       - name: Build the selected package
-        run: npm run build $PACKAGE
+        run: npm run build:$PACKAGE
 
       - name: Clean package.json before publishing
         run: |

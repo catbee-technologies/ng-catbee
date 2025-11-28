@@ -44,7 +44,253 @@
             "fix": true,
             "lintFilePatterns": [
               "packages/**/*.html",
-              "packages/**/*.scss",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "utils": {
+      "projectType": "library",
+      "root": "packages/utils",
+      "sourceRoot": "packages/utils/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/utils/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "loader": {
+      "projectType": "library",
+      "root": "packages/loader",
+      "sourceRoot": "packages/loader/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/loader/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "jwt": {
+      "projectType": "library",
+      "root": "packages/jwt",
+      "sourceRoot": "packages/jwt/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/jwt/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "storage": {
+      "projectType": "library",
+      "root": "packages/storage",
+      "sourceRoot": "packages/storage/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/storage/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "cookie": {
+      "projectType": "library",
+      "root": "packages/cookie",
+      "sourceRoot": "packages/cookie/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/cookie/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
+              "packages/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
+    "indexed-db": {
+      "projectType": "library",
+      "root": "packages/indexed-db",
+      "sourceRoot": "packages/indexed-db/src",
+      "prefix": "ng-catbee",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "project": "packages/indexed-db/src/ng-package.json",
+              "tsConfig": "packages/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "packages/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "karmaConfig": "karma.config.mjs",
+            "codeCoverage": true,
+            "codeCoverageExclude": [],
+            "tsConfig": "packages/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "fix": true,
+            "lintFilePatterns": [
+              "packages/**/*.html",
+              "packages/**/*.css",
               "packages/**/*.ts"
             ]
           }
