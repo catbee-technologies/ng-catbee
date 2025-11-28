@@ -1,0 +1,62 @@
+.catbee-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 200ms ease-in;
+  width: fit-content;
+}
+
+.catbee-loader.catbee-loader-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.catbee-loader.catbee-loader-overlay.fading-out {
+  animation: fadeOut 200ms ease-out forwards;
+}
+
+.catbee-loader-overlay.fullscreen {
+  position: fixed;
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.ng-catbee-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.ng-catbee-loader-message {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  color: inherit;
+  max-width: 20rem;
+}
+
+.catbee-loader-block-scroll {
+  overflow: hidden !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
