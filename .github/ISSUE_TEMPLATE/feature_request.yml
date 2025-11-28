@@ -27,8 +27,14 @@ body:
     attributes:
       label: Affected Package(s)
       options:
+        - "All Packages"
+        - "@ng-catbee/utils"
         - "@ng-catbee/monaco-editor"
-        # - "@ng-catbee/utils"
+        - "@ng-catbee/loader"
+        - "@ng-catbee/jwt"
+        - "@ng-catbee/storage"
+        - "@ng-catbee/cookie"
+        - "@ng-catbee/indexed-db"
       multiple: true
     validations:
       required: true

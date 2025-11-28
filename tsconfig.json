@@ -4,7 +4,14 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "paths": {
-      "@ng-catbee/monaco-editor/*": ["./packages/monaco-editor/src/index"]
+      "@ng-catbee/utils/types/*": ["./packages/utils/src/types/index"],
+      "@ng-catbee/utils/*": ["./packages/utils/src/*/index", "./packages/utils/src/*"],
+      "@ng-catbee/monaco-editor/*": ["./packages/monaco-editor/src/index"],
+      "@ng-catbee/loader/*": ["./packages/loader/src/index"],
+      "@ng-catbee/jwt/*": ["./packages/jwt/src/index"],
+      "@ng-catbee/storage/*": ["./packages/storage/src/index"],
+      "@ng-catbee/cookie/*": ["./packages/cookie/src/index"],
+      "@ng-catbee/indexed-db/*": ["./packages/indexed-db/src/index"]
     },
     "strict": true,
     "noImplicitOverride": true,

@@ -33,13 +33,13 @@ async function run() {
 
     // Copy LICENSE
     await fs.copy(licensePath, path.join(distTarget, "LICENSE"));
-    console.log(`✔ Copied LICENSE → @ng-catbee/${name}`);
+    // console.log(`✔ Copied LICENSE → @ng-catbee/${name}`);
 
     // Copy README if exists
     const readmePath = path.join(pkgDir, "README.md");
     if (fs.existsSync(readmePath)) {
       await fs.copy(readmePath, path.join(distTarget, "README.md"));
-      console.log(`✔ Copied README.md → @ng-catbee/${name}`);
+      // console.log(`✔ Copied README.md → @ng-catbee/${name}`);
     }
 
     // Cleanup dist folder: remove unwanted files/folders
