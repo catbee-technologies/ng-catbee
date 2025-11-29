@@ -1,0 +1,36 @@
+{
+  "name": "@ng-catbee/loader",
+  "version": "0.0.1",
+  "author": "Hari G <hprasath.dev@gmail.com>",
+  "description": "An Angular library for displaying loading indicators and spinners.",
+  "license": "MIT",
+  "homepage": "https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/intro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catbee-technologies/ng-catbee.git"
+  },
+  "bugs": {
+    "url": "https://github.com/catbee-technologies/ng-catbee/issues"
+  },
+  "scripts": {
+    "prebuild": "node ./scripts/prebuild.mjs",
+    "build": "ng build loader",
+    "postbuild": "node ../../scripts/post-build.mjs && npm run add-license",
+    "add-monaco-ref": "node ../../scripts/add-monaco-ref.mjs",
+    "add-license": "node ../../scripts/add-license.mjs"
+  },
+  "keywords": [
+    "angular",
+    "loader",
+    "loading",
+    "spinner",
+    "catbee",
+    "ng-catbee",
+    "ng-catbee-loader",
+    "angular library",
+    "angular component",
+    "angular standalone",
+    "loading indicators"
+  ],
+  "sideEffects": false
+}

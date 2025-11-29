@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/@ng-catbee/loader",
+  "deleteDestPath": true,
+  "lib": {
+    "entryFile": "index.ts"
+  },
+  "assets": [
+    "css"
+  ]
+}

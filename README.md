@@ -4,7 +4,13 @@
 A collection of Angular libraries developed and maintained by the Catbee team.
 
 ## Packages
+- `@ng-catbee/utils`: A modern Angular utility library providing a collection of helpful functions and services.
 - `@ng-catbee/monaco-editor`: Angular components and services for integrating the Monaco Editor into Angular applications.
+- `@ng-catbee/loader`: An Angular library for displaying loading indicators and spinners.
+- `@ng-catbee/jwt`: An Angular library for handling JSON Web Tokens (JWT) in client-side applications.
+- `@ng-catbee/storage`: An Angular library for simplified interaction with web storage APIs (localStorage and sessionStorage) and SSR support.
+- `@ng-catbee/cookie`: An Angular library for managing browser cookies with ease.
+- `@ng-catbee/indexed-db`: An Angular library for IndexedDB operations.
 
 ## Project Structure
 - `packages/`: Contains individual Angular libraries.
@@ -35,7 +41,7 @@ npm run build
 ```
 To build a specific library, navigate to its directory and run:
 ```bash
-npm run build <library-name>
+npm run build:<library-name>
 ```
 
 ## Linting
@@ -106,7 +112,6 @@ npm run release:<library-name> prepatch|preminor|premajor|prerelease <prerelease
    npm run release:utils premajor rc
    npm run release:monaco prerelease next
 ```
-
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

@@ -36,19 +36,12 @@ const formattedLicense = [
   ''
 ].join('\n');
 
-// Recursively get all files under a directory
+// Recursively list files
 function getFiles(dir) {
-  let results = [];
-  const list = fs.readdirSync(dir, { withFileTypes: true });
-  for (const file of list) {
-    const fullPath = path.join(dir, file.name);
-    if (file.isDirectory()) {
-      results = results.concat(getFiles(fullPath));
-    } else {
-      results.push(fullPath);
-    }
-  }
-  return results;
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(f => {
+    const full = path.join(dir, f.name);
+    return f.isDirectory() ? getFiles(full) : full;
+  });
 }
 
 // Check if file should be skipped
@@ -67,7 +60,7 @@ for (const basePath of includePaths) {
     const content = fs.readFileSync(filePath, 'utf-8');
     // Skip if license is already present
     if (content.startsWith('/*\n * The MIT License')) {
-      console.log(`✔ LICENSE already present in ${filePath} - skipping.`);
+      // console.log(`✔ LICENSE already present in ${filePath} - skipping.`);
       continue;
     }
     fs.writeFileSync(filePath, formattedLicense + '\n' + content, 'utf-8');

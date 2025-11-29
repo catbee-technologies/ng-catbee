@@ -39,17 +39,90 @@ ci:
   - head-branch:
     - "^ci/"
 
-monaco-editor:
+# Monaco Editor Package
+packages/monaco-editor:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/**"
 
-monaco-editor/readme:
+packages/monaco-editor/readme:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/README.md"
 
-monaco-editor/tests:
+packages/monaco-editor/tests:
   - changed-files:
     - any-glob-to-any-file: "packages/monaco-editor/**/*.spec.ts"
+
+# Utils Package
+packages/utils:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/**"
+
+packages/utils/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/README.md"
+
+packages/utils/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/utils/**/*.spec.ts"
+
+# Loader Package
+packages/loader:
+  - changed-files:
+    - any-glob-to-any-file: "packages/loader/**"
+
+packages/loader/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/loader/README.md"
+
+packages/loader/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/loader/**/*.spec.ts"
+
+# JWT Package
+packages/jwt:
+  - changed-files:
+    - any-glob-to-any-file: "packages/jwt/**"
+
+packages/jwt/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/jwt/README.md"
+
+packages/jwt/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/jwt/**/*.spec.ts"
+
+# Storage Package
+packages/storage:
+  - changed-files:
+    - any-glob-to-any-file: "packages/storage/**"
+packages/storage/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/storage/README.md"
+packages/storage/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/storage/**/*.spec.ts"
+
+# Cookie Package
+packages/cookie:
+  - changed-files:
+    - any-glob-to-any-file: "packages/cookie/**"
+packages/cookie/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/cookie/README.md"
+packages/cookie/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/cookie/**/*.spec.ts"
+
+# Indexed DB Package
+packages/indexed-db:
+  - changed-files:
+    - any-glob-to-any-file: "packages/indexed-db/**"
+packages/indexed-db/readme:
+  - changed-files:
+    - any-glob-to-any-file: "packages/indexed-db/README.md"
+packages/indexed-db/tests:
+  - changed-files:
+    - any-glob-to-any-file: "packages/indexed-db/**/*.spec.ts"
 
 changelog:
   - changed-files:

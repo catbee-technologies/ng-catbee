@@ -6,12 +6,7 @@ import { CatbeeMonacoDiffEditor } from './components/v1/monaco-editor-diff';
 import { CatbeeMonacoEditorV2 } from './components/v2/monaco-editor';
 import { CatbeeMonacoDiffEditorV2 } from './components/v2/monaco-editor-diff';
 
-const components = [
-  CatbeeMonacoEditor,
-  CatbeeMonacoDiffEditor,
-  CatbeeMonacoEditorV2,
-  CatbeeMonacoDiffEditorV2
-];
+const components = [CatbeeMonacoEditor, CatbeeMonacoDiffEditor, CatbeeMonacoEditorV2, CatbeeMonacoDiffEditorV2];
 
 /** @ng-catbee: Monaco Editor Module
  * ```typescript
