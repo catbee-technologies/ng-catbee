@@ -22,14 +22,13 @@ export default function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      dir: path.join(process.cwd(), './coverage'),
+      dir: path.join(process.cwd(), 'coverage/', process.env.COVERAGE_DIR || ''),
       subdir: '.',
       reporters: [
-        { type: 'html' },
+        { type: 'text' },
         { type: 'text-summary' },
-        { type: 'cobertura' },
-        { type: 'lcov' },
-      ],
+        { type: 'json' }
+      ]
     },
     reporters: ['progress', 'kjhtml'],
     specReporter: {
