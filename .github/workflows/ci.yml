@@ -23,7 +23,7 @@ jobs:
   build:
     name: Build, Lint, Test, Type Check
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     if: >
       (
         github.event_name != 'pull_request' ||

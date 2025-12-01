@@ -20,6 +20,7 @@ export default function (config) {
         random: false,
       },
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
+      captureConsole: false, // Suppress console warnings in CI
     },
     coverageReporter: {
       dir: path.join(process.cwd(), 'coverage/', process.env.COVERAGE_DIR || ''),

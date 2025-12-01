@@ -5,7 +5,6 @@ import { take } from 'rxjs/operators';
 
 describe('CatbeeLoaderService', () => {
   let service: CatbeeLoaderService;
-  let consoleLogSpy: jasmine.Spy;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -13,7 +12,6 @@ describe('CatbeeLoaderService', () => {
     });
 
     service = TestBed.inject(CatbeeLoaderService);
-    consoleLogSpy = spyOn(console, 'log');
   });
 
   it('should be created', () => {

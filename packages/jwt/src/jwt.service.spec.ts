@@ -36,7 +36,6 @@ function createTokenWithExp(exp: number, includeIat = true): string {
 
 describe('JwtService', () => {
   let service: JwtService;
-  let consoleErrorSpy: jasmine.Spy;
 
   const FAKE_NOW_TIMESTAMP = Math.floor(NOW.getTime() / 1000); // 1262347200 (2010-01-01 12:00:00 UTC)
 
@@ -66,7 +65,6 @@ describe('JwtService', () => {
 
   afterAll(() => {
     jasmine.clock().uninstall();
-    consoleErrorSpy.calls.reset();
   });
 
   beforeEach(() => {
@@ -74,9 +72,6 @@ describe('JwtService', () => {
       providers: [JwtService]
     });
     service = TestBed.inject(JwtService);
-
-    // Suppress console.error for tests
-    consoleErrorSpy = spyOn(console, 'error');
   });
 
   it('should be created', () => {

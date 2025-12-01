@@ -7,11 +7,6 @@ import { CatbeeIndexedDBConfig, DBMode, ObjectStoreMeta } from './indexed-db.typ
 
 describe('CatbeeIndexedDBService', () => {
   // Suppress all console output during tests
-  beforeAll(() => {
-    spyOn(console, 'log').and.stub();
-    spyOn(console, 'warn').and.stub();
-    spyOn(console, 'error').and.stub();
-  });
   let service: CatbeeIndexedDBService;
   let mockIndexedDB: any;
   let databases: Map<string, any>;
