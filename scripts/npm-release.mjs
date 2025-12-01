@@ -92,9 +92,13 @@ for (const pkgName of pkgList) {
       execSync(`git checkout -- ${pkgJsonPath}`);
     }
     if (!dryRunMode) newVersion = execSync(cmd, { encoding: "utf8" }).trim().replace('v', '');
-  } else if (!dryRunMode) {
-    pkgJson.version = bump;
-    fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
+  } else {
+    if (!dryRunMode) {
+      pkgJson.version = bump;
+      fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
+    } else {
+      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️   ${newVersion}`);
+    }
   }
 
   if (!dryRunMode) {
