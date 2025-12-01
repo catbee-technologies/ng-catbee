@@ -1,6 +1,6 @@
 {
   "name": "@ng-catbee/indexed-db",
-  "version": "0.0.1",
+  "version": "21.0.0",
   "author": "Hari G <hprasath.dev@gmail.com>",
   "description": "A comprehensive, type-safe Angular library for IndexedDB operations — providing full CRUD functionality, advanced querying with indexes and cursors, bulk operations, database migrations, and reactive RxJS observables, SSR safe.",
   "license": "MIT",
