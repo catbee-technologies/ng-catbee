@@ -31,6 +31,7 @@
     "coverage:json-merge": "npx istanbul report json",
     "prepare": "husky",
     "format": "prettier --write \"**/*.{ts,html,scss,css}\" \"!**/*.min.css\"",
+    "release": "node scripts/npm-release.mjs",
     "release:utils": "node scripts/npm-release.mjs utils",
     "release:monaco-editor": "node scripts/npm-release.mjs monaco-editor",
     "release:loader": "node scripts/npm-release.mjs loader",

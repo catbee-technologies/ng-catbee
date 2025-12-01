@@ -11,25 +11,48 @@ if (args.length < 2) {
   process.exit(1);
 }
 
-const [pkgName, bump] = args;
-const preid = args[2]?.startsWith('--') ? undefined : args[2]; // optional preid
-const dryRunMode = args.includes('dry-run'); // if --dry-run is present
-const validPackages = ['utils', 'monaco-editor'];
+const validPackages = ['utils', 'monaco-editor', 'cookie', 'jwt', 'loader', 'storage', 'indexed-db'];
 
-if (dryRunMode) {
-  console.log('⚠️  Dry-run mode activated. No changes will be made.');
-}
+let pkgList = args.filter(a => validPackages.includes(a));     // all valid packages in CLI
+const bump = args.find(a => !validPackages.includes(a));       // first non-package argument = bump type
+const preid = args.find(a => ['alpha', 'beta', 'rc', 'next', 'dev', 'nightly', 'canary', 'test', 'snapshot'].includes(a));
+const dryRunMode = args.includes('dry-run') || args.includes('dryrun');
 
-if (!validPackages.includes(pkgName)) {
-  console.error(`❌ Invalid package "${pkgName}". Allowed packages: ${validPackages.join(', ')}`);
+if (!pkgList.length) {
+  console.error("❌ No valid packages provided!");
   process.exit(1);
 }
 
-const projectPath = path.resolve(`packages/${pkgName}`);
-const pkgJsonPath = path.join(projectPath, 'package.json');
+console.log("Args:", args.join(' '));
 
-if (!fs.existsSync(pkgJsonPath)) {
-  console.error(`❌ package.json not found at ${pkgJsonPath}`);
+console.log("📦 Packages to release:", pkgList.join(', '));
+if (dryRunMode) console.log("⚠️  Dry Run Mode — no changes will be applied");
+
+if (!dryRunMode) {
+  let seconds = 5;
+  const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+  let i = 0;
+  let ms = seconds * 1000;
+
+  const intervalId = setInterval(() => {
+    const secs = Math.ceil(ms / 1000); // derived from remaining ms
+    process.stdout.write(`\r🚀 ${frames[i++ % frames.length]}  Releasing in ${secs}s  `);
+    ms -= 100;
+
+    if (ms <= 0) {
+      clearInterval(intervalId);
+      process.stdout.write("\r🚀 Starting release...        \n");
+    }
+  }, 100);
+
+  await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}
+
+const allowedBumps = ['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease'];
+
+if (!allowedBumps.includes(bump) && !/^\d+\.\d+\.\d+(-.*)?$/.test(bump)) {
+  console.error(`❌ Invalid bump "${bump}". Expected version or one of: ${allowedBumps.join(', ')}`);
   process.exit(1);
 }
 
@@ -40,75 +63,55 @@ if (!dryRunMode && status) {
   process.exit(1);
 }
 
-const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
-const currentVersion = pkgJson.version;
+let generatedTags = [];
 
-const allowedBumps = [
-  'patch',
-  'minor',
-  'major',
-  'prepatch',
-  'preminor',
-  'premajor',
-  'prerelease'
-];
-
-let newVersion;
-
-if (allowedBumps.includes(bump)) {
-  let cmd = `npm version ${bump} --prefix ${projectPath} --no-git-tag-version`;
-
-  const needsPreid = bump.startsWith('pre');
-  const validPreIds = ['alpha', 'beta', 'rc', 'next', 'dev', 'nightly', 'canary', 'test', 'snapshot'];
-  if (needsPreid && !preid) {
-    console.error(`❌ Missing preid for ${bump}. Expected: ${validPreIds.join(', ')}`);
+for (const pkgName of pkgList) {
+  const projectPath = path.resolve(`packages/${pkgName}`);
+  const pkgJsonPath = path.join(projectPath, 'package.json');
+  if (!fs.existsSync(pkgJsonPath)) {
+    console.error(`❌ Missing package.json for ${pkgName}`);
     process.exit(1);
   }
 
-  if (needsPreid) {
-    if (!validPreIds.includes(preid)) {
-      console.error(`❌ Invalid preid "${preid}". Allowed preids: ${validPreIds.join(', ')}`);
+  const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+  const currentVersion = pkgJson.version;
+  let newVersion = bump;
+
+  let cmd = `npm version ${bump} --prefix ${projectPath} --no-git-tag-version`;
+
+  if (allowedBumps.includes(bump)) {
+    // Handle prerelease with identifier
+    if (bump.startsWith("pre") && !preid) {
+      console.error(`❌ Pre-release requires preid (alpha/beta/rc...)`);
       process.exit(1);
     }
-    cmd += ` --preid=${preid}`;
+    if (preid) cmd += ` --preid=${preid}`;
+    if (dryRunMode) {
+      newVersion = execSync(cmd + ' --json', { encoding: 'utf8' });
+      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️   ${newVersion}`);
+      execSync(`git checkout -- ${pkgJsonPath}`);
+    }
+    if (!dryRunMode) newVersion = execSync(cmd, { encoding: "utf8" }).trim().replace('v', '');
+  } else if (!dryRunMode) {
+    pkgJson.version = bump;
+    fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
   }
 
-  if (dryRunMode) {
-    newVersion = execSync(cmd + ' --json', { encoding: 'utf8' });
-    console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️ ${newVersion}`);
-    execSync(`git checkout -- ${pkgJsonPath}`);
-    process.exit(0);
-  } else {
-    newVersion = execSync(cmd, { encoding: 'utf8' }).trim().replace('v', '');
-  }
-} else {
-  // Explicit version
-  newVersion = bump;
   if (!dryRunMode) {
-    pkgJson.version = newVersion;
-    fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
-  } else {
-    console.log(`✔ [DRY-RUN] ${pkgName} would be set from ${currentVersion} ➡️ ${newVersion}`);
-    process.exit(0);
+    console.log(`✔ ${pkgName} bumped from ${currentVersion} ➡️   ${newVersion}`);
+    execSync(`git add ${pkgJsonPath}`);
+    execSync(`git commit -m "release(${pkgName}): v${newVersion}"`);
+    const tag = `${pkgName}@v${newVersion}`;
+    execSync(`git tag ${tag}`);
+    generatedTags.push(tag);
   }
 }
 
-console.log(`🎉 Successfully bumped ${pkgName} from ${currentVersion} ➡️ ${newVersion}`);
-
 if (!dryRunMode) {
-  console.log('💾 Committing changes...');
-  execSync(`git add ${pkgJsonPath}`, { stdio: 'inherit' });
-  execSync(`git commit -m "release(${pkgName}): v${newVersion}"`, { stdio: 'inherit' });
-
-  const tagName = `${pkgName}@v${newVersion}`;
-  console.log(`🏷️ Creating git tag "${tagName}"`);
-  execSync(`git tag ${tagName}`, { stdio: 'inherit' });
-
-  console.log('📤 Pushing changes and tags...');
-  execSync('git push', { stdio: 'inherit' });
-  execSync(`git push origin ${tagName}`, { stdio: 'inherit' });
-
-  console.log(`🏷️ Tag released: ${pkgName} v${newVersion}`);
+  console.log("\n📤 Pushing commits + tags...");
+  execSync("git push", { stdio: "inherit" });
+  execSync(`git push origin ${generatedTags.join(" ")}`, { stdio: "inherit" });
+  console.log("🏁 Release complete →", generatedTags.join(", "));
 }
 
 /** Cleanup local tags */
