@@ -10,7 +10,7 @@ import {
   MonacoEditorOptions
 } from '../../types/monaco-editor.types';
 
-const delay = (ms = 150) => new Promise(res => setTimeout(res, ms));
+const delay = (ms = 0) => new Promise(res => setTimeout(res, ms));
 
 function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
   TestBed.configureTestingModule({
@@ -33,7 +33,7 @@ function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
 describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
   describe('CatbeeMonacoEditorV2', () => {
     afterEach(async () => {
-      await delay(300);
+      await delay(150);
     });
 
     describe('Initialization', () => {
@@ -41,7 +41,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
         const fixture = create(TestEditorComponent);
         const initSpy = spyOn(fixture.componentInstance, 'onInit');
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         expect(initSpy).toHaveBeenCalled();
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });
@@ -56,11 +56,11 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
 
       it('should delay initialization when initDelay is set', async () => {
         const fixture = create(TestEditorComponent);
-        fixture.componentInstance.initDelay = 500;
+        fixture.componentInstance.initDelay = 100;
         fixture.detectChanges();
-        await delay(400);
+        await delay(50);
         expect(fixture.componentInstance.comp.editor).toBeFalsy();
-        await delay(200);
+        await delay(100);
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });
 
@@ -68,7 +68,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
         const fixture = create(TestEditorComponent);
         fixture.componentInstance.codeValue.set('initial code');
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         expect(fixture.componentInstance.comp.editor?.getValue()).toBe('initial code');
       });
     });
@@ -125,7 +125,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
         const fixture = create(TestEditorComponent);
         fixture.componentInstance.codeValue.set('test code');
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         expect(fixture.componentInstance.comp.editor?.getValue()).toBe('test code');
       });
 
@@ -163,7 +163,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
       it('should react to placeholder changes via effect', async () => {
         const fixture = create(TestEditorComponent);
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         const comp = fixture.componentInstance.comp;
         (comp as any).placeholderWidget = { update: jasmine.createSpy() };
         fixture.componentInstance.placeholderText.set('New placeholder');
@@ -197,7 +197,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
         );
         fixture.componentInstance.placeholderText.set('Type here');
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         const comp = fixture.componentInstance.comp;
         const spyAdd = spyOn(comp.editor!, 'addContentWidget');
         comp.value.set('');
@@ -326,7 +326,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
       it('should emit cursor position change event', async () => {
         const fixture = create(TestEditorComponent);
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         const comp = fixture.componentInstance.comp;
         const cursorSpy = jasmine.createSpy();
         comp.editorCursorPositionChange.subscribe(cursorSpy);
@@ -444,7 +444,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
 
   describe('CatbeeMonacoDiffEditorV2', () => {
     afterEach(async () => {
-      await delay(300);
+      await delay(200);
     });
 
     describe('Initialization', () => {

@@ -8,7 +8,7 @@ describe('CatbeeLoader', () => {
   let component: CatbeeLoader;
   let fixture: ComponentFixture<CatbeeLoader>;
   let service: CatbeeLoaderService;
-  let consoleLogSpy: jasmine.Spy;
+  let isFixtureDestroyed = false;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,8 +19,18 @@ describe('CatbeeLoader', () => {
     fixture = TestBed.createComponent(CatbeeLoader);
     component = fixture.componentInstance;
     service = TestBed.inject(CatbeeLoaderService);
-    consoleLogSpy = spyOn(console, 'log');
+    spyOn(console, 'log');
+    spyOn(console, 'error');
+    spyOn(console, 'warn');
+    isFixtureDestroyed = false;
     fixture.detectChanges();
+  });
+
+  afterEach(async () => {
+    await service.hideAll();
+    if (!isFixtureDestroyed) {
+      fixture.destroy();
+    }
   });
 
   it('should create', () => {
@@ -180,6 +190,8 @@ describe('CatbeeLoader', () => {
           fixture.detectChanges();
           expect(component.shouldRender()).toBe(false);
           expect(component.isFadingOut()).toBe(false);
+          isFixtureDestroyed = true;
+          fixture.destroy();
           done();
         }, 250);
       });

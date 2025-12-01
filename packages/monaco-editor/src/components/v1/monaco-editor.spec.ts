@@ -11,7 +11,7 @@ import {
   MonacoEditorOptions
 } from '../../types/monaco-editor.types';
 
-const delay = (ms = 150) => new Promise(res => setTimeout(res, ms));
+const delay = (ms = 0) => new Promise(res => setTimeout(res, ms));
 
 function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
   TestBed.configureTestingModule({
@@ -34,7 +34,7 @@ function create<T>(comp: Type<T>, html?: string): ComponentFixture<T> {
 describe('CatbeeMonacoEditorComponents (V1)', () => {
   describe('CatbeeMonacoEditor', () => {
     afterEach(async () => {
-      await delay(300);
+      await delay(150);
     });
 
     describe('Initialization', () => {
@@ -42,7 +42,7 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
         const fixture = create(TestComponent);
         const initSpy = spyOn(fixture.componentInstance, 'onInit');
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         expect(initSpy).toHaveBeenCalled();
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });
@@ -57,11 +57,11 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
 
       it('should delay initialization when initDelay is set', async () => {
         const fixture = create(TestComponent);
-        fixture.componentInstance.initDelay = 500;
+        fixture.componentInstance.initDelay = 100;
         fixture.detectChanges();
-        await delay(400);
+        await delay(50);
         expect(fixture.componentInstance.comp.editor).toBeFalsy();
-        await delay(200);
+        await delay(100);
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });
     });
@@ -158,7 +158,7 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
       it('should react to placeholder changes via effect', async () => {
         const fixture = create(TestComponent);
         await fixture.whenStable();
-        await delay();
+        await delay(150);
         const comp = fixture.componentInstance.comp;
         const mockWidget = { update: jasmine.createSpy() };
         (comp as any).placeholderWidget = mockWidget;
@@ -441,7 +441,7 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
 
   describe('CatbeeMonacoDiffEditor', () => {
     afterEach(async () => {
-      await delay(300);
+      await delay(200);
     });
 
     describe('Initialization', () => {
