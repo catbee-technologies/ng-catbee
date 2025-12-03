@@ -59,9 +59,9 @@ export interface DecodedJwt<T = JwtPayload> {
  *
  * @example
  * ```typescript
- * import { JwtService } from '@ng-catbee/jwt';
+ * import { CatbeeJwtService } from '@ng-catbee/jwt';
  *
- * constructor(private jwtService: JwtService) {
+ * constructor(private jwtService: CatbeeJwtService) {
  *   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
  *
  *   // Decode the payload
@@ -88,7 +88,7 @@ export interface DecodedJwt<T = JwtPayload> {
 @Injectable({
   providedIn: 'root'
 })
-export class JwtService {
+export class CatbeeJwtService {
   private readonly platformId = inject(PLATFORM_ID);
   /**
    * Decodes a JWT token and returns the payload.
@@ -487,3 +487,26 @@ export class JwtService {
     return parts.length === 3 ? (parts as [string, string, string]) : null;
   }
 }
+
+/**
+ * Public alias for the `CatbeeJwtService` used throughout the Catbee JWT module.
+ *
+ * This export simply re-exports the underlying Angular service without
+ * modification. It exists to provide a consistent naming convention across
+ * Catbee packages.
+ *
+ * @alias JwtService
+ * @see CatbeeJwtService
+ *
+ * @example
+ * ```ts
+ * import { JwtService } from '@ng-catbee/jwt';
+ *
+ * constructor(private jwt: JwtService) {
+ *   const payload = this.jwt.decodePayload(token);
+ * }
+ * ```
+ *
+ * @public
+ */
+export const JwtService = CatbeeJwtService;

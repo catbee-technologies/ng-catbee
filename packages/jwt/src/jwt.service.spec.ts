@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { JwtService, type JwtPayload } from './jwt.service';
+import { CatbeeJwtService, type JwtPayload } from './jwt.service';
 
 const NOW = new Date('2010-01-01 12:00:00');
 
@@ -34,8 +34,8 @@ function createTokenWithExp(exp: number, includeIat = true): string {
   return createCustomToken(payload, header);
 }
 
-describe('JwtService', () => {
-  let service: JwtService;
+describe('CatbeeJwtService', () => {
+  let service: CatbeeJwtService;
 
   const FAKE_NOW_TIMESTAMP = Math.floor(NOW.getTime() / 1000); // 1262347200 (2010-01-01 12:00:00 UTC)
 
@@ -69,9 +69,9 @@ describe('JwtService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [JwtService]
+      providers: [CatbeeJwtService]
     });
-    service = TestBed.inject(JwtService);
+    service = TestBed.inject(CatbeeJwtService);
   });
 
   it('should be created', () => {
@@ -761,14 +761,14 @@ describe('JwtService', () => {
   });
 });
 
-describe('JwtService - watchExpiry (with real timers)', () => {
-  let service: JwtService;
+describe('CatbeeJwtService - watchExpiry (with real timers)', () => {
+  let service: CatbeeJwtService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [JwtService]
+      providers: [CatbeeJwtService]
     });
-    service = TestBed.inject(JwtService);
+    service = TestBed.inject(CatbeeJwtService);
   });
 
   it('should emit remaining time until expiration', done => {

@@ -34,7 +34,7 @@ import { CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
  * @example
  * ```typescript
  * import { Component, inject } from '@angular/core';
- * import { LoaderService } from '@catbee/loader';
+ * import { CatbeeLoaderService } from '@ng-catbee/loader';
  *
  * @Component({
  *   template: `
@@ -265,3 +265,45 @@ export class CatbeeLoader implements OnInit {
     return `la-${animation}` + (sizeClass ? ` ${sizeClass}` : '');
   }
 }
+
+/**
+ * Public alias for the `CatbeeLoader` Angular component.
+ *
+ * This exported symbol is the recommended entrypoint for consumers who want to
+ * use the Catbee Loader component in their Angular templates or standalone
+ * components. It simply re-exports the underlying `CatbeeLoader` class without
+ * modification.
+ *
+ * @alias CatbeeLoaderComponent
+ * @see CatbeeLoader
+ *
+ * @remarks
+ * Use this export when importing from the library:
+ *
+ * ```ts
+ * import { CatbeeLoaderComponent } from '@ng-catbee/loader';
+ * ```
+ *
+ * @example
+ * ```ts
+ * import { Component } from '@angular/core';
+ * import { CatbeeLoaderComponent } from '@ng-catbee/loader';
+ *
+ * @Component({
+ *   standalone: true,
+ *   imports: [CatbeeLoaderComponent],
+ *   template: `
+ *     <ng-catbee-loader
+ *       name="global-loader"
+ *       size="lg"
+ *       animation="ball-spin-fade"
+ *       [fullscreen]="true"
+ *     />
+ *   `
+ * })
+ * export class AppComponent {}
+ * ```
+ *
+ * @public
+ */
+export const CatbeeLoaderComponent = CatbeeLoader;

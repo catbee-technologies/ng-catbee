@@ -4,7 +4,7 @@
  *
  * @internal
  */
-export abstract class CookieReaderService {
+export abstract class CatbeeCookieReaderService {
   /**
    * Gets the raw cookie string from the appropriate source (document.cookie or request headers).
    */

@@ -17,7 +17,7 @@ export const CATBEE_INDEXED_DB_CONFIG = new InjectionToken<CatbeeIndexedDBConfig
  * @example
  * ```typescript
  * // In app.config.ts
- * import { provideCatbeeIndexedDB } from '@catbee/indexed-db';
+ * import { provideCatbeeIndexedDB } from '@ng-catbee/indexed-db';
  *
  * export const appConfig: ApplicationConfig = {
  *   providers: [

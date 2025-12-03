@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { StorageEncoderService } from './storage-encoder.service';
+import { CatbeeStorageEncoderService } from './storage-encoder.service';
 import { CATBEE_STORAGE_CONFIG } from './storage.config';
 import type { CatbeeStorageConfig } from './storage.types';
 
-describe('StorageEncoderService', () => {
-  let service: StorageEncoderService;
+describe('CatbeeStorageEncoderService', () => {
+  let service: CatbeeStorageEncoderService;
   let consoleErrorSpy: jasmine.Spy;
 
   describe('default configuration (browser)', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [StorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
+        providers: [CatbeeStorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
       consoleErrorSpy = spyOn(console, 'error');
     });
 
@@ -98,13 +98,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
       consoleErrorSpy = spyOn(console, 'error');
     });
 
@@ -152,13 +152,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
       consoleErrorSpy = spyOn(console, 'error');
     });
 
@@ -199,13 +199,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: errorConfig }
         ]
       });
 
-      const errorService = TestBed.inject(StorageEncoderService);
+      const errorService = TestBed.inject(CatbeeStorageEncoderService);
       const errorSpy = spyOn(console, 'error');
 
       const result = errorService.decode('test', 'localStorage', false, 'localStorage');
@@ -223,13 +223,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
     });
 
     it('should use common encoding for localStorage', () => {
@@ -257,13 +257,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
     });
 
     it('should use localStorage-specific encoding over common', () => {
@@ -293,13 +293,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'server' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
     });
 
     it('should not use btoa in SSR context for base64 encoding', () => {
@@ -327,10 +327,10 @@ describe('StorageEncoderService', () => {
   describe('edge cases', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [StorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
+        providers: [CatbeeStorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
       consoleErrorSpy = spyOn(console, 'error');
     });
 
@@ -373,13 +373,13 @@ describe('StorageEncoderService', () => {
 
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' },
           { provide: CATBEE_STORAGE_CONFIG, useValue: config }
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
     });
 
     it('should fall back to original value when customEncode is missing', () => {
@@ -397,13 +397,13 @@ describe('StorageEncoderService', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
-          StorageEncoderService,
+          CatbeeStorageEncoderService,
           { provide: PLATFORM_ID, useValue: 'browser' }
           // No CATBEE_STORAGE_CONFIG provided
         ]
       });
 
-      service = TestBed.inject(StorageEncoderService);
+      service = TestBed.inject(CatbeeStorageEncoderService);
     });
 
     it('should use default encoding when no config is provided', () => {

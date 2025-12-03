@@ -14,7 +14,7 @@ type Nullable<T> = T | null | undefined;
  * @example
  * ```typescript
  *  import { Component, inject } from '@angular/core';
- *  import { LoaderService } from '@catbee/loader';
+ *  import { CatbeeLoaderService } from '@ng-catbee/loader';
  *
  * @Component({
  *   template: `
@@ -51,6 +51,9 @@ export class CatbeeLoaderService {
   private readonly loaderState$ = new Subject<CatbeeLoaderState>();
   private readonly activeLoaders = signal<Map<string, CatbeeLoaderState>>(new Map());
 
+  /** Observable stream of all loader state changes */
+  public loader$ = this.loaderState$.asObservable();
+
   /**
    * Shows a loading loader.
    *
@@ -58,7 +61,7 @@ export class CatbeeLoaderService {
    * @param options - Loader options for customizing the loader appearance
    * @returns Promise that resolves when the loader is shown
    */
-  async show(name: Nullable<string>, options?: CatbeeLoaderGlobalConfig): Promise<void> {
+  async show(name?: Nullable<string>, options?: CatbeeLoaderGlobalConfig): Promise<void> {
     const loaderName = this.getLoaderName(name);
     return new Promise(resolve => {
       const state: CatbeeLoaderState = {
@@ -93,7 +96,7 @@ export class CatbeeLoaderService {
    * @param delay - Optional delay in milliseconds before hiding (default: 0)
    * @returns Promise that resolves when the loader is hidden
    */
-  async hide(name: Nullable<string>, delay: number = 0): Promise<void> {
+  async hide(name?: Nullable<string>, delay: number = 0): Promise<void> {
     return new Promise(resolve => {
       const loaderName = this.getLoaderName(name);
       const execute = () => {
@@ -131,7 +134,7 @@ export class CatbeeLoaderService {
    * @param name - Name of the loader to watch (default: 'default')
    * @returns Observable of loader state changes
    */
-  watch(name: Nullable<string>): Observable<CatbeeLoaderState> {
+  watch(name?: Nullable<string>): Observable<CatbeeLoaderState> {
     const loaderName = this.getLoaderName(name);
     return this.loaderState$.asObservable().pipe(filter(state => state.name === loaderName));
   }
@@ -142,7 +145,7 @@ export class CatbeeLoaderService {
    * @param name - Name of the loader to check (default: 'default')
    * @returns True if the loader is visible, false otherwise
    */
-  isVisible(name: Nullable<string>): boolean {
+  isVisible(name?: Nullable<string>): boolean {
     return this.activeLoaders().has(this.getLoaderName(name));
   }
 
@@ -152,7 +155,7 @@ export class CatbeeLoaderService {
    * @param name - Name of the loader to get state for (default: 'default')
    * @returns Current loader state or undefined if not found
    */
-  getState(name: Nullable<string>): CatbeeLoaderState | undefined {
+  getState(name?: Nullable<string>): CatbeeLoaderState | undefined {
     return this.activeLoaders().get(this.getLoaderName(name));
   }
 
@@ -164,7 +167,40 @@ export class CatbeeLoaderService {
     return Array.from(this.activeLoaders().keys());
   }
 
-  private getLoaderName(name: Nullable<string>): string {
+  private getLoaderName(name?: Nullable<string>): string {
     return name ?? CATBEE_LOADER_DEFAULTS.name;
   }
 }
+
+/**
+ * Public alias for the `CatbeeLoaderService` used throughout the Catbee Loader module.
+ *
+ * This export re-exports the underlying loader management service to provide
+ * a clean and consistent public API name across Catbee packages.
+ *
+ * @alias LoaderService
+ * @see CatbeeLoaderService
+ *
+ * @example
+ * ```ts
+ * import { LoaderService } from '@ng-catbee/loader';
+ *
+ * @Component({
+ *   template: `
+ *     <ng-catbee-loader name="page-loader" fullscreen="true" />
+ *   `
+ * })
+ * export class PageComponent {
+ *   constructor(private loader: LoaderService) {}
+ *
+ *   async loadData(): Promise<void> {
+ *     await this.loader.show('page-loader', { message: 'Loading…' });
+ *     // … load data
+ *     await this.loader.hide('page-loader');
+ *   }
+ * }
+ * ```
+ *
+ * @public
+ */
+export const LoaderService = CatbeeLoaderService;

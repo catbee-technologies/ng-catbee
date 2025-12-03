@@ -2,7 +2,7 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { fromEvent, Observable, of } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
-import { StorageEncoderService } from './storage-encoder.service';
+import { CatbeeStorageEncoderService } from './storage-encoder.service';
 
 /**
  * Abstract base class for storage services (localStorage and sessionStorage).
@@ -12,9 +12,9 @@ import { StorageEncoderService } from './storage-encoder.service';
  *
  * @internal
  */
-export abstract class BaseStorageService {
+export abstract class CatbeeBaseStorageService {
   protected readonly platformId = inject(PLATFORM_ID);
-  private readonly encoder = inject(StorageEncoderService);
+  private readonly encoder = inject(CatbeeStorageEncoderService);
 
   /**
    * Returns the storage object (localStorage or sessionStorage).

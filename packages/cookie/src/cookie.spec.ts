@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
-import { CookieService } from './cookie.service';
+import { CatbeeCookieService } from './cookie.service';
 import { CookieOptions } from './cookie.types';
 import { CATBEE_COOKIE_CONFIG, provideCatbeeCookie } from './cookie.config';
 
-describe('CookieService', () => {
-  let service: CookieService;
+describe('CatbeeCookieService', () => {
+  let service: CatbeeCookieService;
   let mockDocument: Partial<Document>;
 
   beforeEach(() => {
@@ -15,10 +15,10 @@ describe('CookieService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [CookieService, { provide: DOCUMENT, useValue: mockDocument }]
+      providers: [CatbeeCookieService, { provide: DOCUMENT, useValue: mockDocument }]
     });
 
-    service = TestBed.inject(CookieService);
+    service = TestBed.inject(CatbeeCookieService);
   });
 
   afterEach(() => {
@@ -27,7 +27,7 @@ describe('CookieService', () => {
   });
 
   // Helper function to create error document and service
-  function setupErrorDocument(cookieGetter: () => string, cookieSetter: (value: string) => void): CookieService {
+  function setupErrorDocument(cookieGetter: () => string, cookieSetter: (value: string) => void): CatbeeCookieService {
     const errorDocument = {
       get cookie() {
         return cookieGetter();
@@ -39,10 +39,10 @@ describe('CookieService', () => {
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [CookieService, { provide: DOCUMENT, useValue: errorDocument }]
+      providers: [CatbeeCookieService, { provide: DOCUMENT, useValue: errorDocument }]
     });
 
-    return TestBed.inject(CookieService);
+    return TestBed.inject(CatbeeCookieService);
   }
 
   it('should create', () => {
@@ -808,7 +808,7 @@ describe('CookieService', () => {
 
   describe('SSR compatibility', () => {
     it('should return false from has() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       // Override isAvailable to simulate SSR
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
@@ -816,77 +816,77 @@ describe('CookieService', () => {
     });
 
     it('should return null from get() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.get('anyKey')).toBeNull();
     });
 
     it('should return empty array from keys() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.keys()).toEqual([]);
     });
 
     it('should return empty array from values() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.values()).toEqual([]);
     });
 
     it('should return empty array from entries() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.entries()).toEqual([]);
     });
 
     it('should return empty object from getAll() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getAll()).toEqual({});
     });
 
     it('should return null from getJson() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getJson('key')).toBeNull();
     });
 
     it('should return null from getArray() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getArray('key')).toBeNull();
     });
 
     it('should return false from getBoolean() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getBoolean('key')).toBe(false);
     });
 
     it('should return NaN from getNumber() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getNumber('key')).toBeNaN();
     });
 
     it('should return null from getEnum() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getEnum('key', ['default', 'other'] as const)).toBeNull();
     });
 
     it('should no-op set() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.set('key', 'value');
@@ -894,7 +894,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op setJson() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.setJson('key', { data: 'value' });
@@ -902,7 +902,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op setArray() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.setArray('key', ['value']);
@@ -910,7 +910,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op delete() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.delete('key');
@@ -918,7 +918,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op deleteAll() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.deleteAll();
@@ -926,7 +926,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op deleteMany() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.deleteMany(['key1', 'key2']);
@@ -934,7 +934,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op setIfNotExists() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.setIfNotExists('key', 'value');
@@ -942,7 +942,7 @@ describe('CookieService', () => {
     });
 
     it('should no-op updateJson() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       ssrService.updateJson('key', { old: 'newValue' }, { old: 'value' });
@@ -950,7 +950,7 @@ describe('CookieService', () => {
     });
 
     it('should return default from getWithDefault() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getWithDefault('key', 'default')).toBe('default');
@@ -958,7 +958,7 @@ describe('CookieService', () => {
     });
 
     it('should return default from getBooleanWithDefault() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getBooleanWithDefault('enabled', true)).toBe(true);
@@ -966,7 +966,7 @@ describe('CookieService', () => {
     });
 
     it('should return default from getNumberWithDefault() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       expect(ssrService.getNumberWithDefault('count', 42)).toBe(42);
@@ -974,7 +974,7 @@ describe('CookieService', () => {
     });
 
     it('should return default from getEnumWithDefault() during SSR', () => {
-      const ssrService = TestBed.inject(CookieService);
+      const ssrService = TestBed.inject(CatbeeCookieService);
       Object.defineProperty(ssrService, 'isAvailable', { get: () => false });
 
       type Theme = 'light' | 'dark';
@@ -1280,10 +1280,10 @@ describe('CookieService', () => {
 
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [CookieService, { provide: DOCUMENT, useValue: errorDocument }]
+        providers: [CatbeeCookieService, { provide: DOCUMENT, useValue: errorDocument }]
       });
 
-      const errorService = TestBed.inject(CookieService);
+      const errorService = TestBed.inject(CatbeeCookieService);
       const spy = spyOn(console, 'error');
 
       errorService.deleteAll();

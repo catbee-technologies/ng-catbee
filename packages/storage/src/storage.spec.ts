@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { LocalStorageService } from './local-storage.service';
-import { SessionStorageService } from './session-storage.service';
-import { StorageEncoderService } from './storage-encoder.service';
+import { CatbeeLocalStorageService } from './local-storage.service';
+import { CatbeeSessionStorageService } from './session-storage.service';
+import { CatbeeStorageEncoderService } from './storage-encoder.service';
 
-describe('LocalStorageService', () => {
-  let service: LocalStorageService;
+describe('CatbeeLocalStorageService', () => {
+  let service: CatbeeLocalStorageService;
   let consoleErrorSpy: jasmine.Spy;
   let mockLocalStorage: Storage;
 
@@ -28,10 +28,10 @@ describe('LocalStorageService', () => {
     });
 
     TestBed.configureTestingModule({
-      providers: [LocalStorageService, StorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
+      providers: [CatbeeLocalStorageService, CatbeeStorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
     });
 
-    service = TestBed.inject(LocalStorageService);
+    service = TestBed.inject(CatbeeLocalStorageService);
     consoleErrorSpy = spyOn(console, 'error');
   });
 
@@ -981,9 +981,13 @@ describe('LocalStorageService', () => {
     beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [LocalStorageService, StorageEncoderService, { provide: PLATFORM_ID, useValue: 'server' }]
+        providers: [
+          CatbeeLocalStorageService,
+          CatbeeStorageEncoderService,
+          { provide: PLATFORM_ID, useValue: 'server' }
+        ]
       });
-      service = TestBed.inject(LocalStorageService);
+      service = TestBed.inject(CatbeeLocalStorageService);
     });
 
     it('should handle set in SSR context', () => {
@@ -1014,8 +1018,8 @@ describe('LocalStorageService', () => {
   });
 });
 
-describe('SessionStorageService', () => {
-  let service: SessionStorageService;
+describe('CatbeeSessionStorageService', () => {
+  let service: CatbeeSessionStorageService;
   let consoleErrorSpy: jasmine.Spy;
   let mockSessionStorage: Storage;
 
@@ -1038,10 +1042,14 @@ describe('SessionStorageService', () => {
     });
 
     TestBed.configureTestingModule({
-      providers: [SessionStorageService, StorageEncoderService, { provide: PLATFORM_ID, useValue: 'browser' }]
+      providers: [
+        CatbeeSessionStorageService,
+        CatbeeStorageEncoderService,
+        { provide: PLATFORM_ID, useValue: 'browser' }
+      ]
     });
 
-    service = TestBed.inject(SessionStorageService);
+    service = TestBed.inject(CatbeeSessionStorageService);
     consoleErrorSpy = spyOn(console, 'error');
   });
 
@@ -1109,9 +1117,13 @@ describe('SessionStorageService', () => {
     beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [SessionStorageService, StorageEncoderService, { provide: PLATFORM_ID, useValue: 'server' }]
+        providers: [
+          CatbeeSessionStorageService,
+          CatbeeStorageEncoderService,
+          { provide: PLATFORM_ID, useValue: 'server' }
+        ]
       });
-      service = TestBed.inject(SessionStorageService);
+      service = TestBed.inject(CatbeeSessionStorageService);
     });
 
     it('should handle operations in SSR context gracefully', () => {

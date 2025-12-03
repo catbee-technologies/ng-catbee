@@ -12,7 +12,7 @@ import type { CatbeeStorageEncodingConfig, StorageType } from './storage.types';
  * @internal
  */
 @Injectable({ providedIn: 'root' })
-export class StorageEncoderService {
+export class CatbeeStorageEncoderService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly globalConfig = inject(CATBEE_STORAGE_CONFIG, { optional: true });
 

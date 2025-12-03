@@ -1,1 +1,1 @@
-export { JwtService, type JwtPayload, type DecodedJwt } from './jwt.service';
+export { JwtService, CatbeeJwtService, type JwtPayload, type DecodedJwt } from './jwt.service';

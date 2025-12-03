@@ -45,7 +45,7 @@ npm install @ng-catbee/jwt
 
 ```typescript
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { JwtService, type JwtPayload } from '@ng-catbee/jwt';
+import { CatbeeJwtService, type JwtPayload } from '@ng-catbee/jwt';
 
 interface UserPayload extends JwtPayload {
   userId: string;
@@ -65,7 +65,7 @@ interface UserPayload extends JwtPayload {
   `
 })
 export class UserComponent implements OnInit {
-  private jwtService = inject(JwtService);
+  private jwtService = inject(CatbeeJwtService);
   private authService = inject(AuthService);
   user = signal<UserPayload | null>(null);
   private token = this.authService.getToken(); // Replace with your token retrieval logic
@@ -98,11 +98,11 @@ export class UserComponent implements OnInit {
 ```typescript
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtService } from '@ng-catbee/jwt';
+import { CatbeeJwtService } from '@ng-catbee/jwt';
 import { AuthService } from './auth.service';
 
 export const authGuard = () => {
-  const jwtService = inject(JwtService);
+  const jwtService = inject(CatbeeJwtService);
   const authService = inject(AuthService);
   const router = inject(Router);
   const token = authService.getToken(); // Replace with your token retrieval logic
@@ -125,11 +125,11 @@ function getAuthToken(): string | null {
 ```typescript
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { JwtService } from '@ng-catbee/jwt';
+import { CatbeeJwtService } from '@ng-catbee/jwt';
 import { AuthService } from './auth.service';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const jwtService = inject(JwtService);
+  const jwtService = inject(CatbeeJwtService);
   const authService = inject(AuthService);
   const token = authService.getToken(); // Replace with your token retrieval logic
   
@@ -147,7 +147,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
 ```typescript
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
-import { JwtService } from '@ng-catbee/jwt';
+import { CatbeeJwtService } from '@ng-catbee/jwt';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -156,7 +156,7 @@ import { AuthService } from './auth.service';
   template: `<p>Token expires in: {{ remainingSeconds() }}s</p>`
 })
 export class TokenCountdownComponent implements OnInit, OnDestroy {
-  private jwtService = inject(JwtService);
+  private jwtService = inject(CatbeeJwtService);
   private authService = inject(AuthService);
   private destroy$ = new Subject<void>();
   private token = this.authService.getToken(); // Replace with your token retrieval logic
@@ -181,11 +181,11 @@ export class TokenCountdownComponent implements OnInit, OnDestroy {
 
 ```typescript
 import { Injectable, inject } from '@angular/core';
-import { JwtService } from '@ng-catbee/jwt';
+import { CatbeeJwtService } from '@ng-catbee/jwt';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private jwtService = inject(JwtService);
+  private jwtService = inject(CatbeeJwtService);
   private token: string | null = null; // Store token in service state
 
   setToken(token: string) {
