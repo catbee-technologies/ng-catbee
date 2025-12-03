@@ -383,6 +383,7 @@ interface CookieOptions {
   secure?: boolean;         // HTTPS only (default: false)
   sameSite?: 'Lax' | 'Strict' | 'None'; // CSRF protection (default: 'Lax')
   partitioned?: boolean;    // Partitioned cookie (CHIPS)
+  priority?: 'Low' | 'Medium' | 'High'; // Cookie priority (Chrome)
 }
 ```
 

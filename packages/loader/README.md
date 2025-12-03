@@ -139,11 +139,11 @@ export class AppComponent {
   private loaderService = inject(CatbeeLoaderService);
 
   async showLoader() {
-    await this.loaderService.show('default');
+    await this.loaderService.show();
   }
 
   async hideLoader() {
-    await this.loaderService.hide('default');
+    await this.loaderService.hide();
   }
 }
 ```
@@ -320,13 +320,13 @@ export class ServiceDemoComponent {
 
   async demonstrateAPI() {
     // Show loader
-    await this.loaderService.show('default');
+    await this.loaderService.show();
 
     // Check if visible
-    const isVisible = this.loaderService.isVisible('default'); // true
+    const isVisible = this.loaderService.isVisible(); // true
 
     // Get loader state
-    const state = this.loaderService.getState('default');
+    const state = this.loaderService.getState();
     console.log('Loader state:', state);
 
     // Get all visible loaders
@@ -334,13 +334,12 @@ export class ServiceDemoComponent {
     console.log('Visible loaders:', visibleLoaders);
 
     // Hide specific loader
-    await this.loaderService.hide('default');
-
+    await this.loaderService.hide();
     // Hide all loaders at once
     await this.loaderService.hideAll();
 
     // Observe loader state changes
-    this.loaderService.watch('default').subscribe(state => {
+    this.loaderService.watch().subscribe(state => {
       console.log('Loader state changed:', state);
     });
   }
