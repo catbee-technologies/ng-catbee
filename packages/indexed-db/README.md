@@ -1186,7 +1186,12 @@ export class DbStatsComponent implements OnInit {
 
 ## 📖 Documentation
 
-Full documentation: [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/intro)
+💡 Full documentation available at [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/intro/)
+
+- [Introduction](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/intro/)
+- [Installation and Configuration](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/installation/)
+- [Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/usage/)
+- [API Reference](https://catbee.npm.hprasath.com/docs/@ng-catbee/indexed-db/api-reference/)
 
 ## 📜 License
 
