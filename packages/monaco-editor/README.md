@@ -192,16 +192,15 @@ export class AppComponent {
 
 ## 📖 Documentation
 
-💡 Full documentation available at [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro)
+💡 Full documentation available at [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro/)
 
-- [Introduction](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro)
-- [Installation and Configuration](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/installation)
-- [Module Setup](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/module-setup)
-- [Single Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/single-editor)
-- [Diff Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/diff-editor)
-- [API Reference](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/api-reference)
-- [Type Definitions](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/types)
-
+- [Introduction](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro/)
+- [Installation and Configuration](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/installation/)
+- [Module Setup](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/module-setup/)
+- [Single Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/single-editor/)
+- [Diff Editor Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/usage/diff-editor/)
+- [API Reference](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/api-reference/)
+- [Type Definitions](https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/types/)
 
 ## 📜 License
 

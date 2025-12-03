@@ -533,7 +533,13 @@ export class FormComponent {
 
 ## 📖 Documentation
 
-Full documentation: [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/intro)
+💡 Full documentation available at [https://catbee.npm.hprasath.com](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/intro/)
+
+
+- [Introduction](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/intro/)
+- [Installation and Configuration](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/installation/)
+- [Usage](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/usage/)
+- [API Reference](https://catbee.npm.hprasath.com/docs/@ng-catbee/loader/api-reference/)
 
 ## 📜 License
 
