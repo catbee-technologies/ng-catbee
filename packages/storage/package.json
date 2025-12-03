@@ -1,6 +1,6 @@
 {
   "name": "@ng-catbee/storage",
-  "version": "21.0.0",
+  "version": "21.0.1",
   "author": "Hari G <hprasath.dev@gmail.com>",
   "description": "A modern, type-safe Angular library for simplified interaction with web storage APIs (localStorage and sessionStorage) — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, enum validation, reactive observables, and configurable encoding strategies.",
   "license": "MIT",
