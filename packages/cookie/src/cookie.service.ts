@@ -1,7 +1,7 @@
 import { DOCUMENT, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import type { CookieOptions } from './cookie.types';
 import { APP_BASE_HREF, isPlatformBrowser } from '@angular/common';
-import { CookieReaderService } from './cookie-reader.service';
+import { CatbeeCookieReaderService } from './cookie-reader.service';
 import { CATBEE_COOKIE_CONFIG } from './cookie.config';
 
 /**
@@ -12,7 +12,7 @@ import { CATBEE_COOKIE_CONFIG } from './cookie.config';
  *
  * @example
  * ```typescript
- * constructor(private cookieService: CookieService) {
+ * constructor(private cookieService: CatbeeCookieService) {
  *   // Set a cookie
  *   this.cookieService.set('theme', 'dark', { expires: 30, secure: true });
  *
@@ -29,7 +29,7 @@ import { CATBEE_COOKIE_CONFIG } from './cookie.config';
 @Injectable({
   providedIn: 'root'
 })
-export class CookieService extends CookieReaderService {
+export class CatbeeCookieService extends CatbeeCookieReaderService {
   private readonly document = inject<Document>(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly appBaseHref = inject<string | null>(APP_BASE_HREF, { optional: true });
@@ -449,3 +449,26 @@ export class CookieService extends CookieReaderService {
     }
   }
 }
+
+/**
+ * Public alias for the `CatbeeCookieService` used throughout the Catbee Cookie module.
+ *
+ * This export re-exports the underlying service to provide a consistent and
+ * simplified public API name across Catbee packages. No functionality is modified.
+ *
+ * @alias CookieService
+ * @see CatbeeCookieService
+ *
+ * @example
+ * ```ts
+ * import { CookieService } from '@ng-catbee/cookie';
+ *
+ * constructor(private cookies: CookieService) {
+ *   this.cookies.set('theme', 'dark', { expires: 30 });
+ *   const theme = this.cookies.get('theme');
+ * }
+ * ```
+ *
+ * @public
+ */
+export const CookieService = CatbeeCookieService;

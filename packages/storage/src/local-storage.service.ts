@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { BaseStorageService } from './base-storage.service';
+import { CatbeeBaseStorageService } from './base-storage.service';
 
 /**
  * Service for safe localStorage operations with SSR support.
@@ -13,9 +13,9 @@ import { BaseStorageService } from './base-storage.service';
  *
  * @example
  * ```typescript
- * import { LocalStorageService } from '@catbee/storage';
+ * import { CatbeeLocalStorageService } from '@ng-catbee/storage';
  *
- * constructor(private localStorage: LocalStorageService) {
+ * constructor(private localStorage: CatbeeLocalStorageService) {
  *   // Simple storage
  *   this.localStorage.set('theme', 'dark');
  *
@@ -31,7 +31,7 @@ import { BaseStorageService } from './base-storage.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LocalStorageService extends BaseStorageService {
+export class CatbeeLocalStorageService extends CatbeeBaseStorageService {
   protected getStorage(): Storage | null {
     return isPlatformBrowser(this.platformId) ? window.localStorage : null;
   }
@@ -44,3 +44,29 @@ export class LocalStorageService extends BaseStorageService {
     return 'localStorage';
   }
 }
+
+/**
+ * Public alias for the `CatbeeLocalStorageService` used across the Catbee Storage module.
+ *
+ * This export re-exports the underlying localStorage wrapper service to provide
+ * a clean, short, and consistent public API name for consumers.
+ *
+ * @alias LocalStorageService
+ * @see CatbeeLocalStorageService
+ *
+ * @example
+ * ```ts
+ * import { LocalStorageService } from '@ng-catbee/storage';
+ *
+ * constructor(private localStorage: LocalStorageService) {
+ *   this.localStorage.set('theme', 'dark');
+ *
+ *   const theme = this.localStorage.get('theme');
+ *   const count = this.localStorage.getNumber('count', 0);
+ *   const enabled = this.localStorage.getBoolean('enabled', true);
+ * }
+ * ```
+ *
+ * @public
+ */
+export const LocalStorageService = CatbeeLocalStorageService;

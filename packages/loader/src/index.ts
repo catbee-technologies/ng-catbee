@@ -1,5 +1,5 @@
-export { CatbeeLoader } from './loader.component';
-export { CatbeeLoaderService } from './loader.service';
+export { CatbeeLoader, CatbeeLoaderComponent } from './loader.component';
+export { CatbeeLoaderService, LoaderService } from './loader.service';
 export { provideCatbeeLoader, type CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
 export {
   type CatbeeLoaderGlobalConfig,

@@ -75,7 +75,7 @@ export class AppModule { }
 
 ```typescript
 import { Component, inject } from '@angular/core';
-import { CookieService } from '@ng-catbee/cookie';
+import { CatbeeCookieService, CatbeeSsrCookieService } from '@ng-catbee/cookie';
 
 @Component({
   selector: 'app-root',
@@ -86,7 +86,14 @@ import { CookieService } from '@ng-catbee/cookie';
   `
 })
 export class AppComponent {
-  private cookieService = inject(CookieService);
+  private cookieService = inject(CatbeeCookieService);
+
+  /*
+   * It only provides getting cookies from the request headers in SSR context
+   * and does not support setting cookies.
+   */
+  private ssrCookieService = inject(CatbeeSsrCookieService);
+
   value = '';
 
   save() {
@@ -103,7 +110,7 @@ export class AppComponent {
 
 ```typescript
 import { Component, inject } from '@angular/core';
-import { CookieService } from '@ng-catbee/cookie';
+import { CatbeeCookieService } from '@ng-catbee/cookie';
 
 interface UserPreferences {
   theme: string;
@@ -116,7 +123,7 @@ interface UserPreferences {
   template: `<div>User preferences saved!</div>`,
 })
 export class PreferencesComponent {
-  private cookieService = inject(CookieService);
+  private cookieService = inject(CatbeeCookieService);
 
   savePreferences() {
     const prefs: UserPreferences = {
@@ -171,14 +178,14 @@ export class PreferencesComponent {
 
 ```typescript
 import { Component, inject } from '@angular/core';
-import { CookieService } from '@ng-catbee/cookie';
+import { CatbeeCookieService } from '@ng-catbee/cookie';
 
 @Component({
   selector: 'app-settings',
   template: `<div>Settings saved!</div>`,
 })
 export class SettingsComponent {
-  private cookieService = inject(CookieService);
+  private cookieService = inject(CatbeeCookieService);
 
   // Boolean cookies (recognizes: true/false, 1/0, yes/no, on/off)
   // Read-only: returns value or default, doesn't set
@@ -231,14 +238,14 @@ export class SettingsComponent {
 
 ```typescript
 import { Component, inject } from '@angular/core';
-import { CookieService } from '@ng-catbee/cookie';
+import { CatbeeCookieService } from '@ng-catbee/cookie';
 
 @Component({
   selector: 'app-advanced',
   template: `<div>Advanced cookie operations</div>`,
 })
 export class AdvancedComponent {
-  private cookieService = inject(CookieService);
+  private cookieService = inject(CatbeeCookieService);
 
   // Atomic get-or-set operation
   getOrCreateSessionId() {

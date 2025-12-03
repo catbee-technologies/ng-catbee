@@ -87,7 +87,7 @@ export class AppModule { }
 
 ```typescript
 import { Component, inject } from '@angular/core';
-import { LocalStorageService, SessionStorageService } from '@ng-catbee/storage';
+import { CatbeeLocalStorageService, CatbeeSessionStorageService } from '@ng-catbee/storage';
 
 interface UserSettings {
   theme: string;
@@ -103,8 +103,8 @@ interface UserSettings {
   `
 })
 export class AppComponent {
-  private localStorage = inject(LocalStorageService);
-  private sessionStorage = inject(SessionStorageService);
+  private localStorage = inject(CatbeeLocalStorageService);
+  private sessionStorage = inject(CatbeeSessionStorageService);
   data = '';
 
   save() {
@@ -129,7 +129,7 @@ export class AppComponent {
 ```typescript
 @Component({ selector: 'app-typed' })
 export class TypedComponent {
-  private localStorage = inject(LocalStorageService);
+  private localStorage = inject(CatbeeLocalStorageService);
 
   examples() {
     // Boolean (recognizes: true/false, 1/0, yes/no, on/off)
@@ -160,7 +160,7 @@ export class TypedComponent {
 
 ```typescript
 import { Component, inject, OnInit } from '@angular/core';
-import { LocalStorageService } from '@ng-catbee/storage';
+import { CatbeeLocalStorageService } from '@ng-catbee/storage';
 
 @Component({
   selector: 'app-reactive',
@@ -170,7 +170,7 @@ import { LocalStorageService } from '@ng-catbee/storage';
   `,
 })
 export class ReactiveComponent implements OnInit {
-  private localStorage = inject(LocalStorageService);
+  private localStorage = inject(CatbeeLocalStorageService);
   currentTheme = 'light';
 
   ngOnInit() {
@@ -199,7 +199,7 @@ export class ReactiveComponent implements OnInit {
 ```typescript
 @Component({ selector: 'app-advanced' })
 export class AdvancedComponent implements OnInit {
-  private localStorage = inject(LocalStorageService);
+  private localStorage = inject(CatbeeLocalStorageService);
 
   ngOnInit() {
     // Watch changes to specific key
@@ -278,7 +278,7 @@ export class AdvancedComponent implements OnInit {
 
 ```typescript
 import { Injectable, inject } from '@angular/core';
-import { LocalStorageService } from '@ng-catbee/storage';
+import { CatbeeLocalStorageService } from '@ng-catbee/storage';
 
 interface CartItem {
   id: number;
@@ -289,7 +289,7 @@ interface CartItem {
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private localStorage = inject(LocalStorageService);
+  private localStorage = inject(CatbeeLocalStorageService);
   private readonly CART_KEY = 'shopping-cart';
 
   getCart(): CartItem[] {

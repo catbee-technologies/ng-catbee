@@ -1,6 +1,6 @@
 import { isPlatformServer } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, REQUEST } from '@angular/core';
-import { CookieReaderService } from './cookie-reader.service';
+import { CatbeeCookieReaderService } from './cookie-reader.service';
 
 /**
  * Server-side cookie service for SSR applications.
@@ -9,13 +9,13 @@ import { CookieReaderService } from './cookie-reader.service';
  * the Express Request object. It extends the base cookie service to provide
  * read-only cookie operations during SSR.
  *
- * Note: Write operations (set, delete, etc.) are no-ops during SSR as cookies
+ * Note: Write operations (set, delete, etc.) methods are no-ops during SSR as cookies
  * should be set on the client side. This service is primarily for reading cookies
  * that were sent with the initial request.
  *
  * @example
  * ```typescript
- * constructor(private ssrCookieService: SsrCookieService) {
+ * constructor(private ssrCookieService: CatbeeSsrCookieService) {
  *   // Get a cookie during SSR
  *   const theme = this.ssrCookieService.get('theme');
  *
@@ -29,7 +29,7 @@ import { CookieReaderService } from './cookie-reader.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SsrCookieService extends CookieReaderService {
+export class CatbeeSsrCookieService extends CatbeeCookieReaderService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly request = inject<{ headers: Headers }>(REQUEST, { optional: true });
 
@@ -44,3 +44,25 @@ export class SsrCookieService extends CookieReaderService {
     return this.request?.headers.get('cookie') ?? null;
   }
 }
+
+/**
+ * Public alias for the `CatbeeSsrCookieService` used in server-side rendering environments.
+ *
+ * This export re-exports the underlying SSR cookie reader service to provide
+ * a clean and consistent public API name across Catbee packages.
+ *
+ * @alias SsrCookieService
+ * @see CatbeeSsrCookieService
+ *
+ * @example
+ * ```ts
+ * import { SsrCookieService } from '@ng-catbee/cookie';
+ *
+ * constructor(private ssrCookies: SsrCookieService) {
+ *   const theme = this.ssrCookies.get('theme');
+ * }
+ * ```
+ *
+ * @public
+ */
+export const SsrCookieService = CatbeeSsrCookieService;

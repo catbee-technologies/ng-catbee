@@ -23,11 +23,11 @@ import { QueryBuilder } from './query-builder';
  * @example
  * ```typescript
  * // Configure in app.config.ts
- * import { provideCatbeeUtils } from '@catbee/utils';
+ * import { provideCatbeeIndexedDB } from '@ng-catbee/indexed-db';
  *
  * export const appConfig: ApplicationConfig = {
  *   providers: [
- *     provideCatbeeUtils({
+ *     provideCatbeeIndexedDB({
  *       indexedDb: {
  *         name: 'MyAppDB',
  *         version: 1,
@@ -47,7 +47,7 @@ import { QueryBuilder } from './query-builder';
  * };
  *
  * // Use in component
- * constructor(private db: IndexedDBService) {}
+ * constructor(private db: CatbeeIndexedDBService) {}
  *
  * addUser() {
  *   this.db.add('users', { email: 'john@example.com', name: 'John' })
@@ -1337,3 +1337,28 @@ export class CatbeeIndexedDBService {
     });
   }
 }
+
+/**
+ * Public alias for the `CatbeeIndexedDBService`.
+ *
+ * This export provides a stable, concise name for consumers of the Catbee
+ * IndexedDB module while re-exporting the underlying full-featured service
+ * without modification.
+ *
+ * @alias IndexedDBService
+ * @see CatbeeIndexedDBService
+ *
+ * @example
+ * ```ts
+ * import { IndexedDBService } from '@ng-catbee/indexed-db';
+ *
+ * constructor(private db: IndexedDBService) {}
+ *
+ * this.db.getAll('users').subscribe(users => {
+ *   console.log('Users:', users);
+ * });
+ * ```
+ *
+ * @public
+ */
+export const IndexedDBService = CatbeeIndexedDBService;
