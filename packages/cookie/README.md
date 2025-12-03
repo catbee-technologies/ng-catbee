@@ -388,6 +388,46 @@ interface CookieOptions {
 
 **Configuration Priority:** Method options > Global config > Built-in defaults
 
+## 🏗️ CookieBuilder API
+
+For advanced cookie string generation, use the `CookieBuilder` fluent API:
+
+```typescript
+import { CookieBuilder } from '@ng-catbee/cookie';
+
+// Create a complete cookie string
+const cookieString = CookieBuilder
+  .create('session', 'abc123')
+  .withExpires(3600000) // 1 hour in milliseconds
+  .withPath('/')
+  .withSecure()
+  .withHttpOnly()
+  .withSameSite('Strict')
+  .withMaxAge(3600) // 1 hour in seconds
+  .build();
+
+// Result: "session=abc123; Expires=...; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Strict"
+```
+
+### CookieBuilder Methods
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `create(name, value?, encoding?)` | Creates a new builder | `CookieBuilder.create('user', 'john')` |
+| `withName(name)` | Sets cookie name | `.withName('session')` |
+| `withValue(value)` | Sets cookie value | `.withValue('token123')` |
+| `withExpires(date \| ms)` | Sets expiration (Date or ms from now) | `.withExpires(86400000)` |
+| `withMaxAge(seconds)` | Sets Max-Age in seconds | `.withMaxAge(3600)` |
+| `withDomain(domain)` | Sets Domain attribute | `.withDomain('.example.com')` |
+| `withPath(path)` | Sets Path attribute | `.withPath('/app')` |
+| `withSecure(bool?)` | Sets Secure flag | `.withSecure()` |
+| `withHttpOnly(bool?)` | Sets HttpOnly flag | `.withHttpOnly()` |
+| `withSameSite(mode)` | Sets SameSite attribute | `.withSameSite('Strict')` |
+| `withPartitioned(bool?)` | Sets Partitioned flag (CHIPS) | `.withPartitioned()` |
+| `withPriority(priority)` | Sets Priority (Chrome) | `.withPriority('High')` |
+| `build()` | Returns cookie string | `.build()` |
+| `toString()` | Alias for build() | `.toString()` |
+
 ## 🔒 Security
 
 ```typescript

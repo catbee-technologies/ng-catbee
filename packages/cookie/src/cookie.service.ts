@@ -47,7 +47,7 @@ export class CatbeeCookieService extends CatbeeCookieReaderService {
   }
 
   private buildCookieString(name: string, value: string, options: CookieOptions): string {
-    const { path, domain, secure, sameSite, expires, partitioned } = this.resolveOptions(options);
+    const { path, domain, secure, sameSite, expires, partitioned, priority } = this.resolveOptions(options);
 
     let expiresAttr = '';
     if (expires) {
@@ -71,6 +71,7 @@ export class CatbeeCookieService extends CatbeeCookieReaderService {
     if (isSecure) cookie += `; Secure`;
     if (partitioned) cookie += `; Partitioned`;
     if (domain) cookie += `; Domain=${domain}`;
+    if (priority) cookie += `; Priority=${priority}`;
 
     return cookie;
   }
@@ -82,7 +83,8 @@ export class CatbeeCookieService extends CatbeeCookieReaderService {
       secure: options.secure ?? this.globalConfig?.secure ?? false,
       sameSite: options.sameSite ?? this.globalConfig?.sameSite ?? 'Lax',
       expires: options.expires ?? this.globalConfig?.expires,
-      partitioned: options.partitioned ?? this.globalConfig?.partitioned
+      partitioned: options.partitioned ?? this.globalConfig?.partitioned,
+      priority: options.priority ?? this.globalConfig?.priority ?? 'Medium'
     };
   }
 
