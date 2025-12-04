@@ -1,0 +1,121 @@
+name: Tag
+run-name: Tag for ${{ github.repository }} on ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/**/package.json"
+
+permissions:
+  contents: write
+  statuses: write
+
+jobs:
+  detect:
+    name: Detect Version Changes
+    runs-on: ubuntu-latest
+    outputs:
+      changed_count: ${{ steps.detect.outputs.changed_count }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect version changes
+        id: detect
+        run: |
+          changed=$(git diff --name-only HEAD~1 HEAD -- "packages/**/package.json")
+          echo "$changed" > changed.txt
+
+          COUNT=$(wc -l < changed.txt | tr -d ' ')
+          echo "changed_count=$COUNT" >> $GITHUB_OUTPUT
+
+          echo "Changed files:"
+          cat changed.txt
+
+  auto-tag:
+    name: Create Tags for Version Bumps
+    needs: detect
+    if: needs.detect.outputs.changed_count != '0'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed package.json files
+        run: |
+          git diff --name-only HEAD~1 HEAD -- "packages/**/package.json" > changed.txt
+
+      - name: Create tags
+        id: create_tags
+        run: |
+          CREATED=0
+          CREATED_TAGS=""
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
+            folder=$(basename "$(dirname "$file")")
+            new_version=$(jq -r '.version' "$file")
+            old_version=$(git show HEAD~1:"$file" | jq -r '.version')
+
+            if [ "$new_version" = "$old_version" ]; then
+              echo "Version unchanged → skipping tag"
+              continue
+            fi
+
+            tag="${folder}@v${new_version}"
+            echo "Creating tag: $tag"
+
+            if git tag "$tag"; then
+              CREATED=$((CREATED + 1))
+              CREATED_TAGS="$CREATED_TAGS $tag"
+            else
+              echo "Tag already exists or failed"
+            fi
+
+          done < changed.txt
+
+          echo "CREATED=$CREATED" >> $GITHUB_ENV
+          echo "CREATED_TAGS=$CREATED_TAGS" >> $GITHUB_ENV
+
+          if [ "$CREATED" -eq 0 ]; then
+            echo "No tags were created"
+            exit 1
+          fi
+
+
+      - name: Push tags
+        if: env.CREATED != '0'
+        run: git push --tags
+
+      - name: Notify commit about created tags
+        if: success()          # ← ADD THIS
+        uses: actions/github-script@v7
+        env:
+          TARGET_SHA: ${{ github.sha }}
+          CREATED_TAGS: ${{ env.CREATED_TAGS }}
+        with:
+          script: |
+            const created = (process.env.CREATED_TAGS || "").trim();
+            const formatted = created.split(" ").filter(Boolean).join(", ");
+
+            const description = created
+              ? `Created tags: ${formatted}`
+              : "No tags were created";
+
+            const targetUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.TARGET_SHA,
+              state: "success",
+              context: "Tag",
+              description,
+              target_url: targetUrl
+            });
