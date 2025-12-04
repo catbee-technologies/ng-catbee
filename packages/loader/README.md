@@ -305,6 +305,43 @@ export class CustomTemplateComponent {
 }
 ```
 
+### Blur Background Effect
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { CatbeeLoader, CatbeeLoaderService } from '@ng-catbee/loader';
+
+@Component({
+  selector: 'app-blur-demo',
+  standalone: true,
+  imports: [CatbeeLoader],
+  template: `
+    <!-- Blur effect is only applied in fullscreen mode -->
+    <catbee-loader
+      name="blur-loader"
+      [fullscreen]="true"
+      [blurBackground]="true"
+      [blurPixels]="10"
+      animation="ball-spin-fade"
+    />
+  `,
+})
+export class BlurDemoComponent {
+  private loaderService = inject(CatbeeLoaderService);
+
+  async showWithBlur() {
+    // Override blur settings at runtime
+    await this.loaderService.show('blur-loader', {
+      blurBackground: true,
+      blurPixels: 15,
+      message: 'Processing with blur effect...'
+    });
+  }
+}
+```
+
+> **Note:** The blur effect (`blurBackground` and `blurPixels`) only applies when `fullscreen` is `true`. This ensures optimal visual appearance and performance.
+
 ### Service API
 
 ```typescript
@@ -394,6 +431,8 @@ The library includes 50+ beautiful loading animations. Each animation requires i
 | `customTemplate` | `string` | `null` | Custom HTML template |
 | `width` | `string` | `'100%'` | Loader container width |
 | `height` | `string` | `'100%'` | Loader container height |
+| `blurBackground` | `boolean` | `false` | Apply blur effect to background (fullscreen only) |
+| `blurPixels` | `number` | `5` | Amount of blur in pixels (requires `blurBackground: true`) |
 
 ### Component Outputs
 | Output | Type | Description |
@@ -424,6 +463,8 @@ interface LoaderDisplayOptions {
   zIndex?: number;
   customTemplate?: string;
   message?: string;
+  blurBackground?: boolean;
+  blurPixels?: number;
 }
 ```
 
@@ -439,6 +480,8 @@ export interface CatbeeLoaderGlobalConfig {
   fullscreen?: boolean;
   message?: string | null;
   customTemplate?: string | null;
+  blurBackground?: boolean;
+  blurPixels?: number;
 }
 ```
 

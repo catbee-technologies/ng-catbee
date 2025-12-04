@@ -340,8 +340,7 @@ describe('CatbeeLoaderService', () => {
         fullscreen: false,
         zIndex: 5000,
         customTemplate: '<div>Custom</div>',
-        message: 'Loading all options',
-        blockScroll: false
+        message: 'Loading all options'
       };
 
       await service.show('all-options-loader', options);
@@ -355,6 +354,35 @@ describe('CatbeeLoaderService', () => {
       expect(state?.zIndex).toBe(options.zIndex);
       expect(state?.customTemplate).toBe(options.customTemplate);
       expect(state?.message).toBe(options.message);
+    });
+  });
+
+  describe('blur background options', () => {
+    it('should accept blurBackground option', async () => {
+      await service.show('blur-loader', { blurBackground: true });
+
+      const state = service.getState('blur-loader');
+      expect(state?.blurBackground).toBe(true);
+    });
+
+    it('should accept blurPixels option', async () => {
+      await service.show('blur-loader', { blurPixels: 15 });
+
+      const state = service.getState('blur-loader');
+      expect(state?.blurPixels).toBe(15);
+    });
+
+    it('should accept both blur options together', async () => {
+      await service.show('blur-loader', {
+        blurBackground: true,
+        blurPixels: 20,
+        fullscreen: true
+      });
+
+      const state = service.getState('blur-loader');
+      expect(state?.blurBackground).toBe(true);
+      expect(state?.blurPixels).toBe(20);
+      expect(state?.fullscreen).toBe(true);
     });
   });
 });

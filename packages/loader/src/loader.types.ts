@@ -19,6 +19,10 @@ export interface CatbeeLoaderGlobalConfig {
   message?: string | null;
   /** Default custom template for loaders */
   customTemplate?: string | null;
+  /** Whether to apply a blur effect to the background when the loader is visible */
+  blurBackground?: boolean;
+  /** Amount of blur in pixels to apply to the background when blurBackground is true, Default is 5 */
+  blurPixels?: number;
 }
 
 /** Loader visibility state */
@@ -52,7 +56,9 @@ export const CATBEE_LOADER_DEFAULTS: Required<Omit<CatbeeLoaderGlobalConfig, 'cu
   zIndex: 999999,
   size: 'default',
   animation: 'ball-spin-clockwise',
-  fullscreen: true
+  fullscreen: true,
+  blurBackground: false,
+  blurPixels: 5
 } as const;
 
 /** Loader animation element counts for different loader types */

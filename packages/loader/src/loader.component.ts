@@ -71,8 +71,10 @@ import { CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
         [class.catbee-loader-overlay]="loaderData().fullscreen"
         [class.fullscreen]="loaderData().fullscreen"
         [class.fading-out]="isFadingOut()"
+        [class.catbee-loader-blur]="loaderData().fullscreen && loaderData().blurBackground"
         [style.background-color]="loaderData().backgroundColor"
         [style.z-index]="loaderData().zIndex"
+        [style.--catbee-blur-amount]="blurAmount()"
       >
         <div class="ng-catbee-loader-container">
           @if (loaderData().customTemplate) {
@@ -137,6 +139,12 @@ export class CatbeeLoader implements OnInit {
   /** Loading message to display below loader */
   readonly message = input<string>();
 
+  /** Whether to apply a blur effect to the background when the loader is visible */
+  readonly blurBackground = input<boolean>();
+
+  /** Amount of blur in pixels to apply to the background when blurBackground is true */
+  readonly blurPixels = input<number>();
+
   /** Emits when loader visibility changes */
   readonly visibleChange = output<boolean>();
 
@@ -153,7 +161,9 @@ export class CatbeeLoader implements OnInit {
     visible: false,
     zIndex: CATBEE_LOADER_DEFAULTS.zIndex,
     customTemplate: null,
-    message: null
+    message: null,
+    blurBackground: CATBEE_LOADER_DEFAULTS.blurBackground,
+    blurPixels: CATBEE_LOADER_DEFAULTS.blurPixels
   });
 
   // Track which properties were set via service (to distinguish from defaults)
@@ -195,8 +205,20 @@ export class CatbeeLoader implements OnInit {
       visible: state.visible,
       zIndex: overrides.zIndex ?? this.zIndex() ?? this.globalConfig?.zIndex ?? CATBEE_LOADER_DEFAULTS.zIndex,
       customTemplate: overrides.customTemplate ?? this.customTemplate() ?? this.globalConfig?.customTemplate ?? null,
-      message: overrides.message ?? this.message() ?? this.globalConfig?.message ?? null
+      message: overrides.message ?? this.message() ?? this.globalConfig?.message ?? null,
+      blurBackground:
+        overrides.blurBackground ??
+        this.blurBackground() ??
+        this.globalConfig?.blurBackground ??
+        CATBEE_LOADER_DEFAULTS.blurBackground,
+      blurPixels:
+        overrides.blurPixels ?? this.blurPixels() ?? this.globalConfig?.blurPixels ?? CATBEE_LOADER_DEFAULTS.blurPixels
     };
+  });
+
+  readonly blurAmount = computed(() => {
+    const data = this.loaderData();
+    return data.fullscreen && data.blurBackground ? `blur(${data.blurPixels}px)` : '';
   });
 
   constructor() {
@@ -234,6 +256,8 @@ export class CatbeeLoader implements OnInit {
           if (state.zIndex !== undefined) overrides.zIndex = state.zIndex;
           if (state.customTemplate !== undefined) overrides.customTemplate = state.customTemplate;
           if (state.message !== undefined) overrides.message = state.message;
+          if (state.blurBackground !== undefined) overrides.blurBackground = state.blurBackground;
+          if (state.blurPixels !== undefined) overrides.blurPixels = state.blurPixels;
 
           this.serviceOverrides.set(overrides);
           this.isFadingOut.set(false);

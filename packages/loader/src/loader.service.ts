@@ -74,7 +74,9 @@ export class CatbeeLoaderService {
         fullscreen: options?.fullscreen,
         zIndex: options?.zIndex,
         customTemplate: options?.customTemplate,
-        message: options?.message
+        message: options?.message,
+        blurBackground: options?.blurBackground,
+        blurPixels: options?.blurPixels
       };
 
       this.loaderState$.next(state);

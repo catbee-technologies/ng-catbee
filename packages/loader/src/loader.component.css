@@ -41,6 +41,11 @@
   overflow: hidden !important;
 }
 
+.catbee-loader-blur {
+  backdrop-filter: var(--catbee-blur-amount, blur(5px));
+  -webkit-backdrop-filter: var(--catbee-blur-amount, blur(5px));
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -58,5 +63,12 @@
 
   to {
     opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catbee-loader-blur {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }

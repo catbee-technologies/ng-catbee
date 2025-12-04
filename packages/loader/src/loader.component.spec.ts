@@ -113,6 +113,26 @@ describe('CatbeeLoader', () => {
       expect(component.loaderData().zIndex).toBe(10000);
     });
 
+    it('should apply blur background when enabled', async () => {
+      fixture.componentRef.setInput('blurBackground', true);
+      fixture.componentRef.setInput('blurPixels', 10);
+      fixture.detectChanges();
+
+      await service.show('default');
+      fixture.detectChanges();
+
+      expect(component.loaderData().blurBackground).toBe(true);
+      expect(component.loaderData().blurPixels).toBe(10);
+    });
+
+    it('should default blurBackground to false', async () => {
+      await service.show('default');
+      fixture.detectChanges();
+
+      expect(component.loaderData().blurBackground).toBe(false);
+      expect(component.loaderData().blurPixels).toBe(5);
+    });
+
     it('should display custom template', async () => {
       const template = '<div class="custom">Custom loader</div>';
       fixture.componentRef.setInput('customTemplate', template);
@@ -216,7 +236,9 @@ describe('CatbeeLoader', () => {
         fullscreen: false,
         zIndex: 5000,
         customTemplate: '<div>Override</div>',
-        message: 'Override message'
+        message: 'Override message',
+        blurBackground: true,
+        blurPixels: 15
       };
 
       await service.show('default', options);
@@ -231,6 +253,8 @@ describe('CatbeeLoader', () => {
       expect(data.zIndex).toBe(options.zIndex);
       expect(data.customTemplate).toBe(options.customTemplate);
       expect(data.message).toBe(options.message);
+      expect(data.blurBackground).toBe(options.blurBackground);
+      expect(data.blurPixels).toBe(options.blurPixels);
     });
   });
 
@@ -335,6 +359,50 @@ describe('CatbeeLoader', () => {
       const loaderDiv = compiled.querySelector('.catbee-loader');
 
       expect(loaderDiv).toBeFalsy();
+    });
+
+    it('should apply blur class only when fullscreen and blurBackground are enabled', async () => {
+      fixture.componentRef.setInput('fullscreen', true);
+      fixture.componentRef.setInput('blurBackground', true);
+      fixture.componentRef.setInput('blurPixels', 8);
+      fixture.detectChanges();
+
+      await service.show('default');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const loaderDiv = compiled.querySelector('.catbee-loader');
+
+      expect(loaderDiv?.classList.contains('catbee-loader-blur')).toBe(true);
+    });
+
+    it('should not apply blur class when fullscreen is false', async () => {
+      fixture.componentRef.setInput('fullscreen', false);
+      fixture.componentRef.setInput('blurBackground', true);
+      fixture.componentRef.setInput('blurPixels', 8);
+      fixture.detectChanges();
+
+      await service.show('default');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const loaderDiv = compiled.querySelector('.catbee-loader');
+
+      expect(loaderDiv?.classList.contains('catbee-loader-blur')).toBe(false);
+    });
+
+    it('should not apply blur class when blurBackground is false', async () => {
+      fixture.componentRef.setInput('fullscreen', true);
+      fixture.componentRef.setInput('blurBackground', false);
+      fixture.detectChanges();
+
+      await service.show('default');
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const loaderDiv = compiled.querySelector('.catbee-loader');
+
+      expect(loaderDiv?.classList.contains('catbee-loader-blur')).toBe(false);
     });
   });
 
