@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/ci.yml"
+      - "packages/**/**.ts"
+      - "packages/**/tsconfig*.json"
   pull_request:
     types: 
       - opened
