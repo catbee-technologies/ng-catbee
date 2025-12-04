@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Run stale action
-        uses: actions/stale@v9
+        uses: actions/stale@v10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue is stale because it has been open for 90 days with no activity.'
