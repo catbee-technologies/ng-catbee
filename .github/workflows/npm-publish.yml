@@ -1,75 +1,144 @@
 name: Publish Angular Packages
+run-name: Publish Angular Packages for ${{ github.repository }} on ${{ github.ref_name }}
 
 on:
-  push:
-    tags:
-      - 'utils@v*.*.*'
-      - 'monaco-editor@v*.*.*'
-      - 'loader@v*.*.*'
-      - 'jwt@v*.*.*'
-      - 'storage@v*.*.*'
-      - 'cookie@v*.*.*'
-      - 'indexed-db@v*.*.*'
+  workflow_run:
+    workflows: ["Tag"]
+    types:
+      - completed
   workflow_dispatch:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Report failure to commit (tag workflow failed)
+        if: ${{ github.event.workflow_run.conclusion != 'success' }}
+        uses: actions/github-script@v7
+        env:
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+        with:
+          script: |
+            const targetUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.TARGET_SHA,
+              state: "failure",
+              context: "Release",
+              description: "Failed due to Tag workflow did not complete successfully",
+              target_url: targetUrl
+            });
+
+            core.setFailed("Tag workflow failed — stopping publish workflow");
+
+      - name: Stop publish workflow
+        if: ${{ github.event.workflow_run.conclusion != 'success' }}
+        run: |
+          echo "Tag workflow failed — stopping publish workflow"
+          exit 1
+
+      - name: Checkout the exact commit where tags were created
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Fetch all tags
+        run: git fetch --tags --force
+
+      - name: Detect tags pointing at this commit
+        id: tags
+        run: |
+          COMMIT_SHA=${{ github.event.workflow_run.head_sha }}
+          TAGS=$(git tag --points-at $COMMIT_SHA | tr '\n' ' ')
+          echo "Commit: $COMMIT_SHA"
+          echo "Found tags: $TAGS"
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Extract package name from tag
-        run: |
-          REF=${GITHUB_REF_NAME}
-          PACKAGE=${REF%%@v*}   # everything before "@v"
-          echo "PACKAGE=$PACKAGE" >> $GITHUB_ENV
-
-      - name: Build the selected package
-        run: npm run build:$PACKAGE
-
-      - name: Clean package.json before publishing
-        run: |
-          PKG_PATH=dist/@ng-catbee/$PACKAGE
-          node -e "
-          const fs = require('fs');
-          const pkg = JSON.parse(fs.readFileSync('$PKG_PATH/package.json', 'utf8'));
-          delete pkg.devDependencies;
-          delete pkg.scripts;
-          fs.writeFileSync('$PKG_PATH/package.json', JSON.stringify(pkg, null, 2));
-          console.log('Cleaned package.json for publish');
-          "
-
-      - name: Publish to npm
+      - name: Publish all packages
+        if: env.TAGS != ''
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          PKG_PATH=dist/@ng-catbee/$PACKAGE
-          VERSION=${GITHUB_REF_NAME##*@v}
+          PUBLISHED_LIST=""
+          for TAG in $TAGS; do
+            echo -e "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo -e "Processing tag: $TAG"
+            echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            
+            PACKAGE=${TAG%%@v*}
+            VERSION=${TAG##*@v}
+            FULL="${PACKAGE}@v${VERSION}"
 
-          echo "Publishing package: $PKG_PATH"
-          echo "Version: $VERSION"
+            echo "Package: $PACKAGE"
+            echo "Version: $VERSION"
 
-          cd "$PKG_PATH"
+            # Build package
+            npm run build:$PACKAGE
 
-          if [[ "$VERSION" == *-* ]]; then
-            TAG=$(echo "$VERSION" | sed 's/^[0-9.]*-//' | cut -d. -f1)
-            echo "Detected prerelease. Tag: $TAG"
-            npm publish --access public --tag "$TAG"
-          else
-            echo "Stable release detected. Tag: latest"
-            npm publish --access public --tag latest
-          fi
+            PKG_PATH=dist/@ng-catbee/$PACKAGE
+
+            # Clean package.json
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('$PKG_PATH/package.json', 'utf8'));
+              delete pkg.devDependencies;
+              delete pkg.scripts;
+              fs.writeFileSync('$PKG_PATH/package.json', JSON.stringify(pkg, null, 2));
+            "
+
+            cd "$PKG_PATH"
+
+            # Publish package
+            if [[ "$VERSION" == *-* ]]; then
+              TAG_NAME=$(echo "$VERSION" | sed 's/^[0-9.]*-//' | cut -d. -f1)
+              echo "Publishing prerelease with tag: $TAG_NAME"
+              npm publish --access public --tag "$TAG_NAME"
+            else
+              echo "Publishing stable release"
+              npm publish --access public --tag latest
+            fi
+
+            cd - > /dev/null
+
+            # Append to published list
+            PUBLISHED_LIST="$PUBLISHED_LIST $FULL"
+          done
+
+          echo "PUBLISHED_LIST=$PUBLISHED_LIST" >> $GITHUB_ENV
+
+      - name: Report status to commit
+        uses: actions/github-script@v7
+        env:
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha }}
+          PUBLISHED_LIST: ${{ env.PUBLISHED_LIST }}
+        with:
+          script: |
+            const description = process.env.PUBLISHED_LIST?.trim() || "No packages published";
+            const targetUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: process.env.TARGET_SHA,
+              state: "success",
+              context: "Release",
+              description: description,
+              target_url: targetUrl
+            });

@@ -19,14 +19,19 @@ const preid = args.find(a => ['alpha', 'beta', 'rc', 'next', 'dev', 'nightly', '
 const dryRunMode = args.includes('dry-run') || args.includes('dryrun');
 
 if (!pkgList.length) {
-  console.error("❌ No valid packages provided!");
+  console.error('❌ No valid packages provided!');
   process.exit(1);
 }
 
-console.log("Args:", args.join(' '));
+console.log('📦 Packages to release:', pkgList.join(', '));
+if (dryRunMode) console.log('⚠️  Dry Run Mode — no changes will be applied\n');
 
-console.log("📦 Packages to release:", pkgList.join(', '));
-if (dryRunMode) console.log("⚠️  Dry Run Mode — no changes will be applied");
+// Ensure clean working directory
+const status = execSync('git status --porcelain', { encoding: 'utf8' });
+if (!dryRunMode && status) {
+  console.warn('⚠️  Uncommitted changes detected. Commit or stash them before releasing.\n');
+  process.exit(1);
+}
 
 if (!dryRunMode) {
   let seconds = 5;
@@ -42,7 +47,7 @@ if (!dryRunMode) {
 
     if (ms <= 0) {
       clearInterval(intervalId);
-      process.stdout.write("\r🚀 Starting release...        \n");
+      process.stdout.write('\r🚀 Starting release...        \n');
     }
   }, 100);
 
@@ -52,18 +57,11 @@ if (!dryRunMode) {
 const allowedBumps = ['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease'];
 
 if (!allowedBumps.includes(bump) && !/^\d+\.\d+\.\d+(-.*)?$/.test(bump)) {
-  console.error(`❌ Invalid bump "${bump}". Expected version or one of: ${allowedBumps.join(', ')}`);
+  console.error(`❌ Invalid bump '${bump}'. Expected version or one of: ${allowedBumps.join(', ')}`);
   process.exit(1);
 }
 
-// Ensure clean working directory
-const status = execSync('git status --porcelain', { encoding: 'utf8' });
-if (!dryRunMode && status) {
-  console.warn('⚠️  Uncommitted changes detected. Commit or stash them before releasing.');
-  process.exit(1);
-}
-
-let generatedTags = [];
+const releases = [];
 
 for (const pkgName of pkgList) {
   const projectPath = path.resolve(`packages/${pkgName}`);
@@ -81,41 +79,66 @@ for (const pkgName of pkgList) {
 
   if (allowedBumps.includes(bump)) {
     // Handle prerelease with identifier
-    if (bump.startsWith("pre") && !preid) {
+    if (bump.startsWith('pre') && !preid) {
       console.error(`❌ Pre-release requires preid (alpha/beta/rc...)`);
       process.exit(1);
     }
     if (preid) cmd += ` --preid=${preid}`;
     if (dryRunMode) {
       newVersion = execSync(cmd + ' --json', { encoding: 'utf8' });
-      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️   ${newVersion}`);
+      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➜  ${newVersion}`);
       execSync(`git checkout -- ${pkgJsonPath}`);
     }
-    if (!dryRunMode) newVersion = execSync(cmd, { encoding: "utf8" }).trim().replace('v', '');
+    if (!dryRunMode) newVersion = execSync(cmd, { encoding: 'utf8' }).trim().replace('v', '');
   } else {
     if (!dryRunMode) {
       pkgJson.version = bump;
       fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
     } else {
-      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➡️   ${newVersion}`);
+      console.log(`✔ [DRY-RUN] ${pkgName} would be bumped from ${currentVersion} ➜  ${newVersion}`);
     }
   }
 
   if (!dryRunMode) {
-    console.log(`✔ ${pkgName} bumped from ${currentVersion} ➡️   ${newVersion}`);
+    console.log(`✔ ${pkgName} bumped from ${currentVersion} ➜  ${newVersion}`);
     execSync(`git add ${pkgJsonPath}`);
-    execSync(`git commit -m "release(${pkgName}): v${newVersion}"`);
-    const tag = `${pkgName}@v${newVersion}`;
-    execSync(`git tag ${tag}`);
-    generatedTags.push(tag);
+    releases.push({
+      pkgName,
+      fullName: `@ng-catbee/${pkgName}`,
+      version: newVersion
+    });
   }
 }
 
 if (!dryRunMode) {
-  console.log("\n📤 Pushing commits + tags...");
-  execSync("git push", { stdio: "inherit" });
-  execSync(`git push origin ${generatedTags.join(" ")}`, { stdio: "inherit" });
-  console.log("🏁 Release complete →", generatedTags.join(", "));
+  let commitMsg = '';
+
+  if (releases.length === 1) {
+    const r = releases[0];
+    commitMsg = `release(${r.fullName}): v${r.version}`;
+  } else {
+    commitMsg = `release(${bump}): multiple packages\n`;
+    releases.sort((a, b) => a.fullName.localeCompare(b.fullName));
+    for (const r of releases) {
+      commitMsg += `- ${r.fullName} v${r.version}\n`;
+    }
+  }
+
+  console.log('\n📝 Commit message:\n' + commitMsg);
+
+  let msgCmd = `git commit`;
+  const lines = commitMsg.trim().split("\n");
+  msgCmd += ` -m "${lines[0]}"`;
+  for (let i = 1; i < lines.length; i++) {
+    msgCmd += ` -m "${lines[i]}"`;
+  }
+  execSync(msgCmd, { stdio: 'inherit' });
+  console.log('✔ Release commit created.\n');
+
+  console.log("\n🎉 Release Summary:");
+  releases.forEach(r => {
+    console.log(`- ${r.fullName} ➜  v${r.version}`);
+  });
 }
 
 /** Cleanup local tags */
