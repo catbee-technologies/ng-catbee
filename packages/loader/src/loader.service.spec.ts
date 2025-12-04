@@ -12,6 +12,8 @@ describe('CatbeeLoaderService', () => {
     });
 
     service = TestBed.inject(CatbeeLoaderService);
+    // Clear any existing overflow styles
+    document.body.style.overflow = '';
   });
 
   it('should be created', () => {
@@ -383,6 +385,124 @@ describe('CatbeeLoaderService', () => {
       expect(state?.blurBackground).toBe(true);
       expect(state?.blurPixels).toBe(20);
       expect(state?.fullscreen).toBe(true);
+    });
+  });
+
+  describe('body overflow management', () => {
+    beforeEach(() => {
+      // Clear any existing overflow styles
+      document.body.style.overflow = '';
+    });
+
+    it('should set body overflow to hidden when fullscreen loader is shown', async () => {
+      await service.show('fullscreen-loader', { fullscreen: true });
+
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should set body overflow to hidden when loader with default fullscreen is shown', async () => {
+      await service.show('default-fullscreen-loader');
+
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should not set body overflow when non-fullscreen loader is shown', async () => {
+      await service.show('inline-loader', { fullscreen: false });
+
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should remove body overflow when fullscreen loader is hidden', async () => {
+      await service.show('fullscreen-loader', { fullscreen: true });
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('fullscreen-loader');
+
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should keep body overflow when one fullscreen loader remains after hiding another', async () => {
+      await service.show('fullscreen1', { fullscreen: true });
+      await service.show('fullscreen2', { fullscreen: true });
+
+      await service.hide('fullscreen1');
+
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should remove body overflow only when all fullscreen loaders are hidden', async () => {
+      await service.show('fullscreen1', { fullscreen: true });
+      await service.show('fullscreen2', { fullscreen: true });
+      await service.show('fullscreen3', { fullscreen: true });
+
+      await service.hide('fullscreen1');
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('fullscreen2');
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('fullscreen3');
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should handle mixed fullscreen and non-fullscreen loaders correctly', async () => {
+      await service.show('inline1', { fullscreen: false });
+      await service.show('fullscreen1', { fullscreen: true });
+      await service.show('inline2', { fullscreen: false });
+
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('inline1');
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('fullscreen1');
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should remove body overflow when hideAll is called', async () => {
+      await service.show('loader1', { fullscreen: true });
+      await service.show('loader2', { fullscreen: true });
+
+      await service.hideAll();
+
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should restore body overflow after hideAll followed by new fullscreen loader', async () => {
+      await service.show('loader1', { fullscreen: true });
+      await service.hideAll();
+      expect(document.body.style.overflow).toBe('');
+
+      await service.show('loader2', { fullscreen: true });
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should not block scroll when blockScroll is false', async () => {
+      await service.show('no-block-loader', { fullscreen: true, blockScroll: false });
+
+      expect(document.body.style.overflow).toBe('');
+    });
+
+    it('should block scroll when blockScroll is true', async () => {
+      await service.show('block-loader', { fullscreen: true, blockScroll: true });
+
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should respect blockScroll default (true) when not specified', async () => {
+      await service.show('default-block-loader', { fullscreen: true });
+
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    it('should handle multiple loaders with different blockScroll settings', async () => {
+      await service.show('block1', { fullscreen: true, blockScroll: true });
+      await service.show('no-block', { fullscreen: true, blockScroll: false });
+
+      expect(document.body.style.overflow).toBe('hidden');
+
+      await service.hide('block1');
+      expect(document.body.style.overflow).toBe('');
     });
   });
 });

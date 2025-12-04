@@ -3,11 +3,9 @@ import {
   ChangeDetectionStrategy,
   DestroyRef,
   computed,
-  effect,
   inject,
   input,
   signal,
-  DOCUMENT,
   OnInit,
   output
 } from '@angular/core';
@@ -107,7 +105,6 @@ export class CatbeeLoader implements OnInit {
   private readonly loaderService = inject(CatbeeLoaderService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly globalConfig = inject(CATBEE_LOADER_GLOBAL_CONFIG, { optional: true });
-  private readonly document = inject(DOCUMENT);
 
   /** Unique name for this loader instance */
   readonly name = input<string>(CATBEE_LOADER_DEFAULTS.name);
@@ -145,6 +142,9 @@ export class CatbeeLoader implements OnInit {
   /** Amount of blur in pixels to apply to the background when blurBackground is true */
   readonly blurPixels = input<number>();
 
+  /** Whether to block page scrolling when fullscreen loader is visible */
+  readonly blockScroll = input<boolean>();
+
   /** Emits when loader visibility changes */
   readonly visibleChange = output<boolean>();
 
@@ -163,7 +163,8 @@ export class CatbeeLoader implements OnInit {
     customTemplate: null,
     message: null,
     blurBackground: CATBEE_LOADER_DEFAULTS.blurBackground,
-    blurPixels: CATBEE_LOADER_DEFAULTS.blurPixels
+    blurPixels: CATBEE_LOADER_DEFAULTS.blurPixels,
+    blockScroll: CATBEE_LOADER_DEFAULTS.blockScroll
   });
 
   // Track which properties were set via service (to distinguish from defaults)
@@ -212,7 +213,12 @@ export class CatbeeLoader implements OnInit {
         this.globalConfig?.blurBackground ??
         CATBEE_LOADER_DEFAULTS.blurBackground,
       blurPixels:
-        overrides.blurPixels ?? this.blurPixels() ?? this.globalConfig?.blurPixels ?? CATBEE_LOADER_DEFAULTS.blurPixels
+        overrides.blurPixels ?? this.blurPixels() ?? this.globalConfig?.blurPixels ?? CATBEE_LOADER_DEFAULTS.blurPixels,
+      blockScroll:
+        overrides.blockScroll ??
+        this.blockScroll() ??
+        this.globalConfig?.blockScroll ??
+        CATBEE_LOADER_DEFAULTS.blockScroll
     };
   });
 
@@ -220,18 +226,6 @@ export class CatbeeLoader implements OnInit {
     const data = this.loaderData();
     return data.fullscreen && data.blurBackground ? `blur(${data.blurPixels}px)` : '';
   });
-
-  constructor() {
-    // Handle scroll blocking based on loader visibility
-    effect(() => {
-      const loaderData = this.loaderData();
-      if (loaderData.visible && loaderData.fullscreen) {
-        this.document.body.classList.add('catbee-loader-block-scroll');
-      } else {
-        this.document.body.classList.remove('catbee-loader-block-scroll');
-      }
-    });
-  }
 
   ngOnInit(): void {
     this.watchLoader$();
@@ -258,6 +252,7 @@ export class CatbeeLoader implements OnInit {
           if (state.message !== undefined) overrides.message = state.message;
           if (state.blurBackground !== undefined) overrides.blurBackground = state.blurBackground;
           if (state.blurPixels !== undefined) overrides.blurPixels = state.blurPixels;
+          if (state.blockScroll !== undefined) overrides.blockScroll = state.blockScroll;
 
           this.serviceOverrides.set(overrides);
           this.isFadingOut.set(false);

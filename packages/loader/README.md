@@ -465,6 +465,7 @@ interface LoaderDisplayOptions {
   message?: string;
   blurBackground?: boolean;
   blurPixels?: number;
+  blockScroll?: boolean;
 }
 ```
 
@@ -482,6 +483,7 @@ export interface CatbeeLoaderGlobalConfig {
   customTemplate?: string | null;
   blurBackground?: boolean;
   blurPixels?: number;
+  blockScroll?: boolean;
 }
 ```
 

@@ -23,6 +23,8 @@ export interface CatbeeLoaderGlobalConfig {
   blurBackground?: boolean;
   /** Amount of blur in pixels to apply to the background when blurBackground is true, Default is 5 */
   blurPixels?: number;
+  /** Whether to block page scrolling when fullscreen loader is visible, Default is true */
+  blockScroll?: boolean;
 }
 
 /** Loader visibility state */
@@ -58,7 +60,8 @@ export const CATBEE_LOADER_DEFAULTS: Required<Omit<CatbeeLoaderGlobalConfig, 'cu
   animation: 'ball-spin-clockwise',
   fullscreen: true,
   blurBackground: false,
-  blurPixels: 5
+  blurPixels: 5,
+  blockScroll: true
 } as const;
 
 /** Loader animation element counts for different loader types */

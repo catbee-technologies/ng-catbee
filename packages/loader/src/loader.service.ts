@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, DOCUMENT } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CatbeeLoaderState, CATBEE_LOADER_DEFAULTS, CatbeeLoaderGlobalConfig } from './loader.types';
@@ -50,6 +50,7 @@ type Nullable<T> = T | null | undefined;
 export class CatbeeLoaderService {
   private readonly loaderState$ = new Subject<CatbeeLoaderState>();
   private readonly activeLoaders = signal<Map<string, CatbeeLoaderState>>(new Map());
+  private readonly document = inject(DOCUMENT);
 
   /** Observable stream of all loader state changes */
   public loader$ = this.loaderState$.asObservable();
@@ -76,7 +77,8 @@ export class CatbeeLoaderService {
         customTemplate: options?.customTemplate,
         message: options?.message,
         blurBackground: options?.blurBackground,
-        blurPixels: options?.blurPixels
+        blurPixels: options?.blurPixels,
+        blockScroll: options?.blockScroll
       };
 
       this.loaderState$.next(state);
@@ -87,6 +89,7 @@ export class CatbeeLoaderService {
         return updated;
       });
 
+      this.handleOverFlow();
       resolve();
     });
   }
@@ -109,6 +112,8 @@ export class CatbeeLoaderService {
           updated.delete(loaderName);
           return updated;
         });
+
+        this.handleOverFlow();
         resolve();
       };
 
@@ -171,6 +176,22 @@ export class CatbeeLoaderService {
 
   private getLoaderName(name?: Nullable<string>): string {
     return name ?? CATBEE_LOADER_DEFAULTS.name;
+  }
+
+  /**
+   * Manages body overflow based on active fullscreen loaders.
+   * Sets overflow:hidden if any fullscreen loader is visible with blockScroll enabled, removes it otherwise.
+   */
+  private handleOverFlow(): void {
+    const hasFullscreenLoaderWithBlockScroll = Array.from(this.activeLoaders().values()).some(
+      state => state.visible && state.fullscreen !== false && state.blockScroll !== false
+    );
+
+    if (hasFullscreenLoaderWithBlockScroll) {
+      this.document.body.style.overflow = 'hidden';
+    } else {
+      this.document.body.style.overflow = '';
+    }
   }
 }
 

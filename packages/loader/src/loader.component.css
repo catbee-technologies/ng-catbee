@@ -37,10 +37,6 @@
   max-width: 20rem;
 }
 
-.catbee-loader-block-scroll {
-  overflow: hidden !important;
-}
-
 .catbee-loader-blur {
   backdrop-filter: var(--catbee-blur-amount, blur(5px));
   -webkit-backdrop-filter: var(--catbee-blur-amount, blur(5px));

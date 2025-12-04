@@ -133,6 +133,23 @@ describe('CatbeeLoader', () => {
       expect(component.loaderData().blurPixels).toBe(5);
     });
 
+    it('should apply blockScroll when enabled', async () => {
+      fixture.componentRef.setInput('blockScroll', true);
+      fixture.detectChanges();
+
+      await service.show('default');
+      fixture.detectChanges();
+
+      expect(component.loaderData().blockScroll).toBe(true);
+    });
+
+    it('should default blockScroll to true', async () => {
+      await service.show('default');
+      fixture.detectChanges();
+
+      expect(component.loaderData().blockScroll).toBe(true);
+    });
+
     it('should display custom template', async () => {
       const template = '<div class="custom">Custom loader</div>';
       fixture.componentRef.setInput('customTemplate', template);
@@ -238,7 +255,8 @@ describe('CatbeeLoader', () => {
         customTemplate: '<div>Override</div>',
         message: 'Override message',
         blurBackground: true,
-        blurPixels: 15
+        blurPixels: 15,
+        blockScroll: false
       };
 
       await service.show('default', options);
@@ -255,6 +273,7 @@ describe('CatbeeLoader', () => {
       expect(data.message).toBe(options.message);
       expect(data.blurBackground).toBe(options.blurBackground);
       expect(data.blurPixels).toBe(options.blurPixels);
+      expect(data.blockScroll).toBe(options.blockScroll);
     });
   });
 
