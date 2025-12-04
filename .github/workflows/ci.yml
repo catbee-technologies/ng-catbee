@@ -61,7 +61,7 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage
-        run: npm run test
+        run: npx cross-env COVERAGE_REPORT_TYPES=text,text-summary,lcovonly,cobertura npm run test
 
       - name: TypeScript type checking
         run: |
