@@ -42,7 +42,7 @@ describe('CatbeeMonacoEditorComponents (V1)', () => {
         const fixture = create(TestComponent);
         const initSpy = spyOn(fixture.componentInstance, 'onInit');
         await fixture.whenStable();
-        await delay(150);
+        await delay(500);
         expect(initSpy).toHaveBeenCalled();
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });

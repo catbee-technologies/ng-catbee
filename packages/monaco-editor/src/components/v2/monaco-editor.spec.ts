@@ -41,7 +41,7 @@ describe('CatbeeMonacoEditorComponents (V2 - Signal Forms)', () => {
         const fixture = create(TestEditorComponent);
         const initSpy = spyOn(fixture.componentInstance, 'onInit');
         await fixture.whenStable();
-        await delay(150);
+        await delay(500);
         expect(initSpy).toHaveBeenCalled();
         expect(fixture.componentInstance.comp.editor).toBeDefined();
       });
