@@ -1,0 +1,55 @@
+name: Node22
+run-name: Node 22 Build for ${{ github.repository }} on ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-node22.yml"
+      - "packages/**/**.ts"
+      - "packages/tsconfig*.json"
+      - "package*.json"
+  pull_request:
+    branches: 
+      - '**'
+    paths:
+      - ".github/workflows/build-node22.yml"
+      - "packages/**/**.ts"
+      - "packages/tsconfig*.json"
+      - "package*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: >
+      (
+        github.event_name != 'pull_request' ||
+        (
+          github.event.pull_request.draft == false &&
+          !contains(github.event.pull_request.title, 'WIP') &&
+          !contains(github.event.pull_request.title, 'Work in progress') &&
+          !contains(github.event.pull_request.title, '🚧')
+        )
+      )
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build

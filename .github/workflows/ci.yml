@@ -8,7 +8,8 @@ on:
     paths:
       - ".github/workflows/ci.yml"
       - "packages/**/**.ts"
-      - "packages/**/tsconfig*.json"
+      - "packages/tsconfig*.json"
+      - "package*.json"
   pull_request:
     types: 
       - opened
@@ -47,13 +48,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: "npm"
+          node-version: 24
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -115,7 +116,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
@@ -157,7 +158,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
