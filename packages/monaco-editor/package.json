@@ -1,7 +1,11 @@
 {
   "name": "@ng-catbee/monaco-editor",
   "version": "21.0.1",
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "description": "A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both single and diff editors.",
   "license": "MIT",
   "homepage": "https://catbee.in/docs/@ng-catbee/monaco-editor/intro",

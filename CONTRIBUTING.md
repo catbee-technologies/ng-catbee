@@ -66,7 +66,7 @@ By participating in this project, you agree to uphold its standards.
 
 Read the full Code of Conduct here: `CODE_OF_CONDUCT.md`
 
-Reports or concerns: **hprasath.dev@gmail.com**
+Reports or concerns: **info@catbee.in**
 
 ---
 

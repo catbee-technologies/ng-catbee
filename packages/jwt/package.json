@@ -1,7 +1,11 @@
 {
   "name": "@ng-catbee/jwt",
   "version": "21.0.1",
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "description": "A modern, type-safe Angular library for decoding, validating, and managing JSON Web Tokens (JWT) in client-side applications — fully compatible with Server-Side Rendering (SSR) and offering comprehensive token utilities including expiration tracking, claim extraction, and reactive observables.",
   "license": "MIT",
   "homepage": "https://catbee.in/docs/@ng-catbee/jwt/intro",

@@ -1,7 +1,11 @@
 {
   "name": "@ng-catbee/cookie",
   "version": "21.0.1",
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "description": "A modern, type-safe Angular library for managing browser cookies with ease — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, and enum validation.",
   "license": "MIT",
   "homepage": "https://catbee.in/docs/@ng-catbee/cookie/intro",

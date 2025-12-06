@@ -5,7 +5,11 @@
   "keywords": [
     "angular"
   ],
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "scripts": {
     "build": "node scripts/build-all.mjs",
     "build:utils": "cd packages/utils && npm run build",

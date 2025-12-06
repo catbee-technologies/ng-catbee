@@ -1,7 +1,11 @@
 {
   "name": "@ng-catbee/loader",
   "version": "21.0.2",
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "description": "A modern, customizable Angular library for displaying beautiful loading indicators and spinners with 50+ animation styles and featuring advanced options like fullscreen mode, custom templates, and multiple concurrent loaders.",
   "license": "MIT",
   "homepage": "https://catbee.in/docs/@ng-catbee/loader/intro",

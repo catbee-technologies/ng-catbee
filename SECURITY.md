@@ -8,7 +8,7 @@
 ## Reporting a Vulnerability
 Do **not** open public issues for security reports.
 - **Preferred:** Open a private advisory (GitHub > Security > Advisories > Report a vulnerability) if this repo is hosted on GitHub.
-- **Alternative:** Email a private report to **hprasath.dev@gmail.com** with:
+- **Alternative:** Email a private report to **security@catbee.in** with:
   - Affected package(s) and version(s)
   - Environment details (Angular/Node/OS)
   - Impact assessment and PoC or reproduction steps
@@ -43,4 +43,4 @@ We regularly update dependencies (e.g., via Renovate) and prioritize security up
 - When using Monaco, avoid executing untrusted code; disable features that evaluate arbitrary input.
 
 ## Contact
-For urgent matters: **hprasath.dev@gmail.com**
+For urgent security matters: **security@catbee.in**

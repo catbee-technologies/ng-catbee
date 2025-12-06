@@ -1,7 +1,11 @@
 {
   "name": "@ng-catbee/utils",
   "version": "0.0.1",
-  "author": "Hari G <hprasath.dev@gmail.com>",
+  "author": "Hari G <harig@catbee.in>",
+  "maintainers": [
+    "Hari G <harig@catbee.in>",
+    "Bavi R <bavithra@catbee.in>"
+  ],
   "description": "A modern Angular utility library providing a collection of helpful functions and services.",
   "license": "MIT",
   "homepage": "https://catbee.in/docs/@ng-catbee/utils/intro",
