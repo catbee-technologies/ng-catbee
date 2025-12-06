@@ -4,7 +4,7 @@
   "author": "Hari G <hprasath.dev@gmail.com>",
   "description": "A modern Angular library that seamlessly integrates the Monaco Editor, offering full support for both single and diff editors.",
   "license": "MIT",
-  "homepage": "https://catbee.npm.hprasath.com/docs/@ng-catbee/monaco-editor/intro",
+  "homepage": "https://catbee.in/docs/@ng-catbee/monaco-editor/intro",
   "repository": {
     "type": "git",
     "url": "https://github.com/catbee-technologies/ng-catbee.git"
