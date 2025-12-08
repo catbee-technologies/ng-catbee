@@ -19,6 +19,7 @@
     "build:storage": "cd packages/storage && npm run build",
     "build:cookie": "cd packages/cookie && npm run build",
     "build:indexed-db": "cd packages/indexed-db && npm run build",
+    "build:logger": "cd packages/logger && npm run build",
     "lint": "ng lint",
     "prelint:fix": "npm run format",
     "lint:fix": "ng lint --fix",
@@ -33,6 +34,7 @@
     "test:storage": "cross-env COVERAGE_DIR=storage npm run test-base -- storage",
     "test:cookie": "cross-env COVERAGE_DIR=cookie npm run test-base -- cookie",
     "test:indexed-db": "cross-env COVERAGE_DIR=indexed-db npm run test-base -- indexed-db",
+    "test:logger": "cross-env COVERAGE_DIR=logger npm run test-base -- logger",
     "coverage:merge": "node scripts/coverage-merge.mjs",
     "coverage:overall": "node scripts/coverage-generator.mjs",
     "coverage:nyc": "nyc report  --reporter=text --reporter=text-summary --reporter=lcovonly --reporter=cobertura --reporter=html --report-dir=coverage  -t coverage",
@@ -46,6 +48,7 @@
     "release:storage": "node scripts/npm-release.mjs storage",
     "release:cookie": "node scripts/npm-release.mjs cookie",
     "release:indexed-db": "node scripts/npm-release.mjs indexed-db",
+    "release:logger": "node scripts/npm-release.mjs logger",
     "deps:update": "npx npm-check-updates -u --target latest && npm install"
   },
   "private": true,
