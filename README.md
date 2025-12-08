@@ -11,6 +11,7 @@ A collection of Angular libraries developed and maintained by the Catbee team.
 - `@ng-catbee/monaco-editor`: Angular components and services for integrating the Monaco Editor into Angular applications.
 - `@ng-catbee/storage`: A modern, type-safe Angular library for simplified interaction with web storage APIs (localStorage and sessionStorage) — fully compatible with Server-Side Rendering (SSR) and offering advanced features like JSON storage, boolean/number parsing, enum validation, reactive observables, and configurable encoding strategies.
 - `@ng-catbee/utils`: A modern Angular utility library providing a collection of helpful functions and services.
+- `@ng-catbee/logger`: A modern, customizable Angular library for logging and managing application logs with advanced features.
 
 ## Project Structure
 - `packages/`: Contains individual Angular libraries.

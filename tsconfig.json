@@ -11,7 +11,8 @@
       "@ng-catbee/jwt/*": ["./packages/jwt/src/index"],
       "@ng-catbee/storage/*": ["./packages/storage/src/index"],
       "@ng-catbee/cookie/*": ["./packages/cookie/src/index"],
-      "@ng-catbee/indexed-db/*": ["./packages/indexed-db/src/index"]
+      "@ng-catbee/indexed-db/*": ["./packages/indexed-db/src/index"],
+      "@ng-catbee/logger": ["./packages/logger/src/index"]
     },
     "strict": true,
     "noImplicitOverride": true,
