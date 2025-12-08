@@ -86,14 +86,16 @@ export class ConsoleTransport implements LogTransport {
    */
   private writePrettyBrowser(entry: LogEntry): void {
     const levelName = CatbeeLogLevel[entry.level];
-    const time = new Date(entry.time).toISOString();
     const parts: string[] = [];
     const styles: string[] = [];
 
     if (this.useColors) {
-      // Time
-      parts.push('%c' + time);
-      styles.push(this.browserStyles.time);
+      // Time (if present)
+      if (entry.time !== undefined) {
+        const time = typeof entry.time === 'string' ? entry.time : new Date(entry.time).toISOString();
+        parts.push('%c' + time);
+        styles.push(this.browserStyles.time);
+      }
 
       // Level
       parts.push('%c[' + levelName + ']');
@@ -116,7 +118,10 @@ export class ConsoleTransport implements LogTransport {
       styles.push('color: inherit');
     } else {
       // No colors - plain text
-      parts.push(time);
+      if (entry.time !== undefined) {
+        const time = typeof entry.time === 'string' ? entry.time : new Date(entry.time).toISOString();
+        parts.push(time);
+      }
       parts.push('[' + levelName + ']');
 
       // Context Path (hierarchical child logger names)
@@ -139,8 +144,15 @@ export class ConsoleTransport implements LogTransport {
     if (entry.context && Object.keys(entry.context).length > 0) {
       extras.push(entry.context);
     }
+    // In browser, use original Error object for interactive stack traces
+    // In server/JSON mode, use serialized error
     if (entry.err) {
-      extras.push(entry.err);
+      const originalError = (entry as any)._originalError;
+      if (this.isBrowser && originalError instanceof Error) {
+        extras.push(originalError);
+      } else {
+        extras.push(entry.err);
+      }
     }
 
     // Add any other custom fields
@@ -162,13 +174,16 @@ export class ConsoleTransport implements LogTransport {
    */
   private writePrettyNode(entry: LogEntry): void {
     const levelName = CatbeeLogLevel[entry.level];
-    const time = new Date(entry.time).toISOString();
     const parts: string[] = [];
 
     if (this.useColors) {
       const color = this.ansiColors[levelName as keyof typeof this.ansiColors] as string;
 
-      parts.push(this.ansiColors.GRAY + time + this.ansiColors.RESET);
+      // Time (if present)
+      if (entry.time !== undefined) {
+        const time = typeof entry.time === 'string' ? entry.time : new Date(entry.time).toISOString();
+        parts.push(this.ansiColors.GRAY + time + this.ansiColors.RESET);
+      }
       parts.push(color + this.ansiColors.BOLD + '[' + levelName + ']' + this.ansiColors.RESET);
 
       // Context Path (hierarchical child logger names)
@@ -182,7 +197,10 @@ export class ConsoleTransport implements LogTransport {
 
       parts.push(entry.msg);
     } else {
-      parts.push(time);
+      if (entry.time !== undefined) {
+        const time = typeof entry.time === 'string' ? entry.time : new Date(entry.time).toISOString();
+        parts.push(time);
+      }
       parts.push('[' + levelName + ']');
 
       // Context Path (hierarchical child logger names)

@@ -67,8 +67,8 @@ export interface LogTransport {
 export interface LogEntry {
   /** Log level */
   level: CatbeeLogLevel;
-  /** Timestamp in milliseconds since epoch */
-  time: number;
+  /** Timestamp in milliseconds since epoch or ISO string */
+  time?: number | string;
   /** Log message */
   msg: string;
   /** Logger name or scope */
@@ -147,12 +147,14 @@ export interface CatbeeLoggerConfig {
   redactPaths?: string[];
   /** Whether to include timestamps. Default: true */
   includeTimestamp?: boolean;
+  /** Timestamp format for JSON mode. Default: 'iso' */
+  timestampFormat?: 'iso' | 'epoch';
   /** Whether to include hostname. Default: false */
   includeHostname?: boolean;
   /** Whether to include PID (server-side). Default: false */
   includePid?: boolean;
-  /** Custom timestamp function */
-  timestamp?: () => number;
+  /** Custom timestamp function. Can return epoch milliseconds or ISO string */
+  timestamp?: () => number | string;
   /** Maximum batch size for async transports. Default: 100 */
   batchSize?: number;
   /** Flush interval in ms for async transports. Default: 1000 */

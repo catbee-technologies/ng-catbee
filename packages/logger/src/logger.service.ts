@@ -72,6 +72,7 @@ export class CatbeeLogger implements OnDestroy {
       maxDepth: 5,
       redactSensitive: true,
       includeTimestamp: true,
+      timestampFormat: 'iso',
       includeHostname: false,
       includePid: false,
       batchSize: 100,
@@ -285,13 +286,28 @@ export class CatbeeLogger implements OnDestroy {
     }
 
     // Create log entry
-    const entry: LogEntry = {
+    const entry: Partial<LogEntry> = {
       level,
-      time: this.config.timestamp ? this.config.timestamp() : Date.now(),
-      msg: message,
-      name: this.config.name,
-      contextPath: this.contextPath.length > 0 ? this.contextPath : undefined
     };
+
+    // Add timestamp if enabled
+    if (this.config.includeTimestamp !== false) {
+      if (this.config.timestamp) {
+        entry.time = this.config.timestamp();
+      } else {
+        // Use timestampFormat to determine format
+        if (this.config.timestampFormat === 'epoch') {
+          entry.time = Date.now();
+        } else {
+          // Default to ISO string
+          entry.time = new Date().toISOString();
+        }
+      }
+    }
+
+    entry.msg = message;
+    entry.name = this.config.name;
+    entry.contextPath = this.contextPath.length > 0 ? this.contextPath : undefined;
 
     // Merge base context
     if (Object.keys(this.baseContext).length > 0) {
@@ -309,6 +325,16 @@ export class CatbeeLogger implements OnDestroy {
         // Extract error if present
         if (ctx['err'] || ctx['error']) {
           const err = ctx['err'] || ctx['error'];
+          // Store original error for browser console (non-enumerable to hide from output)
+          if (err instanceof Error) {
+            Object.defineProperty(entry, '_originalError', {
+              value: err,
+              enumerable: false,
+              writable: false,
+              configurable: true
+            });
+          }
+          // Serialize for structured logging
           if (this.serializers['err']) {
             entry.err = this.serializers['err'](err) as any;
           }
@@ -348,7 +374,7 @@ export class CatbeeLogger implements OnDestroy {
     }
 
     // Write to all transports
-    this.writeToTransports(entry);
+    this.writeToTransports(entry as LogEntry);
   }
 
   /**
@@ -362,7 +388,11 @@ export class CatbeeLogger implements OnDestroy {
     const result: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(context as Record<string, unknown>)) {
-      if (this.serializers[key]) {
+      // Special handling for err, req, res - pass them through without serialization
+      // They will be serialized later in the log() method with their specific serializers
+      if (key === 'err' || key === 'error' || key === 'req' || key === 'request' || key === 'res' || key === 'response') {
+        result[key] = value;
+      } else if (this.serializers[key]) {
         result[key] = this.serializers[key](value);
       } else if (this.serializers['_default']) {
         result[key] = this.serializers['_default'](value);
