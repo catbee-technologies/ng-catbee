@@ -1,5 +1,4 @@
 import { isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID } from '@angular/core';
 import { CatbeeLogLevel, LogEntry, LogTransport } from '../logger.types';
 
 /**
@@ -39,7 +38,8 @@ export class ConsoleTransport implements LogTransport {
     ERROR: 'color: #F44336; font-weight: bold',
     FATAL: 'color: #D32F2F; font-weight: bold; background: #FFCDD2',
     time: 'color: #9E9E9E; font-size: 0.9em',
-    name: 'color: #2196F3; font-weight: bold'
+    name: 'color: #2196F3; font-weight: bold',
+    contextPath: 'color: #9C27B0; font-weight: bold'
   };
 
   /** ANSI color codes for terminal */
@@ -53,7 +53,8 @@ export class ConsoleTransport implements LogTransport {
     RESET: '\x1b[0m',
     GRAY: '\x1b[90m',
     BLUE: '\x1b[34m',
-    BOLD: '\x1b[1m'
+    BOLD: '\x1b[1m',
+    MAGENTA: '\x1b[35m'
   };
 
   constructor(
@@ -80,6 +81,8 @@ export class ConsoleTransport implements LogTransport {
 
   /**
    * Write pretty-printed log for browser console.
+   * 
+   * @param entry Log entry to write
    */
   private writePrettyBrowser(entry: LogEntry): void {
     const levelName = CatbeeLogLevel[entry.level];
@@ -94,6 +97,12 @@ export class ConsoleTransport implements LogTransport {
     // Level
     parts.push('%c[' + levelName + ']');
     styles.push(this.browserStyles[levelName as keyof typeof this.browserStyles] as string);
+
+    // Context Path (hierarchical child logger names)
+    if (entry.contextPath && entry.contextPath.length > 0) {
+      parts.push('%c' + entry.contextPath.join(' > '));
+      styles.push(this.browserStyles.contextPath);
+    }
 
     // Name/scope
     if (entry.name) {
@@ -140,6 +149,11 @@ export class ConsoleTransport implements LogTransport {
       parts.push(this.ansiColors.GRAY + time + this.ansiColors.RESET);
       parts.push(color + this.ansiColors.BOLD + '[' + levelName + ']' + this.ansiColors.RESET);
 
+      // Context Path (hierarchical child logger names)
+      if (entry.contextPath && entry.contextPath.length > 0) {
+        parts.push(this.ansiColors.MAGENTA + this.ansiColors.BOLD + entry.contextPath.join(' > ') + this.ansiColors.RESET);
+      }
+
       if (entry.name) {
         parts.push(this.ansiColors.BLUE + entry.name + this.ansiColors.RESET);
       }
@@ -148,6 +162,12 @@ export class ConsoleTransport implements LogTransport {
     } else {
       parts.push(time);
       parts.push('[' + levelName + ']');
+
+      // Context Path (hierarchical child logger names)
+      if (entry.contextPath && entry.contextPath.length > 0) {
+        parts.push(entry.contextPath.join(' > '));
+      }
+
       if (entry.name) {
         parts.push(entry.name);
       }
@@ -185,7 +205,7 @@ export class ConsoleTransport implements LogTransport {
    * Get custom fields from log entry (excluding standard fields).
    */
   private getCustomFields(entry: LogEntry): Record<string, unknown> {
-    const standardFields = ['level', 'time', 'msg', 'name', 'context', 'err'];
+    const standardFields = ['level', 'time', 'msg', 'name', 'context', 'contextPath', 'err'];
     const custom: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(entry)) {

@@ -59,6 +59,7 @@ export class CatbeeLogger implements OnDestroy {
   private serializers: Record<string, Serializer>;
   private baseContext: LogContext;
   private readonly isBrowser: boolean;
+  private contextPath: string[] = [];
 
   constructor() {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -169,21 +170,39 @@ export class CatbeeLogger implements OnDestroy {
    * Child loggers inherit all configuration and base context from the parent,
    * and add their own context that is merged with every log entry.
    *
-   * @param bindings - Context bindings to add to all logs from this child logger.
+   * @param bindingsOrName - Context bindings object or a string name for hierarchical logging.
    * @returns A new child logger instance.
    *
    * @example
    * ```typescript
+   * // Object-based child logger
    * const userLogger = this.logger.child({ userId: 123, module: 'UserService' });
    * userLogger.info('User logged in'); // Includes userId and module in context
+   *
+   * // String-based hierarchical logger
+   * const mainLogger = this.logger.child('Main');
+   * const childLogger = mainLogger.child('Child');
+   * childLogger.info('Message'); // Displays as: Main > Child Message
    * ```
    */
-  child(bindings: LogContext): CatbeeLogger {
-    const childLogger = new CatbeeLogger();
+  child(bindingsOrName: LogContext | string): CatbeeLogger {
+    const childLogger = Object.create(CatbeeLogger.prototype);
     childLogger.config = { ...this.config };
     childLogger.serializers = { ...this.serializers };
-    childLogger.baseContext = { ...this.baseContext, ...bindings };
     childLogger.transports = this.transports; // Share transports
+    childLogger.isBrowser = this.isBrowser;
+    childLogger.timers = new Map<string, number[]>();
+
+    if (typeof bindingsOrName === 'string') {
+      // String-based hierarchical logger
+      childLogger.contextPath = [...this.contextPath, bindingsOrName];
+      childLogger.baseContext = { ...this.baseContext };
+    } else {
+      // Object-based logger with bindings
+      childLogger.contextPath = [...this.contextPath];
+      childLogger.baseContext = { ...this.baseContext, ...bindingsOrName };
+    }
+
     return childLogger;
   }
 
@@ -270,7 +289,8 @@ export class CatbeeLogger implements OnDestroy {
       level,
       time: this.config.timestamp ? this.config.timestamp() : Date.now(),
       msg: message,
-      name: this.config.name
+      name: this.config.name,
+      contextPath: this.contextPath.length > 0 ? this.contextPath : undefined
     };
 
     // Merge base context
@@ -401,7 +421,7 @@ export class CatbeeLogger implements OnDestroy {
       this.timers.set(label, [now]);
     }
 
-    this.trace(`Timer started: ${label}`);
+    this.info(`Timer started: ${label}`);
   }
 
   /**
@@ -423,7 +443,7 @@ export class CatbeeLogger implements OnDestroy {
       this.timers.delete(label);
     }
 
-    this.debug(`${label}: ${duration.toFixed(2)}ms`, { duration, label });
+    this.info(`${label}: ${duration.toFixed(2)}ms`, { duration, label });
   }
 
   /**

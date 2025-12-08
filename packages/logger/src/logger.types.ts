@@ -73,6 +73,8 @@ export interface LogEntry {
   msg: string;
   /** Logger name or scope */
   name?: string;
+  /** Hierarchical context path for child loggers */
+  contextPath?: string[];
   /** Additional structured data */
   context?: LogContext;
   /** Error object (if logging an error) */
