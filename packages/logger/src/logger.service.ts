@@ -421,7 +421,7 @@ export class CatbeeLogger implements OnDestroy {
       this.timers.set(label, [now]);
     }
 
-    this.info(`Timer started: ${label}`);
+    this.trace(`Timer started: ${label}`);
   }
 
   /**
@@ -443,7 +443,7 @@ export class CatbeeLogger implements OnDestroy {
       this.timers.delete(label);
     }
 
-    this.info(`${label}: ${duration.toFixed(2)}ms`, { duration, label });
+    this.debug(`${label}: ${duration.toFixed(2)}ms`, { duration, label });
   }
 
   /**

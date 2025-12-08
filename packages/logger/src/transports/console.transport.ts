@@ -90,31 +90,49 @@ export class ConsoleTransport implements LogTransport {
     const parts: string[] = [];
     const styles: string[] = [];
 
-    // Time
-    parts.push('%c' + time);
-    styles.push(this.browserStyles.time);
+    if (this.useColors) {
+      // Time
+      parts.push('%c' + time);
+      styles.push(this.browserStyles.time);
 
-    // Level
-    parts.push('%c[' + levelName + ']');
-    styles.push(this.browserStyles[levelName as keyof typeof this.browserStyles] as string);
+      // Level
+      parts.push('%c[' + levelName + ']');
+      styles.push(this.browserStyles[levelName as keyof typeof this.browserStyles] as string);
 
-    // Context Path (hierarchical child logger names)
-    if (entry.contextPath && entry.contextPath.length > 0) {
-      parts.push('%c' + entry.contextPath.join(' > '));
-      styles.push(this.browserStyles.contextPath);
+      // Context Path (hierarchical child logger names)
+      if (entry.contextPath && entry.contextPath.length > 0) {
+        parts.push('%c' + entry.contextPath.join(' > '));
+        styles.push(this.browserStyles.contextPath);
+      }
+
+      // Name/scope
+      if (entry.name) {
+        parts.push('%c' + entry.name);
+        styles.push(this.browserStyles.name);
+      }
+
+      // Message
+      parts.push('%c' + entry.msg);
+      styles.push('color: inherit');
+    } else {
+      // No colors - plain text
+      parts.push(time);
+      parts.push('[' + levelName + ']');
+
+      // Context Path (hierarchical child logger names)
+      if (entry.contextPath && entry.contextPath.length > 0) {
+        parts.push(entry.contextPath.join(' > '));
+      }
+
+      // Name/scope
+      if (entry.name) {
+        parts.push(entry.name);
+      }
+
+      parts.push(entry.msg);
     }
 
-    // Name/scope
-    if (entry.name) {
-      parts.push('%c' + entry.name);
-      styles.push(this.browserStyles.name);
-    }
-
-    // Message
-    parts.push('%c' + entry.msg);
-    styles.push('color: inherit');
-
-    const message = parts.join(' ');
+    const message = this.useColors ? parts.join(' ') : parts.join(' ');
 
     // Additional data
     const extras: unknown[] = [];
@@ -132,7 +150,11 @@ export class ConsoleTransport implements LogTransport {
     }
 
     // Use appropriate console method
-    this.callConsoleMethod(entry.level, message, ...styles, ...extras);
+    if (this.useColors) {
+      this.callConsoleMethod(entry.level, message, ...styles, ...extras);
+    } else {
+      this.callConsoleMethod(entry.level, message, ...extras);
+    }
   }
 
   /**
@@ -224,7 +246,13 @@ export class ConsoleTransport implements LogTransport {
     switch (level) {
       case CatbeeLogLevel.TRACE:
       case CatbeeLogLevel.DEBUG:
-        console.debug(message, ...args);
+        // Use console.log in browser because console.debug is filtered by default
+        // Use console.debug in Node.js for proper log level
+        if (this.isBrowser) {
+          console.log(message, ...args);
+        } else {
+          console.debug(message, ...args);
+        }
         break;
       case CatbeeLogLevel.INFO:
         console.info(message, ...args);
