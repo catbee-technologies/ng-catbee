@@ -12,7 +12,7 @@
   <!-- <img src="https://img.shields.io/npm/v/@ng-catbee/monaco-editor/rc" alt="NPM RC Version" /> -->
   <!-- <img src="https://img.shields.io/npm/v/@ng-catbee/monaco-editor/next" alt="NPM Next Version" /> -->
   <img src="https://img.shields.io/npm/dt/@ng-catbee/monaco-editor" alt="NPM Downloads" />
-  <img src="https://img.shields.io/maintenance/yes/2025" alt="Maintenance" />
+  <img src="https://img.shields.io/maintenance/yes/2050" alt="Maintenance" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=alert_status&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Quality Gate Status" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=ncloc&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Lines of Code" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=security_rating&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Security Rating" />

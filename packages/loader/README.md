@@ -10,7 +10,7 @@
   <img src="https://codecov.io/github/catbee-technologies/ng-catbee/graph/badge.svg?token=1A3ZOKH80Q" alt="Coverage" />
   <img src="https://img.shields.io/npm/v/@ng-catbee/loader" alt="NPM Version" />
   <img src="https://img.shields.io/npm/dt/@ng-catbee/loader" alt="NPM Downloads" />
-  <img src="https://img.shields.io/maintenance/yes/2025" alt="Maintenance" />
+  <img src="https://img.shields.io/maintenance/yes/2050" alt="Maintenance" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=alert_status&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Quality Gate Status" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=security_rating&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Security Rating" />
   <img src="https://sonarcloud.io/api/project_badges/measure?project=catbee-technologies_ng-catbee&metric=sqale_rating&token=c4ee05a3fd22735559b3313d201e64d85df79d18" alt="Maintainability Rating" />
