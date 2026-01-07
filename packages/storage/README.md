@@ -316,16 +316,16 @@ export class CartService {
 
 ## 📖 Documentation
 
-💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/storage/intro/)
+💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/storage/intro)
 
-- [Introduction](https://catbee.in/docs/@ng-catbee/storage/intro/)
-- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/storage/installation/)
+- [Introduction](https://catbee.in/docs/@ng-catbee/storage/intro)
+- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/storage/installation)
 - [Usage](https://catbee.in/docs/@ng-catbee/storage/usage/)
-- [API Reference](https://catbee.in/docs/@ng-catbee/storage/api-reference/)
+- [API Reference](https://catbee.in/docs/@ng-catbee/storage/api-reference)
 
 ## 📜 License
 
-MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license/) file for the full text)
+MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license) file for the full text)
 
 ## 🔗 Links
 

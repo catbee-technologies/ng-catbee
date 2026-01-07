@@ -210,16 +210,16 @@ export class AuthService {
 
 ## 📖 Documentation
 
-💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/jwt/intro/)
+💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/jwt/intro)
 
-- [Introduction](https://catbee.in/docs/@ng-catbee/jwt/intro/)
-- [Installation](https://catbee.in/docs/@ng-catbee/jwt/installation/)
+- [Introduction](https://catbee.in/docs/@ng-catbee/jwt/intro)
+- [Installation](https://catbee.in/docs/@ng-catbee/jwt/installation)
 - [Usage](https://catbee.in/docs/@ng-catbee/jwt/usage/)
-- [API Reference](https://catbee.in/docs/@ng-catbee/jwt/api-reference/)
+- [API Reference](https://catbee.in/docs/@ng-catbee/jwt/api-reference)
 
 ## 📜 License
 
-MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license/) file for the full text)
+MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license) file for the full text)
 
 ## 🔗 Links
 

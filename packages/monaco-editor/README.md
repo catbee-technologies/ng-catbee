@@ -192,19 +192,19 @@ export class AppComponent {
 
 ## 📖 Documentation
 
-💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/monaco-editor/intro/)
+💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/monaco-editor/intro)
 
-- [Introduction](https://catbee.in/docs/@ng-catbee/monaco-editor/intro/)
-- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/monaco-editor/installation/)
-- [Module Setup](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/module-setup/)
-- [Single Editor Usage](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/single-editor/)
-- [Diff Editor Usage](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/diff-editor/)
-- [API Reference](https://catbee.in/docs/@ng-catbee/monaco-editor/api-reference/)
-- [Type Definitions](https://catbee.in/docs/@ng-catbee/monaco-editor/types/)
+- [Introduction](https://catbee.in/docs/@ng-catbee/monaco-editor/intro)
+- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/monaco-editor/installation)
+- [Module Setup](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/module-setup)
+- [Single Editor Usage](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/single-editor)
+- [Diff Editor Usage](https://catbee.in/docs/@ng-catbee/monaco-editor/usage/diff-editor)
+- [API Reference](https://catbee.in/docs/@ng-catbee/monaco-editor/api-reference)
+- [Type Definitions](https://catbee.in/docs/@ng-catbee/monaco-editor/types)
 
 ## 📜 License
 
-MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license/) file for the full text)
+MIT © Catbee Technologies (see the [LICENSE](https://catbee.in/license) file for the full text)
 
 ## 🔗 Links
 

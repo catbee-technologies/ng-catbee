@@ -446,12 +446,12 @@ const theme = cookieService.getEnumWithDefault('theme', 'light', ['light', 'dark
 
 ## 📖 Documentation
 
-💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/cookie/intro/)
+💡 Full documentation available at [https://catbee.in](https://catbee.in/docs/@ng-catbee/cookie/intro)
 
-- [Introduction](https://catbee.in/docs/@ng-catbee/cookie/intro/)
-- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/cookie/installation/)
+- [Introduction](https://catbee.in/docs/@ng-catbee/cookie/intro)
+- [Installation and Configuration](https://catbee.in/docs/@ng-catbee/cookie/installation)
 - [Usage](https://catbee.in/docs/@ng-catbee/cookie/usage/)
-- [API Reference](https://catbee.in/docs/@ng-catbee/cookie/api-reference/)
+- [API Reference](https://catbee.in/docs/@ng-catbee/cookie/api-reference)
 
 ## 📜 License
 
