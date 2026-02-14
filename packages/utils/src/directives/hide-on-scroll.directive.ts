@@ -11,6 +11,30 @@ import {
   inject
 } from '@angular/core';
 
+/**
+ * Directive that hides an element when the user scrolls down and shows it when scrolling up.
+ *
+ * This directive is useful for hiding headers or navigation bars on scroll to maximize screen space.
+ *
+ * The directive uses a scroll threshold to prevent frequent toggling and is SSR-safe.
+ *
+ * @example
+ * ```typescript
+ * @Component({
+ *  selector: 'app-header',
+ *  template: `
+ *    <header hideOnScroll>
+ *      <!-- Header content -->
+ *    </header>
+ *  `,
+ *  standalone: true,
+ *  imports: [HideOnScroll]
+ * })
+ * export class HeaderComponent {}
+ * ```
+ *
+ * @publicApi
+ */
 @Directive({
   selector: '[hideOnScroll]',
   standalone: true

@@ -1,5 +1,4 @@
 import { EnvironmentProviders, InjectionToken, makeEnvironmentProviders } from '@angular/core';
-import type { LoggerConfig } from '@ng-catbee/utils/types';
 
 /**
  * Global configuration for Catbee Utils library.
@@ -7,8 +6,7 @@ import type { LoggerConfig } from '@ng-catbee/utils/types';
  * @public
  */
 export interface CatbeeUtilsConfig {
-  /** Logger service configuration */
-  logger?: Partial<LoggerConfig>;
+  TODO: string; // Placeholder for future global configuration options
 }
 
 /**
@@ -21,7 +19,7 @@ export const CATBEE_UTILS_CONFIG = new InjectionToken<CatbeeUtilsConfig>('CATBEE
 /**
  * Provides global configuration for Catbee Utils library.
  *
- * Use this provider to configure all utilities in one place, including logger settings.
+ * Use this provider to configure all utilities in one place.
  *
  * @param config - Global configuration for the utils library.
  * @returns Environment providers for the configuration.
@@ -29,23 +27,15 @@ export const CATBEE_UTILS_CONFIG = new InjectionToken<CatbeeUtilsConfig>('CATBEE
  * @example
  * ```typescript
  * // In app.config.ts
- * import { provideCatbeeUtils, LogLevel } from '@catbee/utils';
+ * import { provideCatbeeUtils } from '@catbee/utils';
  *
  * export const appConfig: ApplicationConfig = {
  *   providers: [
- *     provideCatbeeUtils({
- *       logger: {
- *         minLevel: LogLevel.INFO,
- *         prefix: '[MyApp]',
- *         useColors: true,
- *         timestampFormat: 'time',
- *         includeTimestamp: true
- *       },
- *     })
+ *     provideCatbeeUtils({})
  *   ]
  * };
  * ```
- * 
+ *
  * @public
  */
 export function provideCatbeeUtils(config?: CatbeeUtilsConfig): EnvironmentProviders {

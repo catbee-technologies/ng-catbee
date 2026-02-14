@@ -3,7 +3,6 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { PlatformService } from '@ng-catbee/utils/platform';
 import { CATBEE_UTILS_CONFIG, CatbeeUtilsConfig } from '@ng-catbee/utils/config';
 import { BrowserService } from '@ng-catbee/utils/browser';
-import { LoggerService } from '@ng-catbee/utils/logger';
 import {
   AbbreviateNumberPipe,
   BusinessDaysPipe,
@@ -105,11 +104,7 @@ const pipes = [
   UniquePipe
 ];
 
-const services = [
-  BrowserService,
-  PlatformService,
-  LoggerService
-];
+const services = [BrowserService, PlatformService];
 
 /** @ng-catbee/utils module
  *

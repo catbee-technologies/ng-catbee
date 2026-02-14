@@ -1,5 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { ElementRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { distinctUntilChanged, fromEvent, map, merge, Observable, of, shareReplay, startWith } from 'rxjs';
 
 /**
  * Service providing safe access to browser APIs and utility functions.
@@ -27,6 +28,48 @@ export class BrowserService {
   private readonly platformId = inject(PLATFORM_ID);
 
   /**
+   * Observable that emits `true` when the browser tab is visible and `false` when it is hidden.
+   * This is useful for pausing or resuming activities based on tab visibility.
+   * The observable starts with the current visibility state and emits new values whenever it changes.
+   *
+   * @example
+   * ```typescript
+   * this.browserService.tabVisibility$.subscribe(isVisible => {
+   *   console.log('Tab is visible:', isVisible);
+   * });
+   * ```
+   */
+  public readonly tabVisibility$: Observable<boolean> = this.window
+    ? fromEvent(this.document, 'visibilitychange').pipe(
+        startWith(null),
+        map(() => this.document.visibilityState === 'visible'),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true })
+      )
+    : of(true);
+
+  /**
+   * Observable that emits `true` when the browser is online and `false` when it is offline.
+   * This is useful for handling network connectivity changes in your application.
+   * The observable starts with the current online status and emits new values whenever it changes.
+   *
+   * @example
+   * ```typescript
+   * this.browserService.online$.subscribe(isOnline => {
+   *  console.log('Browser is online:', isOnline);
+   * });
+   * ```
+   */
+  readonly online$: Observable<boolean> = this.window
+    ? merge(fromEvent(this.window, 'online'), fromEvent(this.window, 'offline')).pipe(
+        map(() => this.window!.navigator.onLine),
+        startWith(this.window.navigator.onLine),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true })
+      )
+    : of(false);
+
+  /**
    * Gets the global window object if running in a browser environment.
    *
    * @returns The window object in browser context, or `null` during SSR.
@@ -39,10 +82,7 @@ export class BrowserService {
    * ```
    */
   get window(): (Window & typeof globalThis) | null {
-    if (isPlatformBrowser(this.platformId)) {
-      return window;
-    }
-    return null;
+    return isPlatformBrowser(this.platformId) ? window : null;
   }
 
   /**
@@ -55,6 +95,73 @@ export class BrowserService {
    */
   get document(): Document {
     return this.nativeDocument;
+  }
+
+  /**
+   * Gets the localStorage object if running in a browser environment.
+   */
+  get localStorage(): Storage | null {
+    return this.window?.localStorage ?? null;
+  }
+
+  /**
+   * Gets the sessionStorage object if running in a browser environment.
+   */
+  get sessionStorage(): Storage | null {
+    return this.window?.sessionStorage ?? null;
+  }
+
+  /**
+   * Gets the user's preferred language from the browser's navigator object.
+   * Returns `null` if not running in a browser environment.
+   *
+   * @returns The preferred language string (e.g., 'en-US') or `null` in SSR.
+   */
+  get preferredLanguage(): string | null {
+    return this.window?.navigator.language ?? null;
+  }
+
+  /**
+   * Scrolls the window to the top of the page with an optional behavior.
+   * This method is safe to call in SSR (no-op).
+   *
+   * @param behavior - The scroll behavior, either 'smooth' or 'auto'. Defaults to 'smooth'.
+   * @param offset - An optional offset in pixels to scroll above the top. Defaults to 0.
+   *
+   * @example
+   * ```typescript
+   * this.browserService.scrollToTop('smooth', 100);
+   * ```
+   */
+  scrollToTop(behavior: ScrollBehavior = 'smooth', offset: number = 0): void {
+    this.window?.scrollTo({ top: offset, behavior });
+  }
+
+  /**
+   * Scrolls the window to a specific element by its ID with an optional offset and behavior.
+   * This method is safe to call in SSR (no-op).
+   *
+   * @param id - The ID of the element to scroll to.
+   * @param offset - An optional offset in pixels to scroll above the element. Defaults to 0.
+   * @param behavior - The scroll behavior, either 'smooth' or 'auto'. Defaults to 'smooth'.
+   *
+   * @example
+   * ```typescript
+   * this.browserService.scrollTo('section1', 50, 'smooth');
+   * ```
+   */
+  scrollTo(id: string | ElementRef<HTMLElement>, offset: number = 0, behavior: ScrollBehavior = 'smooth'): void {
+    if (!this.window) return;
+    let element: HTMLElement | null = null;
+    if (id instanceof ElementRef) {
+      element = id.nativeElement;
+    } else {
+      element = this.document.getElementById(id);
+    }
+    if (!element) return;
+    const elementPosition = element.getBoundingClientRect().top + this.window.pageYOffset;
+    const offsetPosition = elementPosition - offset;
+    this.window.scrollTo({ top: offsetPosition, behavior });
   }
 
   /**
@@ -98,42 +205,6 @@ export class BrowserService {
     if (!this.window) return false;
 
     return this.window.navigator.onLine;
-  }
-
-  /**
-   * Initializes listeners for network status changes.
-   *
-   * This method is safe to call in SSR (no-op). The callback will be invoked whenever
-   * the browser goes online or offline.
-   *
-   * @param callback - Function to call when network status changes, receiving the online status.
-   * @returns A cleanup function to remove the event listeners, or undefined in SSR.
-   *
-   * @example
-   * ```typescript
-   * const cleanup = this.browserService.initializeNetworkStatusListener((isOnline) => {
-   *   console.log('Network status:', isOnline ? 'online' : 'offline');
-   * });
-   *
-   * // Later, cleanup listeners
-   * cleanup?.();
-   * ```
-   */
-  initializeNetworkStatusListener(callback: (isOnline: boolean) => void): (() => void) | undefined {
-    if (!this.window) return undefined;
-
-    const windowRef = this.window;
-    const onlineHandler = () => callback(true);
-    const offlineHandler = () => callback(false);
-
-    windowRef.addEventListener('online', onlineHandler);
-    windowRef.addEventListener('offline', offlineHandler);
-
-    // Return cleanup function
-    return () => {
-      windowRef.removeEventListener('online', onlineHandler);
-      windowRef.removeEventListener('offline', offlineHandler);
-    };
   }
 
   /**

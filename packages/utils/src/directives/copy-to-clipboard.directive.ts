@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Directive, HostListener, inject, input, NgModule, output, PLATFORM_ID } from '@angular/core';
+import { Directive, DOCUMENT, HostListener, inject, input, NgModule, output, PLATFORM_ID } from '@angular/core';
 
 /**
  * Directive that copies text to clipboard when the host element is clicked.
@@ -40,34 +40,63 @@ import { Directive, HostListener, inject, input, NgModule, output, PLATFORM_ID }
 })
 export class CopyToClipboard {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly document = inject(DOCUMENT);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  /**
-   * The text to copy to clipboard.
-   */
+  /** The text to copy to clipboard. (default: '') */
   readonly copyToClipboard = input<string>('');
 
-  /**
-   * Event emitted when text is successfully copied.
-   */
+  /** Event emitted when text is successfully copied. */
   copied = output<void>();
 
-  /**
-   * Event emitted when copy operation fails.
-   */
+  /** Event emitted when copy operation fails. */
   copyError = output<Error>();
 
+  @HostListener('keydown.space', ['$event'])
+  onSpace(e: Event) {
+    e.preventDefault();
+    this.copy();
+  }
+
+  @HostListener('keydown.enter')
   @HostListener('click')
-  async onClick(): Promise<void> {
-    if (!this.copyToClipboard || !isPlatformBrowser(this.platformId)) {
-      return;
+  async copy(): Promise<void> {
+    if (!this.isBrowser) return;
+
+    const input = this.copyToClipboard();
+    if (!input) return;
+
+    const clipboard = this.document.defaultView?.navigator?.clipboard;
+    if (clipboard?.writeText) {
+      try {
+        await clipboard.writeText(input);
+        this.copied.emit();
+      } catch (err) {
+        this.copyError.emit(err as Error);
+      }
+    } else {
+      this.fallbackCopy(input);
     }
+  }
+
+  private fallbackCopy(text: string) {
+    const textarea = this.document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+
+    this.document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
 
     try {
-      await window.navigator.clipboard.writeText(this.copyToClipboard());
+      this.document.execCommand('copy');
       this.copied.emit();
-    } catch (error) {
-      this.copyError.emit(error as Error);
+    } catch (err) {
+      this.copyError.emit(err as Error);
     }
+
+    this.document.body.removeChild(textarea);
   }
 }
 

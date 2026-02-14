@@ -8,7 +8,8 @@ import {
   Renderer2,
   OnDestroy,
   PLATFORM_ID,
-  NgModule
+  NgModule,
+  numberAttribute
 } from '@angular/core';
 
 /**
@@ -56,134 +57,132 @@ import {
   standalone: true
 })
 export class Ripple implements OnDestroy {
-  private readonly elementRef = inject(ElementRef);
+  private readonly el = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
   private readonly platformId = inject(PLATFORM_ID);
 
-  private rippleElements: HTMLElement[] = [];
+  private readonly rippleElements = new Set<HTMLElement>();
 
-  /**
-   * Color of the ripple effect (default: 'rgba(255, 255, 255, 0.3)').
-   */
-  readonly rippleColor = input<string>('rgba(255, 255, 255, 0.3)');
+  /** Ripple color (default: 'rgba(0,0,0,0.25)') */
+  readonly rippleColor = input<string>('rgba(0,0,0,0.25)');
 
-  /**
-   * Duration of the ripple animation in milliseconds (default: 600).
-   */
-  readonly rippleDuration = input<number>(600);
+  /** Animation duration (ms) (default: 400) */
+  readonly rippleDuration = input(400, { transform: numberAttribute });
 
-  /**
-   * Whether the ripple should always start from the center (default: false).
-   */
+  /** Start ripple from center (default: false) */
   readonly rippleCentered = input<boolean>(false);
 
-  /**
-   * Whether the ripple effect is disabled (default: false).
-   */
+  /** Disable ripple (default: false) */
   readonly rippleDisabled = input<boolean>(false);
 
-  /**
-   * Radius of the ripple effect. If not set, it will be calculated automatically.
-   */
+  /** Custom radius (default: null) */
   readonly rippleRadius = input<number | null>(null);
 
+  /** Allow ripple outside container (default: false) */
+  readonly rippleUnbounded = input<boolean>(false);
+
   constructor() {
-    // Ensure the host element has position relative or absolute
-    if (isPlatformBrowser(this.platformId)) {
-      const position = window.getComputedStyle(this.elementRef.nativeElement).position;
-      if (position === 'static') {
-        this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'relative');
-      }
-      this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'hidden');
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const host = this.el.nativeElement;
+    const style = window.getComputedStyle(host);
+
+    /** Fix inline elements */
+    if (style.display === 'inline') {
+      this.renderer.setStyle(host, 'display', 'inline-block');
+    }
+
+    /** Ensure positioning without overriding intentional layouts */
+    if (style.position === 'static') {
+      this.renderer.setStyle(host, 'position', 'relative');
+    }
+
+    /** Only hide overflow when bounded */
+    if (!this.rippleUnbounded() && style.overflow === 'visible') {
+      this.renderer.setStyle(host, 'overflow', 'hidden');
     }
   }
 
-  @HostListener('click', ['$event'])
-  @HostListener('touchstart', ['$event'])
-  onClick(event: MouseEvent | TouchEvent): void {
-    if (!isPlatformBrowser(this.platformId) || this.rippleDisabled()) {
-      return;
-    }
+  // Pointer handles mouse + touch + pen
+  @HostListener('pointerdown', ['$event'])
+  onPointerDown(event: PointerEvent) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    if (this.rippleDisabled()) return;
+    if (event.button !== 0) return; // left click only
 
-    this.createRipple(event);
+    this.createRipple(event.clientX, event.clientY);
+  }
+
+  @HostListener('keydown.enter')
+  @HostListener('keydown.space')
+  onKeydown() {
+    if (this.rippleDisabled()) return;
+
+    const rect = this.el.nativeElement.getBoundingClientRect();
+    this.createRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
   }
 
   ngOnDestroy(): void {
-    // Clean up any remaining ripple elements
-    this.rippleElements.forEach(ripple => {
-      if (ripple.parentNode) {
-        this.renderer.removeChild(ripple.parentNode, ripple);
-      }
-    });
-    this.rippleElements = [];
+    this.rippleElements.forEach(ripple => ripple.remove());
+    this.rippleElements.clear();
   }
 
-  private createRipple(event: MouseEvent | TouchEvent): void {
-    const hostElement = this.elementRef.nativeElement as HTMLElement;
-    const rect = hostElement.getBoundingClientRect();
+  private createRipple(clientX: number, clientY: number) {
+    const host = this.el.nativeElement;
+    const rect = host.getBoundingClientRect();
 
-    // Calculate ripple position
-    let x: number;
-    let y: number;
+    const x = this.rippleCentered() ? rect.width / 2 : clientX - rect.left;
 
-    if (this.rippleCentered()) {
-      x = rect.width / 2;
-      y = rect.height / 2;
-    } else {
-      if (event instanceof MouseEvent) {
-        x = event.clientX - rect.left;
-        y = event.clientY - rect.top;
-      } else {
-        const touch = event.touches[0];
-        x = touch.clientX - rect.left;
-        y = touch.clientY - rect.top;
-      }
-    }
+    const y = this.rippleCentered() ? rect.height / 2 : clientY - rect.top;
 
-    // Calculate ripple size
-    const radius = this.rippleRadius() ?? Math.sqrt(Math.pow(rect.width, 2) + Math.pow(rect.height, 2));
+    // Correct farthest-corner radius
+    const maxX = Math.max(x, rect.width - x);
+    const maxY = Math.max(y, rect.height - y);
 
-    // Create ripple element
-    const ripple = this.renderer.createElement('span');
-    this.renderer.addClass(ripple, 'ng-catbee-ripple');
+    const radius = this.rippleRadius() ?? Math.sqrt(maxX * maxX + maxY * maxY);
 
-    // Set styles
+    const ripple = this.renderer.createElement('span') as HTMLElement;
+    this.renderer.addClass(ripple, 'ng-ripple');
+
+    // Styles
     this.renderer.setStyle(ripple, 'position', 'absolute');
     this.renderer.setStyle(ripple, 'border-radius', '50%');
     this.renderer.setStyle(ripple, 'pointer-events', 'none');
     this.renderer.setStyle(ripple, 'background-color', this.rippleColor());
-    this.renderer.setStyle(ripple, 'transform', 'scale(0)');
-    this.renderer.setStyle(ripple, 'opacity', '1');
     this.renderer.setStyle(ripple, 'width', `${radius * 2}px`);
     this.renderer.setStyle(ripple, 'height', `${radius * 2}px`);
     this.renderer.setStyle(ripple, 'left', `${x - radius}px`);
     this.renderer.setStyle(ripple, 'top', `${y - radius}px`);
+
+    // GPU acceleration
+    this.renderer.setStyle(ripple, 'will-change', 'transform, opacity');
+    this.renderer.setStyle(ripple, 'transform', 'scale(0)');
+    this.renderer.setStyle(ripple, 'opacity', '1');
+
     this.renderer.setStyle(
       ripple,
       'transition',
       `transform ${this.rippleDuration()}ms ease-out, opacity ${this.rippleDuration()}ms ease-out`
     );
 
-    // Append to host
-    this.renderer.appendChild(hostElement, ripple);
-    this.rippleElements.push(ripple);
+    this.renderer.appendChild(host, ripple);
+    this.rippleElements.add(ripple);
+    ripple.getBoundingClientRect();
 
-    // Trigger animation
     requestAnimationFrame(() => {
-      this.renderer.setStyle(ripple, 'transform', 'scale(1)');
-      this.renderer.setStyle(ripple, 'opacity', '0');
+      ripple.style.transform = 'scale(1)';
+      ripple.style.opacity = '0';
     });
 
-    // Remove ripple after animation completes
-    setTimeout(() => {
-      if (ripple.parentNode) {
-        this.renderer.removeChild(ripple.parentNode, ripple);
-      }
-      const index = this.rippleElements.indexOf(ripple);
-      if (index > -1) {
-        this.rippleElements.splice(index, 1);
-      }
-    }, this.rippleDuration());
+    // Remove via transition event (no timers)
+    ripple.addEventListener(
+      'transitionend',
+      () => {
+        ripple.remove();
+        this.rippleElements.delete(ripple);
+      },
+      { once: true }
+    );
   }
 }
 

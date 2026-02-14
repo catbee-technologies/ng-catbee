@@ -1,5 +1,8 @@
-import { Directive, ElementRef, inject, input, NgModule, OnDestroy, OnInit, output } from '@angular/core';
-import { fromEvent, Subject, takeUntil } from 'rxjs';
+import { DestroyRef, Directive, ElementRef, inject, input, NgModule, OnInit, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, fromEvent } from 'rxjs';
+import { NgZone } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * Directive that emits an event when a click occurs outside the host element.
@@ -16,17 +19,21 @@ import { fromEvent, Subject, takeUntil } from 'rxjs';
  *       (clickOutside)="close()"
  *       [excludeSelectors]="['.modal-backdrop', '#ignore-me']">
  *       <button (click)="toggle()">Toggle</button>
- *       <ul *ngIf="isOpen">
- *         <li>Item 1</li>
- *         <li>Item 2</li>
- *       </ul>
+ *       @if(isOpen) {
+ *        <ul>
+ *          <li>Item 1</li>
+ *          <li>Item 2</li>
+ *        </ul>
+ *       }
  *     </div>
  *
  *     <!-- Exclude by element reference -->
  *     <div
  *       (clickOutside)="close()"
  *       [excludeElements]="[triggerButton]">
- *       <ul *ngIf="isOpen">...</ul>
+ *       @if(isOpen) {
+ *        <ul>...</ul>
+ *       }
  *     </div>
  *     <button #triggerButton (click)="toggle()">Toggle</button>
  *   `,
@@ -46,9 +53,11 @@ import { fromEvent, Subject, takeUntil } from 'rxjs';
   selector: '[clickOutside]',
   standalone: true
 })
-export class ClickOutside implements OnInit, OnDestroy {
-  private readonly elementRef = inject(ElementRef);
-  private readonly destroy$ = new Subject<void>();
+export class ClickOutside implements OnInit {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
+  private readonly zone = inject(NgZone);
 
   /**
    * CSS selectors for elements to exclude from click-outside detection.
@@ -56,59 +65,58 @@ export class ClickOutside implements OnInit, OnDestroy {
    */
   readonly excludeSelectors = input<string[]>([]);
 
-  /**
-   * Element references to exclude from click-outside detection.
-   */
+  /** Element references to exclude from click-outside detection. */
   readonly excludeElements = input<HTMLElement[]>([]);
 
-  /**
-   * Event emitted when a click occurs outside the host element.
-   */
-  readonly clickOutside = output<MouseEvent>();
+  /** Event emitted when a click occurs outside the host element. */
+  readonly clickOutside = output<PointerEvent>();
 
   ngOnInit(): void {
-    fromEvent<MouseEvent>(document, 'click')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(event => {
-        const target = event.target as HTMLElement;
+    this.zone.runOutsideAngular(() => {
+      fromEvent<PointerEvent>(this.document, 'pointerdown')
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          filter(event => event.button === 0)
+        ) // Only left-clicks
+        .subscribe(event => {
+          const target = event.target as HTMLElement;
 
-        // Check if clicked inside host element
-        const clickedInside = this.elementRef.nativeElement.contains(target);
-        if (clickedInside) {
-          return;
-        }
-
-        // Check if clicked on excluded selectors
-        const excludedBySelector = this.excludeSelectors().some(selector => {
-          try {
-            return target.closest(selector) !== null;
-          } catch {
-            // Invalid selector, skip
-            return false;
+          // Check if clicked inside host element
+          const path = event.composedPath();
+          const clickedInside = path.includes(this.elementRef.nativeElement);
+          if (clickedInside) {
+            return;
           }
+
+          // Check if clicked on excluded selectors
+          const excludedBySelector = this.excludeSelectors().some(selector => {
+            try {
+              return target.closest(selector) !== null;
+            } catch {
+              // Invalid selector, skip
+              return false;
+            }
+          });
+
+          if (excludedBySelector) {
+            return;
+          }
+
+          // Check if clicked on excluded elements
+          const excludedByElement = this.excludeElements().some(element => {
+            return element?.contains(target);
+          });
+
+          if (excludedByElement) {
+            return;
+          }
+
+          // Click was outside and not excluded
+          this.zone.run(() => {
+            this.clickOutside.emit(event);
+          });
         });
-
-        if (excludedBySelector) {
-          return;
-        }
-
-        // Check if clicked on excluded elements
-        const excludedByElement = this.excludeElements().some(element => {
-          return element?.contains(target);
-        });
-
-        if (excludedByElement) {
-          return;
-        }
-
-        // Click was outside and not excluded
-        this.clickOutside.emit(event);
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    });
   }
 }
 

@@ -1,7 +1,5 @@
 import { HttpInterceptorFn, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { inject } from '@angular/core';
-import { LoggerService } from '@ng-catbee/utils/logger';
 
 /**
  * Configuration for the logging interceptor.
@@ -19,8 +17,6 @@ export interface LoggingInterceptorConfig {
   logTiming?: boolean;
   /** URLs to exclude from logging */
   excludeUrls?: string[];
-  /** Custom logger service (optional, uses LoggerService by default) */
-  logger?: LoggerService;
 }
 
 /**
@@ -60,8 +56,6 @@ export function createLoggingInterceptor(config: LoggingInterceptorConfig = {}):
   const { logRequests = true, logResponses = true, logErrors = true, logTiming = true, excludeUrls = [] } = config;
 
   return (req, next) => {
-    const logger = config.logger ?? inject(LoggerService);
-
     // Check if URL should be excluded
     if (excludeUrls.some(url => req.url.includes(url))) {
       return next(req);
@@ -73,7 +67,7 @@ export function createLoggingInterceptor(config: LoggingInterceptorConfig = {}):
 
     // Log request
     if (logRequests) {
-      logger.debug(`HTTP ${method} ${url}`, {
+      console.info(`HTTP ${method} ${url}`, {
         method,
         url,
         headers: req.headers,
@@ -88,7 +82,7 @@ export function createLoggingInterceptor(config: LoggingInterceptorConfig = {}):
             const duration = performance.now() - startTime;
 
             if (logResponses) {
-              logger.info(`HTTP ${method} ${url} - ${event.status}`, {
+              console.info(`HTTP ${method} ${url} - ${event.status}`, {
                 status: event.status,
                 statusText: event.statusText,
                 body: event.body,
@@ -101,7 +95,7 @@ export function createLoggingInterceptor(config: LoggingInterceptorConfig = {}):
           const duration = performance.now() - startTime;
 
           if (logErrors) {
-            logger.error(`HTTP ${method} ${url} - ${error.status}`, {
+            console.error(`HTTP ${method} ${url} - ${error.status}`, {
               status: error.status,
               statusText: error.statusText,
               message: error.message,

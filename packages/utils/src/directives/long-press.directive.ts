@@ -35,19 +35,13 @@ import { Subject } from 'rxjs';
   standalone: true
 })
 export class LongPress implements OnDestroy {
-  /**
-   * Duration in milliseconds to trigger long press (default: 500).
-   */
+  /** Duration in milliseconds to trigger long press (default: 500). */
   readonly longPressDuration = input<number>(500);
 
-  /**
-   * Event emitted when long press is triggered.
-   */
+  /** Event emitted when long press is triggered. */
   readonly longPress = output<MouseEvent | TouchEvent>();
 
-  /**
-   * Event emitted when long press is cancelled.
-   */
+  /** Event emitted when long press is cancelled. */
   readonly longPressCancelled = output<void>();
 
   private timeout: ReturnType<typeof setTimeout> | null = null;

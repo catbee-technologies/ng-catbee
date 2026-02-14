@@ -1,7 +1,5 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
-import { inject } from '@angular/core';
-import { LoggerService } from '@ng-catbee/utils/logger';
 
 /**
  * Error handler function type.
@@ -95,11 +93,9 @@ export function createErrorHandlerInterceptor(config: ErrorHandlerInterceptorCon
 
     return next(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        const logger = inject(LoggerService, { optional: true });
-
         // Log error
-        if (logErrors && logger) {
-          logger.error(`HTTP Error: ${error.status} ${error.statusText}`, {
+        if (logErrors) {
+          console.error(`HTTP Error: ${error.status} ${error.statusText}`, {
             url: req.url,
             method: req.method,
             status: error.status,

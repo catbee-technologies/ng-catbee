@@ -37,7 +37,7 @@
     "coverage:overall": "node scripts/coverage-generator.mjs",
     "coverage:nyc": "nyc report  --reporter=text --reporter=text-summary --reporter=lcovonly --reporter=cobertura --reporter=html --report-dir=coverage  -t coverage",
     "prepare": "husky",
-    "format": "prettier --write \"**/*.{ts,html,scss,css}\" \"!**/*.min.css\"",
+    "format": "prettier --write --log-level silent \"**/*.{ts,html,scss,css}\" \"!**/*.min.css\"",
     "release": "node scripts/npm-release.mjs",
     "release:utils": "node scripts/npm-release.mjs utils",
     "release:monaco-editor": "node scripts/npm-release.mjs monaco-editor",

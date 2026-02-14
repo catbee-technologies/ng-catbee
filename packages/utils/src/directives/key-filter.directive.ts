@@ -48,9 +48,7 @@ const SAFARI_KEY_MAP: Record<number, number> = {
   63275: 35 // end
 };
 
-/**
- * Predefined regex patterns for common input validations
- */
+/** Predefined regex patterns for common input validations */
 const PATTERN_MASKS: Record<KeyFilterPattern, RegExp> = {
   pint: /^[\d]*$/,
   int: /^[-]?[\d]*$/,
@@ -63,18 +61,29 @@ const PATTERN_MASKS: Record<KeyFilterPattern, RegExp> = {
   alphanum: /^[a-z0-9_]*$/i
 };
 
-/**
- * Validator provider for KeyFilter directive
- */
+/** Validator provider for KeyFilter directive */
 export const KEYFILTER_VALIDATOR: Provider = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => KeyFilter),
   multi: true
 };
+
 /**
- * KeyFilter Directive restricts user input based on regular expressions.
- * Supports both pattern-based blocking and validation-only modes.
- * @group Components
+ * Directive that filters keyboard input based on a specified pattern.
+ * It can either block invalid keys or validate the entire input value.
+ *
+ * The directive supports predefined patterns (e.g., 'int', 'email') or custom regular expressions.
+ * It also includes special handling for Android devices and Safari browser quirks.
+ * SSR-safe and works with both template-driven and reactive forms.
+ * Emits ngModelChange events for two-way binding support.
+ *
+ * @example
+ * ```html
+ * <input type="text" keyFilter="int" [(ngModel)]="integerValue">
+ * <input type="text" [keyFilter]="/^[a-zA-Z]*$/" [(ngModel)]="alphaValue">
+ * ```
+ *
+ * @publicApi
  */
 @Directive({
   selector: '[keyFilter]',

@@ -75,29 +75,19 @@ export class ScrollSpy implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly document = inject(DOCUMENT);
 
-  /**
-   * Offset from top of viewport to trigger active state (default: 0).
-   */
+  /** Offset from top of viewport to trigger active state (default: 0). */
   readonly scrollSpyOffset = input<number>(0);
 
-  /**
-   * Throttle time for scroll events in milliseconds (default: 100).
-   */
+  /** Throttle time for scroll events in milliseconds (default: 100). */
   readonly scrollSpyThrottle = input<number>(100);
 
-  /**
-   * Event emitted when scroll position changes.
-   */
+  /** Event emitted when scroll position changes. */
   readonly scrollSpyChange = output<ScrollSpyData>();
 
-  /**
-   * Event emitted when element enters viewport.
-   */
+  /** Event emitted when element enters viewport. */
   readonly enterView = output<void>();
 
-  /**
-   * Event emitted when element leaves viewport.
-   */
+  /** Event emitted when element leaves viewport. */
   readonly leaveView = output<void>();
 
   private wasInView = false;

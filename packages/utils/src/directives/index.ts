@@ -3,7 +3,7 @@ export * from './block-copy-paste.directive';
 export * from './click-outside.directive';
 export * from './copy-to-clipboard.directive';
 export * from './debounce-click.directive';
-export * from './deep-disabled.directive';
+export * from './hard-disabled.directive';
 export * from './hide-on-scroll.directive';
 export * from './input-mask.directive';
 export * from './intersection-observer.directive';

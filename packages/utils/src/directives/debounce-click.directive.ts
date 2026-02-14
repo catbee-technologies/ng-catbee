@@ -1,5 +1,4 @@
 import { Directive, HostListener, input, NgModule, OnDestroy, output } from '@angular/core';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 /**
  * Directive that debounces click events to prevent rapid repeated clicks.
@@ -13,7 +12,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
  *   selector: 'app-submit-form',
  *   template: `
  *     <button
- *       (debounceClick)="submit()"
+ *       (debouncedClick)="submit()"
  *       [debounceTime]="500">
  *       Submit
  *     </button>
@@ -31,45 +30,47 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
  * @publicApi
  */
 @Directive({
-  selector: '[debounceClick]',
+  selector: '[debouncedClick]',
   standalone: true
 })
-export class DebounceClick implements OnDestroy {
-  /**
-   * Debounce time in milliseconds (default: 300).
-   */
-  readonly debounceTime = input<number>(300);
+export class DebouncedClick implements OnDestroy {
+  /** Input for debounce time in milliseconds (default: 300) */
+  readonly debounceTime = input(300);
 
-  /**
-   * Event emitted after the debounce time has elapsed.
-   */
-  readonly debounceClick = output<MouseEvent>();
+  /** Output event that emits the click event after the debounce time has passed */
+  readonly debouncedClick = output<MouseEvent>();
 
-  private readonly clicks$ = new Subject<MouseEvent>();
-  private readonly destroy$ = new Subject<void>();
+  /** Input to prevent the default action of the click event (default: false) */
+  readonly preventDefault = input(false);
 
-  constructor() {
-    this.clicks$
-      .pipe(debounceTime(this.debounceTime()), takeUntil(this.destroy$))
-      .subscribe(event => this.debounceClick.emit(event));
-  }
+  /** Input to stop propagation of the click event (default: false) */
+  readonly stopPropagation = input(false);
+
+  private timeoutId?: ReturnType<typeof setTimeout>;
 
   @HostListener('click', ['$event'])
-  onClickEvent(event: MouseEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.clicks$.next(event);
+  onClick(event: MouseEvent) {
+    if (this.preventDefault()) event.preventDefault();
+    if (this.stopPropagation()) event.stopPropagation();
+
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+
+    this.timeoutId = setTimeout(() => {
+      this.debouncedClick.emit(event);
+    }, this.debounceTime());
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.clicks$.complete();
+  ngOnDestroy() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
   }
 }
 
 @NgModule({
-  imports: [DebounceClick],
-  exports: [DebounceClick]
+  imports: [DebouncedClick],
+  exports: [DebouncedClick]
 })
-export class DebounceClickModule {}
+export class DebouncedClickModule {}

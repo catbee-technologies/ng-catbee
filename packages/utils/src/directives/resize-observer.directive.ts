@@ -54,14 +54,10 @@ export class ResizeObserverDirective implements OnInit, OnDestroy {
   private observer: ResizeObserver | null = null;
   private debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  /**
-   * Debounce time in milliseconds to throttle resize events (default: 0).
-   */
+  /** Debounce time in milliseconds to throttle resize events (default: 0). */
   readonly resizeDebounce = input<number>(0);
 
-  /**
-   * Event emitted when element is resized.
-   */
+  /** Event emitted when element is resized. */
   readonly sizeChanged = output<ResizeData>();
 
   ngOnInit(): void {
