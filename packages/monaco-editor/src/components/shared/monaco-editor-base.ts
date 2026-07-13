@@ -13,7 +13,8 @@ import {
   output,
   PLATFORM_ID,
   Signal,
-  signal
+  signal,
+  linkedSignal
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
@@ -58,7 +59,10 @@ export abstract class CatbeeMonacoEditorCommonBase<T extends MonacoEditor | Mona
   /** Whether the editor is disabled (read-only). - default is `false`. */
   readonly disabled = input<boolean>(false);
   /** The options for the editor instance. */
-  readonly options = model<MonacoEditorOptions>();
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  readonly optionsInput = input<MonacoEditorOptions>(undefined, { alias: 'options' });
+  /** The options for the editor instance, linked to the input. */
+  readonly options = linkedSignal(this.optionsInput);
   /** Single language used for both sides of the diff. */
   readonly language = model<string>('plaintext');
 

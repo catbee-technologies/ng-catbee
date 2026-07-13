@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "esModuleInterop": true,
-    "baseUrl": "./",
     "paths": {
       "@ng-catbee/utils/types/*": ["./packages/utils/src/types/index"],
       "@ng-catbee/utils/*": ["./packages/utils/src/*/index", "./packages/utils/src/*"],
