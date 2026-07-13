@@ -1186,9 +1186,7 @@ export class CatbeeIndexedDBService {
   batch<T>(
     storeName: string,
     operations: (
-      | { type: 'add'; value: T; key?: unknown }
-      | { type: 'update'; value: T }
-      | { type: 'delete'; key: IDBValidKey }
+      { type: 'add'; value: T; key?: unknown } | { type: 'update'; value: T } | { type: 'delete'; key: IDBValidKey }
     )[]
   ): Observable<void> {
     return this.ensureDatabase().pipe(

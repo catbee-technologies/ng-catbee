@@ -250,9 +250,7 @@ export interface DatabaseEvent {
  * @public
  */
 export type BatchOperation<T> =
-  | { type: 'add'; value: T; key?: unknown }
-  | { type: 'update'; value: T }
-  | { type: 'delete'; key: IDBValidKey };
+  { type: 'add'; value: T; key?: unknown } | { type: 'update'; value: T } | { type: 'delete'; key: IDBValidKey };
 
 /**
  * Operators supported inside query executions.

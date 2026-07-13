@@ -8924,9 +8924,7 @@ declare namespace monaco.languages {
   }
 
   export type IMonarchLanguageRule =
-    | IShortMonarchLanguageRule1
-    | IShortMonarchLanguageRule2
-    | IExpandedMonarchLanguageRule;
+    IShortMonarchLanguageRule1 | IShortMonarchLanguageRule2 | IExpandedMonarchLanguageRule;
 
   /**
    * An action is either an array of actions...
@@ -9466,13 +9464,7 @@ declare namespace monaco.languages.json {
     readonly value: null;
   }
   export type ASTNode =
-    | ObjectASTNode
-    | PropertyASTNode
-    | ArrayASTNode
-    | StringASTNode
-    | NumberASTNode
-    | BooleanASTNode
-    | NullASTNode;
+    ObjectASTNode | PropertyASTNode | ArrayASTNode | StringASTNode | NumberASTNode | BooleanASTNode | NullASTNode;
   export type JSONDocument = {
     root: ASTNode | undefined;
     getNodeFromOffset(offset: number, includeRightBound?: boolean): ASTNode | undefined;
@@ -9712,14 +9704,7 @@ declare namespace monaco.languages.typescript {
     [index: string]: T;
   }
   type CompilerOptionsValue =
-    | string
-    | number
-    | boolean
-    | (string | number)[]
-    | string[]
-    | MapLike<string[]>
-    | null
-    | undefined;
+    string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | null | undefined;
   interface CompilerOptions {
     allowJs?: boolean;
     allowSyntheticDefaultImports?: boolean;
