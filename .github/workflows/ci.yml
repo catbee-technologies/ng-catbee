@@ -70,7 +70,6 @@ jobs:
 
       - name: TypeScript type checking
         run: |
-          npx tsc --noEmit
           for config in packages/tsconfig*.json; do
             echo "Running TypeScript check for $config..."
             npx tsc --noEmit -p "$config"

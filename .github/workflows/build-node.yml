@@ -1,23 +1,26 @@
-name: Node22
-run-name: Node 22 Build for ${{ github.repository }} on ${{ github.ref_name }}
+name: Node Build
+
+run-name: Node Build for ${{ github.repository }} on ${{ github.ref_name }}
 
 on:
   push:
     branches:
       - main
     paths:
-      - ".github/workflows/build-node22.yml"
+      - ".github/workflows/build-node.yml"
       - "packages/**/**.ts"
       - "packages/tsconfig*.json"
       - "package*.json"
+
   pull_request:
-    branches: 
-      - '**'
+    branches:
+      - "**"
     paths:
-      - ".github/workflows/build-node22.yml"
+      - ".github/workflows/build-node.yml"
       - "packages/**/**.ts"
       - "packages/tsconfig*.json"
       - "package*.json"
+
   workflow_dispatch:
 
 permissions:
@@ -25,8 +28,14 @@ permissions:
 
 jobs:
   build:
-    name: Build
+    name: Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24,  26]
+
     if: >
       (
         github.event_name != 'pull_request' ||
@@ -42,11 +51,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: 'npm'
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
