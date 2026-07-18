@@ -71,12 +71,12 @@
     "@angular/cli": "^22.0.6",
     "@angular/compiler-cli": "^22.0.6",
     "@commitlint/config-conventional": "^21.2.0",
-    "@ng-catbee/cookie": "^21.0.3",
-    "@ng-catbee/indexed-db": "^21.0.3",
-    "@ng-catbee/jwt": "^21.0.3",
-    "@ng-catbee/loader": "^21.0.4",
-    "@ng-catbee/monaco-editor": "^21.0.3",
-    "@ng-catbee/storage": "^21.0.3",
+    "@ng-catbee/cookie": "^22.0.0",
+    "@ng-catbee/indexed-db": "^22.0.0",
+    "@ng-catbee/jwt": "^22.0.0",
+    "@ng-catbee/loader": "^22.0.0",
+    "@ng-catbee/monaco-editor": "^22.0.0",
+    "@ng-catbee/storage": "^22.0.0",
     "@types/jasmine": "~6.0.0",
     "@types/karma-chrome-launcher": "^3.1.4",
     "@types/karma-coverage": "^2.0.3",
@@ -100,7 +100,7 @@
     "npm-run-all2": "^9.0.2",
     "nyc": "^18.0.0",
     "prettier": "^3.9.5",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "vitest": "^4.1.10"
   }
 }
