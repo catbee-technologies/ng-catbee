@@ -58,7 +58,7 @@
       "matchPackageNames": ["^@ng-catbee"]
     }
   ],
-  "addLabels": ["dependency", "renovate"],
+  "addLabels": ["type: dependencies", "status: needs-review"],
   "reviewers": ["catbee-technologies/catbee-admins"],
   "assignees": ["catbee-technologies/catbee-admins"],
   "branchPrefix": "dependency/",
