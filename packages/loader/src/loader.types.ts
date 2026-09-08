@@ -149,9 +149,9 @@ export type CatbeeLoaderSize = 'default' | 'small' | 'medium' | 'large';
  * To use a specific loader animation, include the corresponding CSS file from the `load-awesome` library in your project. For instance, to use the `ball-spin-clockwise-fade` animation, add the following to your Angular project's `angular.json` file under the `styles` array:
  * ```json
  * "styles": [
- *   "node_modules/load-awesome/css/ball-8bits.min.css",
- *   "node_modules/load-awesome/css/ball-pulse.min.css",
- *   "node_modules/load-awesome/css/ball-spin-clockwise-fade.min.css"
+ *   "node_modules/load-awesome/css/ball-8bits.css",
+ *   "node_modules/load-awesome/css/ball-pulse.css",
+ *   "node_modules/load-awesome/css/ball-spin-clockwise-fade.css"
  * ]
  * ```
  *

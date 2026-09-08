@@ -99,7 +99,7 @@ import { CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
       </div>
     }
   `,
-  styleUrls: ['./loader.component.css', './css/ball-spin-clockwise.min.css']
+  styleUrls: ['./loader.component.css', './css/ball-spin-clockwise.css']
 })
 export class CatbeeLoader implements OnInit {
   private readonly loaderService = inject(CatbeeLoaderService);

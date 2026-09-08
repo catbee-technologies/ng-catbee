@@ -1,0 +1,123 @@
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-zig-zag,
+.la-ball-zig-zag > div {
+  position: relative;
+
+  box-sizing: border-box;
+}
+
+.la-ball-zig-zag {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-zig-zag.la-dark {
+  color: #333;
+}
+
+.la-ball-zig-zag > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.la-ball-zig-zag {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.la-ball-zig-zag > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  margin-left: -5px;
+  border-radius: 100%;
+}
+
+.la-ball-zig-zag > div:first-child {
+  animation: ball-zig-effect 0.7s 0s infinite linear;
+}
+
+.la-ball-zig-zag > div:last-child {
+  animation: ball-zag-effect 0.7s 0s infinite linear;
+}
+
+.la-ball-zig-zag.la-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.la-ball-zig-zag.la-sm > div {
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  margin-left: -2px;
+}
+
+.la-ball-zig-zag.la-2x {
+  width: 64px;
+  height: 64px;
+}
+
+.la-ball-zig-zag.la-2x > div {
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+.la-ball-zig-zag.la-3x {
+  width: 96px;
+  height: 96px;
+}
+
+.la-ball-zig-zag.la-3x > div {
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  margin-left: -15px;
+}
+
+/*
+ * Animations
+ */
+
+@keyframes ball-zig-effect {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-75%, -150%);
+  }
+  66% {
+    transform: translate(75%, -150%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes ball-zag-effect {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(75%, 150%);
+  }
+  66% {
+    transform: translate(-75%, 150%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}

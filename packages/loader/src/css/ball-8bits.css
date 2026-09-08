@@ -1,0 +1,239 @@
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-8bits,
+.la-ball-8bits > div {
+  position: relative;
+
+  box-sizing: border-box;
+}
+
+.la-ball-8bits {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-8bits.la-dark {
+  color: #333;
+}
+
+.la-ball-8bits > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.la-ball-8bits {
+  width: 12px;
+  height: 12px;
+}
+
+.la-ball-8bits > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 0;
+  opacity: 0;
+
+  transform: translate(100%, 100%);
+
+  animation: ball-8bits 1s 0s ease infinite;
+}
+
+.la-ball-8bits > div:nth-child(1) {
+  animation-delay: -0.9375s;
+}
+
+.la-ball-8bits > div:nth-child(2) {
+  animation-delay: -0.875s;
+}
+
+.la-ball-8bits > div:nth-child(3) {
+  animation-delay: -0.8125s;
+}
+
+.la-ball-8bits > div:nth-child(4) {
+  animation-delay: -0.75s;
+}
+
+.la-ball-8bits > div:nth-child(5) {
+  animation-delay: -0.6875s;
+}
+
+.la-ball-8bits > div:nth-child(6) {
+  animation-delay: -0.625s;
+}
+
+.la-ball-8bits > div:nth-child(7) {
+  animation-delay: -0.5625s;
+}
+
+.la-ball-8bits > div:nth-child(8) {
+  animation-delay: -0.5s;
+}
+
+.la-ball-8bits > div:nth-child(9) {
+  animation-delay: -0.4375s;
+}
+
+.la-ball-8bits > div:nth-child(10) {
+  animation-delay: -0.375s;
+}
+
+.la-ball-8bits > div:nth-child(11) {
+  animation-delay: -0.3125s;
+}
+
+.la-ball-8bits > div:nth-child(12) {
+  animation-delay: -0.25s;
+}
+
+.la-ball-8bits > div:nth-child(13) {
+  animation-delay: -0.1875s;
+}
+
+.la-ball-8bits > div:nth-child(14) {
+  animation-delay: -0.125s;
+}
+
+.la-ball-8bits > div:nth-child(15) {
+  animation-delay: -0.0625s;
+}
+
+.la-ball-8bits > div:nth-child(16) {
+  animation-delay: 0s;
+}
+
+.la-ball-8bits > div:nth-child(1) {
+  top: -100%;
+  left: 0;
+}
+
+.la-ball-8bits > div:nth-child(2) {
+  top: -100%;
+  left: 33.3333333333%;
+}
+
+.la-ball-8bits > div:nth-child(3) {
+  top: -66.6666666667%;
+  left: 66.6666666667%;
+}
+
+.la-ball-8bits > div:nth-child(4) {
+  top: -33.3333333333%;
+  left: 100%;
+}
+
+.la-ball-8bits > div:nth-child(5) {
+  top: 0;
+  left: 100%;
+}
+
+.la-ball-8bits > div:nth-child(6) {
+  top: 33.3333333333%;
+  left: 100%;
+}
+
+.la-ball-8bits > div:nth-child(7) {
+  top: 66.6666666667%;
+  left: 66.6666666667%;
+}
+
+.la-ball-8bits > div:nth-child(8) {
+  top: 100%;
+  left: 33.3333333333%;
+}
+
+.la-ball-8bits > div:nth-child(9) {
+  top: 100%;
+  left: 0;
+}
+
+.la-ball-8bits > div:nth-child(10) {
+  top: 100%;
+  left: -33.3333333333%;
+}
+
+.la-ball-8bits > div:nth-child(11) {
+  top: 66.6666666667%;
+  left: -66.6666666667%;
+}
+
+.la-ball-8bits > div:nth-child(12) {
+  top: 33.3333333333%;
+  left: -100%;
+}
+
+.la-ball-8bits > div:nth-child(13) {
+  top: 0;
+  left: -100%;
+}
+
+.la-ball-8bits > div:nth-child(14) {
+  top: -33.3333333333%;
+  left: -100%;
+}
+
+.la-ball-8bits > div:nth-child(15) {
+  top: -66.6666666667%;
+  left: -66.6666666667%;
+}
+
+.la-ball-8bits > div:nth-child(16) {
+  top: -100%;
+  left: -33.3333333333%;
+}
+
+.la-ball-8bits.la-sm {
+  width: 6px;
+  height: 6px;
+}
+
+.la-ball-8bits.la-sm > div {
+  width: 2px;
+  height: 2px;
+}
+
+.la-ball-8bits.la-2x {
+  width: 24px;
+  height: 24px;
+}
+
+.la-ball-8bits.la-2x > div {
+  width: 8px;
+  height: 8px;
+}
+
+.la-ball-8bits.la-3x {
+  width: 36px;
+  height: 36px;
+}
+
+.la-ball-8bits.la-3x > div {
+  width: 12px;
+  height: 12px;
+}
+
+/*
+ * Animation
+ */
+
+@keyframes ball-8bits {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  51% {
+    opacity: 0;
+  }
+}

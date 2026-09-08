@@ -1,0 +1,93 @@
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-elastic-dots,
+.la-ball-elastic-dots > div {
+  position: relative;
+
+  box-sizing: border-box;
+}
+
+.la-ball-elastic-dots {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-elastic-dots.la-dark {
+  color: #333;
+}
+
+.la-ball-elastic-dots > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.la-ball-elastic-dots {
+  width: 120px;
+  height: 10px;
+  font-size: 0;
+  text-align: center;
+}
+
+.la-ball-elastic-dots > div {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  white-space: nowrap;
+  border-radius: 100%;
+
+  animation: ball-elastic-dots-anim 1s infinite;
+}
+
+.la-ball-elastic-dots.la-sm {
+  width: 60px;
+  height: 4px;
+}
+
+.la-ball-elastic-dots.la-sm > div {
+  width: 4px;
+  height: 4px;
+}
+
+.la-ball-elastic-dots.la-2x {
+  width: 240px;
+  height: 20px;
+}
+
+.la-ball-elastic-dots.la-2x > div {
+  width: 20px;
+  height: 20px;
+}
+
+.la-ball-elastic-dots.la-3x {
+  width: 360px;
+  height: 30px;
+}
+
+.la-ball-elastic-dots.la-3x > div {
+  width: 30px;
+  height: 30px;
+}
+
+/*
+ * Animation
+ */
+
+@keyframes ball-elastic-dots-anim {
+  0%,
+  100% {
+    margin: 0;
+
+    transform: scale(1);
+  }
+  50% {
+    margin: 0 5%;
+
+    transform: scale(0.65);
+  }
+}

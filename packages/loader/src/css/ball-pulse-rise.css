@@ -1,0 +1,133 @@
+/*!
+ * Load Awesome v1.1.0 (http://github.danielcardoso.net/load-awesome/)
+ * Copyright 2015 Daniel Cardoso <@DanielCardoso>
+ * Licensed under MIT
+ */
+.la-ball-pulse-rise,
+.la-ball-pulse-rise > div {
+  position: relative;
+
+  box-sizing: border-box;
+}
+
+.la-ball-pulse-rise {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+
+.la-ball-pulse-rise.la-dark {
+  color: #333;
+}
+
+.la-ball-pulse-rise > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.la-ball-pulse-rise {
+  width: 70px;
+  height: 14px;
+}
+
+.la-ball-pulse-rise > div {
+  width: 10px;
+  height: 10px;
+  margin: 2px;
+  border-radius: 100%;
+
+  animation: ball-pulse-rise-even 1s cubic-bezier(0.15, 0.36, 0.9, 0.6) 0s infinite;
+}
+
+.la-ball-pulse-rise > div:nth-child(2n-1) {
+  animation-name: ball-pulse-rise-odd;
+}
+
+.la-ball-pulse-rise.la-sm {
+  width: 34px;
+  height: 6px;
+}
+
+.la-ball-pulse-rise.la-sm > div {
+  width: 4px;
+  height: 4px;
+  margin: 1px;
+}
+
+.la-ball-pulse-rise.la-2x {
+  width: 140px;
+  height: 28px;
+}
+
+.la-ball-pulse-rise.la-2x > div {
+  width: 20px;
+  height: 20px;
+  margin: 4px;
+}
+
+.la-ball-pulse-rise.la-3x {
+  width: 210px;
+  height: 42px;
+}
+
+.la-ball-pulse-rise.la-3x > div {
+  width: 30px;
+  height: 30px;
+  margin: 6px;
+}
+
+/*
+ * Animations
+ */
+
+@keyframes ball-pulse-rise-even {
+  0% {
+    opacity: 1;
+
+    transform: scale(1.1);
+  }
+  25% {
+    transform: translateY(-200%);
+  }
+  50% {
+    opacity: 0.35;
+
+    transform: scale(0.3);
+  }
+  75% {
+    transform: translateY(200%);
+  }
+  100% {
+    opacity: 1;
+
+    transform: translateY(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes ball-pulse-rise-odd {
+  0% {
+    opacity: 0.35;
+
+    transform: scale(0.4);
+  }
+  25% {
+    transform: translateY(200%);
+  }
+  50% {
+    opacity: 1;
+
+    transform: scale(1.1);
+  }
+  75% {
+    transform: translateY(-200%);
+  }
+  100% {
+    opacity: 0.35;
+
+    transform: translateY(0);
+    transform: scale(0.75);
+  }
+}
