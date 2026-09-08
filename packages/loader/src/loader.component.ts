@@ -63,7 +63,7 @@ import { CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'ng-catbee-loader' },
   template: `
-    @if (shouldRender()) {
+    @if (forceShow() || shouldRender()) {
       <div
         class="catbee-loader"
         [class.catbee-loader-overlay]="loaderData().fullscreen"
@@ -119,6 +119,9 @@ export class CatbeeLoader implements OnInit {
 
   /** Loader height (supports CSS size values like px, %, em) */
   readonly height = input<string>();
+
+  /** Whether to force the loader to be shown independently of loader service control */
+  readonly forceShow = input<boolean>(false);
 
   /** Animation type
    * @link https://labs.danielcardoso.net/load-awesome/animations.html */

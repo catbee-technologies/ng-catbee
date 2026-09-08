@@ -426,6 +426,7 @@ The library includes 50+ beautiful loading animations. Each animation requires i
 | `backgroundColor` | `string` | `'rgba(0,0,0,0.7)'` | Overlay background color |
 | `loaderColor` | `string` | `'#ffffff'` | Loader/spinner color |
 | `fullscreen` | `boolean` | `true` | Fullscreen overlay mode |
+| `forceShow` | `boolean` | `false` | Force the loader to be shown independently of loader service control |
 | `zIndex` | `number` | `999999` | CSS z-index value |
 | `message` | `string` | `null` | Optional loading message |
 | `customTemplate` | `string` | `null` | Custom HTML template |
