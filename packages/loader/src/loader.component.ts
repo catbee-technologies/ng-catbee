@@ -91,7 +91,18 @@ import { CATBEE_LOADER_GLOBAL_CONFIG } from './loader.config';
           }
 
           @if (loaderData().message) {
-            <div class="ng-catbee-loader-message">{{ loaderData().message }}</div>
+            <div class="ng-catbee-loader-message">
+              @let msg = loaderData().message;
+              @let hasDots = msg?.endsWith('...');
+              {{ msg && hasDots ? msg.slice(0, -3) : msg }}
+              @if (loaderData().animateMessage && hasDots) {
+                <span class="ng-catbee-loader-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              }
+            </div>
           }
 
           <ng-content></ng-content>
@@ -148,6 +159,9 @@ export class CatbeeLoader implements OnInit {
   /** Whether to block page scrolling when fullscreen loader is visible */
   readonly blockScroll = input<boolean>();
 
+  /** Whether to animate trailing dots on the loading message */
+  readonly animateMessage = input<boolean>(false);
+
   /** Emits when loader visibility changes */
   readonly visibleChange = output<boolean>();
 
@@ -161,6 +175,7 @@ export class CatbeeLoader implements OnInit {
     elements: [],
     cssClass: '',
     fullscreen: CATBEE_LOADER_DEFAULTS.fullscreen,
+    animateMessage: CATBEE_LOADER_DEFAULTS.animateMessage,
     visible: false,
     zIndex: CATBEE_LOADER_DEFAULTS.zIndex,
     customTemplate: null,
@@ -206,6 +221,11 @@ export class CatbeeLoader implements OnInit {
       cssClass: this.getCssClassByAnimation(animation, size),
       fullscreen:
         overrides.fullscreen ?? this.fullscreen() ?? this.globalConfig?.fullscreen ?? CATBEE_LOADER_DEFAULTS.fullscreen,
+      animateMessage:
+        overrides.animateMessage ??
+        this.animateMessage() ??
+        this.globalConfig?.animateMessage ??
+        CATBEE_LOADER_DEFAULTS.animateMessage,
       visible: state.visible,
       zIndex: overrides.zIndex ?? this.zIndex() ?? this.globalConfig?.zIndex ?? CATBEE_LOADER_DEFAULTS.zIndex,
       customTemplate: overrides.customTemplate ?? this.customTemplate() ?? this.globalConfig?.customTemplate ?? null,

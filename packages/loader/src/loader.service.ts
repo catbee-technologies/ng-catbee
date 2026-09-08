@@ -73,6 +73,7 @@ export class CatbeeLoaderService {
         size: options?.size,
         animation: options?.animation,
         fullscreen: options?.fullscreen,
+        animateMessage: options?.animateMessage,
         zIndex: options?.zIndex,
         customTemplate: options?.customTemplate,
         message: options?.message,

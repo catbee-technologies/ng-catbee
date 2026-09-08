@@ -15,6 +15,8 @@ export interface CatbeeLoaderGlobalConfig {
   zIndex?: number;
   /** Default fullscreen mode for loaders */
   fullscreen?: boolean;
+  /** Whether to animate trailing dots on the loading message */
+  animateMessage?: boolean;
   /** Default message to display below loaders */
   message?: string | null;
   /** Default custom template for loaders */
@@ -59,6 +61,7 @@ export const CATBEE_LOADER_DEFAULTS: Required<Omit<CatbeeLoaderGlobalConfig, 'cu
   size: 'default',
   animation: 'ball-spin-clockwise',
   fullscreen: true,
+  animateMessage: false,
   blurBackground: false,
   blurPixels: 5,
   blockScroll: true

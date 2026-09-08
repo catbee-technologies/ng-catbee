@@ -429,6 +429,7 @@ The library includes 50+ beautiful loading animations. Each animation requires i
 | `forceShow` | `boolean` | `false` | Force the loader to be shown independently of loader service control |
 | `zIndex` | `number` | `999999` | CSS z-index value |
 | `message` | `string` | `null` | Optional loading message |
+| `animateMessage` | `boolean` | `false` | Animate trailing dots in the loading message when the message ends with `...` |
 | `customTemplate` | `string` | `null` | Custom HTML template |
 | `width` | `string` | `'100%'` | Loader container width |
 | `height` | `string` | `'100%'` | Loader container height |
