@@ -41,6 +41,7 @@ npm install @ng-catbee/storage
 ## 🔧 Configuration (Optional)
 
 **Standalone apps:**
+
 ```typescript
 import { provideCatbeeStorage } from '@ng-catbee/storage';
 
@@ -63,6 +64,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 **Module-based apps:**
+
 ```typescript
 import { CatbeeStorageModule } from '@ng-catbee/storage';
 
@@ -232,8 +234,9 @@ export class AdvancedComponent implements OnInit {
 ## 📚 API Reference
 
 ### Basic Methods
+
 | Method | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `set(key: string, value: string, skipEncoding?: boolean): void` | Store a string value |
 | `get(key: string, skipDecoding?: boolean): string \| null` | Get a string value |
 | `delete(key: string): void` | Remove an item |
@@ -246,26 +249,26 @@ export class AdvancedComponent implements OnInit {
 ### Core Methods
 
 | Method | Description |
-|--------|-------------|
-| `setJson<T>(key, value): void` | Store JSON value |
+| -------- | ------------- |
+| `setJson<T>(key, value, skipEncoding?): void` | Store JSON value |
 | `getJson<T>(key, skipDecoding?): T \| null` | Get and parse JSON |
-| `getJsonWithDefault<T>(key, defaultValue): T` | Get JSON with auto-set default |
-| `setArray<T>(key, value): void` | Store array |
+| `getJsonWithDefault<T>(key, defaultValue, skipDecoding?, skipEncoding?): T` | Get JSON with auto-set default |
+| `setArray<T>(key, value, skipEncoding?): void` | Store array |
 | `getArray<T>(key, skipDecoding?): T[] \| null` | Get and parse array |
-| `getArrayWithDefault<T>(key, defaultValue?): T[]` | Get array with auto-set default |
-| `getBoolean(key, skipDecoding?)` | Parse boolean |
-| `getBooleanWithDefault(key, defaultValue)` | Parse boolean with auto-set default |
-| `getNumber(key, skipDecoding?)` | Parse number |
-| `getNumberWithDefault(key, defaultValue)` | Parse number with auto-set default |
-| `getEnum<T>(key, enumValues, skipDecoding?)` | Get validated enum |
-| `getEnumWithDefault<T>(key, defaultValue, enumValues)` | Get enum with auto-set default |
+| `getArrayWithDefault<T>(key, defaultValue?, skipDecoding?, skipEncoding?): T[]` | Get array with auto-set default |
+| `getBoolean(key, skipDecoding?): boolean \| null` | Parse boolean |
+| `getBooleanWithDefault(key, defaultValue, skipDecoding?, skipEncoding?): boolean` | Parse boolean with auto-set default |
+| `getNumber(key, skipDecoding?): number \| null` | Parse number |
+| `getNumberWithDefault(key, defaultValue, skipDecoding?, skipEncoding?): number` | Parse number with auto-set default |
+| `getEnum<T>(key, enumValues, skipDecoding?): T \| null` | Get validated enum |
+| `getEnumWithDefault<T>(key, defaultValue, enumValues, skipDecoding?, skipEncoding?): T` | Get enum with auto-set default |
 
 ### Advanced
 
 | Method | Description |
-|--------|-------------|
-| `setIfNotExists(key: string, value: string): void` | Set only if missing |
-| `getWithDefault(key: string, defaultValue: string, allowedValues?: string[]): string` | Get with validation and auto-set default |
+| -------- | ------------- |
+| `setIfNotExists(key: string, value: string, skipEncoding?: boolean): void` | Set only if missing |
+| `getWithDefault(key: string, defaultValue: string, allowedValues?: string[], skipDecoding?: boolean, skipEncoding?: boolean): string` | Get with validation and auto-set default |
 | `updateJson<T>(key: string, updates: Partial<T>, defaultValue: T): void` | Partial JSON update |
 | `multiGet(keys: string[]): Map<string, string \| null>` | Get multiple values at once |
 | `multiSet(entries: Record<string, string>): void` | Set multiple values at once |

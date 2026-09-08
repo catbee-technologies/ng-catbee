@@ -58,13 +58,14 @@ export abstract class CatbeeBaseStorageService {
    *
    * @param key - The storage key.
    * @param value - The string value to store.
+   * @param skipEncoding - If true, skip encoding (useful for backend-compatible values).
    */
-  setIfNotExists(key: string, value: string): void {
+  setIfNotExists(key: string, value: string, skipEncoding: boolean = false): void {
     const storage = this.getStorage();
     if (!storage) return;
     try {
-      if (!storage.getItem(key)) {
-        this.set(key, value);
+      if (storage.getItem(key) === null) {
+        this.set(key, value, skipEncoding);
       }
     } catch (error) {
       console.error(`Failed to check/set ${this.getStorageName()} key "${key}":`, error);
@@ -104,8 +105,8 @@ export abstract class CatbeeBaseStorageService {
     if (value === null) {
       return null;
     }
-    const parsed = Number.parseFloat(value);
-    return Number.isNaN(parsed) ? null : parsed;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
   /**
@@ -121,17 +122,7 @@ export abstract class CatbeeBaseStorageService {
    */
   getBoolean(key: string, skipDecoding: boolean = false): boolean | null {
     const value = this.get(key, skipDecoding);
-    if (value === null) {
-      return null;
-    }
-    const lowered = value.toLowerCase();
-    if (['true', '1', 'yes', 'on'].includes(lowered)) {
-      return true;
-    }
-    if (['false', '0', 'no', 'off'].includes(lowered)) {
-      return false;
-    }
-    return null;
+    return value === null ? null : this.parseBoolean(value);
   }
 
   /**
@@ -161,10 +152,13 @@ export abstract class CatbeeBaseStorageService {
    * @param skipDecoding - If true, skip decoding
    * @returns The parsed object, or `null` if not found or parsing fails.
    */
-  getJson<T>(key: string, skipDecoding: boolean = false): T | null {
+  getJson<T>(key: string, skipDecoding = false): T | null {
     const value = this.get(key, skipDecoding);
+    if (value === null) {
+      return null;
+    }
     try {
-      return value ? JSON.parse(value) : null;
+      return JSON.parse(value) as T;
     } catch (error) {
       console.error(`Failed to parse JSON for key "${key}":`, error);
       return null;
@@ -179,11 +173,14 @@ export abstract class CatbeeBaseStorageService {
    * @param skipDecoding - If true, skip decoding
    * @returns The parsed array, or `null` if not found or parsing fails.
    */
-  getArray<T>(key: string, skipDecoding: boolean = false): T[] | null {
+  getArray<T>(key: string, skipDecoding = false): T[] | null {
     const value = this.get(key, skipDecoding);
+    if (value === null) {
+      return null;
+    }
     try {
-      const parsed = value ? JSON.parse(value) : null;
-      return Array.isArray(parsed) ? parsed : null;
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? (parsed as T[]) : null;
     } catch (error) {
       console.error(`Failed to parse array for key "${key}":`, error);
       return null;
@@ -196,18 +193,26 @@ export abstract class CatbeeBaseStorageService {
    * @param key - The storage key.
    * @param defaultValue - The default value if key not found or value is invalid.
    * @param allowedValues - Array of allowed values. If empty, any value is accepted.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The stored value if valid, otherwise the default value.
    */
-  getWithDefault(key: string, defaultValue: string, allowedValues: string[] = []): string {
-    const value = this.get(key);
-    if (value) {
+  getWithDefault(
+    key: string,
+    defaultValue: string,
+    allowedValues: readonly string[] = [],
+    skipDecoding: boolean = false,
+    skipEncoding: boolean = false
+  ): string {
+    const value = this.get(key, skipDecoding);
+    if (value !== null) {
       if (allowedValues.length && !allowedValues.includes(value)) {
-        this.set(key, defaultValue);
+        this.set(key, defaultValue, skipEncoding);
         return defaultValue;
       }
       return value;
     }
-    this.set(key, defaultValue);
+    this.set(key, defaultValue, skipEncoding);
     return defaultValue;
   }
 
@@ -220,18 +225,20 @@ export abstract class CatbeeBaseStorageService {
    *
    * @param key - The storage key.
    * @param defaultValue - The default value if key not found or value is invalid.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The parsed boolean value or the default.
    */
-  getBooleanWithDefault(key: string, defaultValue: boolean): boolean {
-    const value = this.get(key)?.toLowerCase() || '';
-    if (['true', '1', 'yes', 'on'].includes(value)) {
-      return true;
-    }
+  getBooleanWithDefault(key: string, defaultValue: boolean, skipDecoding = false, skipEncoding = false): boolean {
+    const value = this.get(key, skipDecoding);
+    if (value !== null) {
+      const parsed = this.parseBoolean(value);
 
-    if (['false', '0', 'no', 'off'].includes(value)) {
-      return false;
+      if (parsed !== null) {
+        return parsed;
+      }
     }
-    this.set(key, defaultValue.toString());
+    this.set(key, String(defaultValue), skipEncoding);
     return defaultValue;
   }
 
@@ -240,13 +247,20 @@ export abstract class CatbeeBaseStorageService {
    *
    * @param key - The storage key.
    * @param defaultValue - The default value if key not found or value is not a valid number.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The parsed number or the default.
    */
-  getNumberWithDefault(key: string, defaultValue: number): number {
-    const value = this.get(key);
-    const parsed = parseFloat(value || '');
-    if (Number.isNaN(parsed)) {
-      this.set(key, defaultValue.toString());
+  getNumberWithDefault(
+    key: string,
+    defaultValue: number,
+    skipDecoding: boolean = false,
+    skipEncoding: boolean = false
+  ): number {
+    const value = this.get(key, skipDecoding);
+    const parsed = value !== null ? Number(value) : NaN;
+    if (!Number.isFinite(parsed)) {
+      this.set(key, defaultValue.toString(), skipEncoding);
       return defaultValue;
     }
     return parsed;
@@ -259,16 +273,24 @@ export abstract class CatbeeBaseStorageService {
    * @param key - The storage key.
    * @param defaultValue - The default enum value if key not found or value is invalid.
    * @param enumValues - Array of valid enum values for validation.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The stored enum value if valid, otherwise the default.
    */
-  getEnumWithDefault<T extends string>(key: string, defaultValue: T, enumValues: readonly T[]): T {
-    const value = this.get(key);
+  getEnumWithDefault<T extends string>(
+    key: string,
+    defaultValue: T,
+    enumValues: readonly T[],
+    skipDecoding: boolean = false,
+    skipEncoding: boolean = false
+  ): T {
+    const value = this.get(key, skipDecoding);
 
     if (typeof value === 'string' && enumValues.includes(value as T)) {
       return value as T;
     }
 
-    this.set(key, defaultValue);
+    this.set(key, defaultValue, skipEncoding);
     return defaultValue;
   }
 
@@ -278,15 +300,23 @@ export abstract class CatbeeBaseStorageService {
    * @template T - The expected type of the parsed object.
    * @param key - The storage key.
    * @param defaultValue - The default value if key not found or JSON parsing fails.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The parsed object or the default value.
    */
-  getJsonWithDefault<T>(key: string, defaultValue: T): T {
-    const value = this.get(key);
+  getJsonWithDefault<T>(key: string, defaultValue: T, skipDecoding: boolean = false, skipEncoding: boolean = false): T {
+    const value = this.get(key, skipDecoding);
+
+    if (value === null) {
+      this.setJson(key, defaultValue, skipEncoding);
+      return defaultValue;
+    }
+
     try {
-      return value ? JSON.parse(value) : defaultValue;
+      return JSON.parse(value) as T;
     } catch (error) {
       console.error(`Failed to parse JSON for key "${key}":`, error);
-      this.set(key, JSON.stringify(defaultValue));
+      this.setJson(key, defaultValue, skipEncoding);
       return defaultValue;
     }
   }
@@ -299,10 +329,11 @@ export abstract class CatbeeBaseStorageService {
    * @template T - The type of the value to store.
    * @param key - The storage key.
    * @param value - The value to serialize and store.
+   * @param skipEncoding - If true, bypass encoding when storing the value.
    */
-  setJson<T>(key: string, value: T): void {
+  setJson<T>(key: string, value: T, skipEncoding: boolean = false): void {
     try {
-      this.set(key, JSON.stringify(value));
+      this.set(key, JSON.stringify(value), skipEncoding);
     } catch (error) {
       console.error(`Failed to stringify JSON for key "${key}":`, error);
     }
@@ -314,16 +345,35 @@ export abstract class CatbeeBaseStorageService {
    * @template T - The expected type of array elements.
    * @param key - The storage key.
    * @param defaultValue - The default array if key not found or parsing fails.
+   * @param skipDecoding - If true, bypass decoding regardless of configuration.
+   * @param skipEncoding - If true, bypass encoding when setting the default value.
    * @returns The parsed array or the default value.
    */
-  getArrayWithDefault<T>(key: string, defaultValue: T[] = []): T[] {
-    const value = this.get(key);
+  getArrayWithDefault<T>(
+    key: string,
+    defaultValue: T[] = [],
+    skipDecoding: boolean = false,
+    skipEncoding: boolean = false
+  ): T[] {
+    const value = this.get(key, skipDecoding);
+
+    if (value === null) {
+      this.setJson(key, defaultValue, skipEncoding);
+      return defaultValue;
+    }
+
     try {
-      const parsed = value ? JSON.parse(value) : defaultValue;
-      return Array.isArray(parsed) ? parsed : defaultValue;
+      const parsed = JSON.parse(value);
+
+      if (Array.isArray(parsed)) {
+        return parsed as T[];
+      }
+
+      this.setJson(key, defaultValue, skipEncoding);
+      return defaultValue;
     } catch (error) {
       console.error(`Failed to parse array for key "${key}":`, error);
-      this.setJson(key, defaultValue);
+      this.setJson(key, defaultValue, skipEncoding);
       return defaultValue;
     }
   }
@@ -336,9 +386,10 @@ export abstract class CatbeeBaseStorageService {
    * @template T - The type of array elements.
    * @param key - The storage key.
    * @param value - The array to store.
+   * @param skipEncoding - If true, bypass encoding when storing the array.
    */
-  setArray<T>(key: string, value: T[]): void {
-    this.setJson(key, value);
+  setArray<T>(key: string, value: T[], skipEncoding: boolean = false): void {
+    this.setJson(key, value, skipEncoding);
   }
 
   /**
@@ -511,7 +562,9 @@ export abstract class CatbeeBaseStorageService {
         return event.key === key && isMatchingStorage;
       }),
       map(event =>
-        event.newValue ? this.encoder.decode(event.newValue, this.getStorageType(), false, this.getStorageName()) : null
+        event.newValue === null
+          ? null
+          : this.encoder.decode(event.newValue, this.getStorageType(), false, this.getStorageName())
       ),
       startWith(this.get(key))
     );
@@ -552,12 +605,14 @@ export abstract class CatbeeBaseStorageService {
       }),
       map(event => ({
         key: event.key,
-        oldValue: event.oldValue
-          ? this.encoder.decode(event.oldValue, this.getStorageType(), false, this.getStorageName())
-          : null,
-        newValue: event.newValue
-          ? this.encoder.decode(event.newValue, this.getStorageType(), false, this.getStorageName())
-          : null
+        oldValue:
+          event.oldValue === null
+            ? null
+            : this.encoder.decode(event.oldValue, this.getStorageType(), false, this.getStorageName()),
+        newValue:
+          event.newValue === null
+            ? null
+            : this.encoder.decode(event.newValue, this.getStorageType(), false, this.getStorageName())
       }))
     );
   }
@@ -617,6 +672,25 @@ export abstract class CatbeeBaseStorageService {
     } catch (error) {
       console.error(`Failed to get ${this.getStorageName()} length:`, error);
       return 0;
+    }
+  }
+
+  private parseBoolean(value: string): boolean | null {
+    switch (value.toLowerCase()) {
+      case 'true':
+      case '1':
+      case 'yes':
+      case 'on':
+        return true;
+
+      case 'false':
+      case '0':
+      case 'no':
+      case 'off':
+        return false;
+
+      default:
+        return null;
     }
   }
 }
