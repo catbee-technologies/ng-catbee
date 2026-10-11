@@ -1,6 +1,5 @@
 name: Node Build
-
-run-name: Node Build for ${{ github.repository }} on ${{ github.ref_name }}
+run-name: "Node Build: ${{ github.head_ref || github.ref_name }}"
 
 on:
   push:

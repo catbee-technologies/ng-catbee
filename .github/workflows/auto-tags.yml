@@ -1,5 +1,5 @@
 name: Tag
-run-name: Tag for ${{ github.repository }} on ${{ github.ref_name }}
+run-name: "Tag: ${{ github.ref_name }}"
 
 on:
   push:
@@ -163,7 +163,7 @@ jobs:
               repo: context.repo.repo,
               event_type: "publish_packages",
               client_payload: {
-                tags: process.env.CREATED_TAGS,
+                tags: (process.env.CREATED_TAGS || "").trim(),
                 sha: process.env.GITHUB_SHA
               }
             });

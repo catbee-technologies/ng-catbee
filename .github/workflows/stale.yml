@@ -1,4 +1,5 @@
 name: Auto Mark Stale Issues and PRs
+run-name: "Stale: ${{ github.event_name == 'schedule' && 'Scheduled' || 'Manual' }}"
 
 on:
   schedule:

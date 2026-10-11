@@ -1,15 +1,21 @@
-name: Publish Angular Packages
-run-name: Publish Angular Packages for ${{ github.repository }} on ${{ github.ref_name }}
+name: Publish Packages
+run-name: "Publish: ${{ github.event.client_payload.tags || inputs.tags || 'manual release' }}"
 
 on:
   repository_dispatch:
     types: [publish_packages]
 
   workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Tag(s) to publish (e.g. loader@v22.1.0 or storage@v22.1.0)'
+        required: false
+        type: string
 
 permissions:
   contents: write
   statuses: write
+  id-token: write
 
 jobs:
   publish:
@@ -19,10 +25,13 @@ jobs:
       - name: Read tags from dispatch payload
         id: payload
         run: |
-          echo "TAGS=${{ github.event.client_payload.tags }}" >> $GITHUB_ENV
-          echo "TARGET_SHA=${{ github.event.client_payload.sha }}" >> $GITHUB_ENV
-          echo "Tags received: ${{ github.event.client_payload.tags }}"
-          echo "SHA received: ${{ github.event.client_payload.sha }}"
+          RAW_TAGS="${{ github.event.client_payload.tags || inputs.tags }}"
+          TAGS=$(echo "$RAW_TAGS" | xargs)
+          TARGET_SHA="${{ github.event.client_payload.sha || github.sha }}"
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+          echo "TARGET_SHA=$TARGET_SHA" >> $GITHUB_ENV
+          echo "Tags received: $TAGS"
+          echo "SHA received: $TARGET_SHA"
 
       - name: Skip when no tags were created
         if: env.TAGS == ''
@@ -31,7 +40,7 @@ jobs:
           exit 0
 
       - name: Checkout commit where tags were created
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ env.TARGET_SHA }}
@@ -44,6 +53,7 @@ jobs:
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false
 
       - name: Install dependencies
         run: npm ci
@@ -84,10 +94,10 @@ jobs:
             if [[ "$VERSION" == *-* ]]; then
               TAG_NAME=$(echo "$VERSION" | sed 's/^[0-9.]*-//' | cut -d. -f1)
               echo "Publishing prerelease with tag: $TAG_NAME"
-              npm publish --access public --tag "$TAG_NAME"
+              npm publish --provenance --access public --tag "$TAG_NAME"
             else
               echo "Publishing stable release"
-              npm publish --access public --tag latest
+              npm publish --provenance --access public --tag latest
             fi
 
             cd - > /dev/null
