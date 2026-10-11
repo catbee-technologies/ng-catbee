@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report to help us improve the project.
-title: "[Bug]: "
-labels: ["bug"]
+title: '[Bug]: '
+labels: ['bug']
 body:
   - type: markdown
     attributes:
@@ -27,14 +27,14 @@ body:
     attributes:
       label: Affected Package(s)
       options:
-        - "All Packages"
-        - "@ng-catbee/utils"
-        - "@ng-catbee/monaco-editor"
-        - "@ng-catbee/loader"
-        - "@ng-catbee/jwt"
-        - "@ng-catbee/storage"
-        - "@ng-catbee/cookie"
-        - "@ng-catbee/indexed-db"
+        - 'All Packages'
+        - '@ng-catbee/cookie'
+        - '@ng-catbee/indexed-db'
+        - '@ng-catbee/jwt'
+        - '@ng-catbee/loader'
+        - '@ng-catbee/monaco-editor'
+        - '@ng-catbee/storage'
+        - '@ng-catbee/utils'
       multiple: true
     validations:
       required: true
@@ -43,7 +43,7 @@ body:
     id: version
     attributes:
       label: Package Version
-      placeholder: e.g., 12.1.0
+      placeholder: e.g., 22.1.0
     validations:
       required: true
 
@@ -51,12 +51,12 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: Include OS, Node version, Angular version, and browser.
+      description: Include OS, Node.js version, Angular version, and browser.
       placeholder: |
-        - OS: macOS 15
-        - Node: 20.x
-        - Angular: 18.x
-        - Browser: Chrome 128
+        - OS: macOS 15 / Windows 11 / Ubuntu 22.04
+        - Node: 20.x / 22.x
+        - Angular: 19.x / 20.x / 21.x / 22.x
+        - Browser: Chrome 130 / Firefox 131 / Safari 18
     validations:
       required: true
 
@@ -65,7 +65,7 @@ body:
     attributes:
       label: Bug Summary
       description: Short and clear description of the problem.
-      placeholder: e.g., Monaco editor not rendering inside Angular zone.
+      placeholder: e.g., Monaco editor not rendering inside Angular zone or Loader overlay not displaying during route transitions.
     validations:
       required: true
 
@@ -75,8 +75,8 @@ body:
       label: Steps to Reproduce
       description: Include code snippets, commands, or repo links.
       placeholder: |
-        1. Go to ...
-        2. Click ...
+        1. Import module or provide service ...
+        2. Render component / trigger service method ...
         3. See error ...
     validations:
       required: true
@@ -85,8 +85,8 @@ body:
     id: reproduction
     attributes:
       label: Minimal Reproduction
-      description: Link to StackBlitz, a minimal repo, or gist that reproduces the issue.
-      placeholder: https://stackblitz.com/...
+      description: Link to StackBlitz, GitHub repository, or minimal reproduction.
+      placeholder: https://stackblitz.com/... or https://github.com/...
     validations:
       required: false
 
@@ -95,9 +95,9 @@ body:
     attributes:
       label: Is this a regression?
       options:
-        - "Yes"
-        - "No"
-        - "Unsure"
+        - 'Yes'
+        - 'No'
+        - 'Unsure'
     validations:
       required: true
 
@@ -132,11 +132,11 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Relevant Logs
-      description: Paste logs or stack traces. Wrap logs in triple backticks.
+      label: Relevant Logs & Console Output
+      description: Paste browser console errors, build logs, or stack traces. Wrap in triple backticks.
       placeholder: |
         ```
-        <paste logs here>
+        <paste console errors, build logs, or stack traces here>
         ```
     validations:
       required: false

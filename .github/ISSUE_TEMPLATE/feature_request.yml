@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest an idea or improvement.
-title: "[Feature]: "
-labels: ["enhancement", "feature-request", "improvement"]
+title: '[Feature]: '
+labels: ['enhancement', 'feature-request', 'improvement']
 body:
   - type: markdown
     attributes:
@@ -27,14 +27,14 @@ body:
     attributes:
       label: Affected Package(s)
       options:
-        - "All Packages"
-        - "@ng-catbee/utils"
-        - "@ng-catbee/monaco-editor"
-        - "@ng-catbee/loader"
-        - "@ng-catbee/jwt"
-        - "@ng-catbee/storage"
-        - "@ng-catbee/cookie"
-        - "@ng-catbee/indexed-db"
+        - 'All Packages'
+        - '@ng-catbee/cookie'
+        - '@ng-catbee/indexed-db'
+        - '@ng-catbee/jwt'
+        - '@ng-catbee/loader'
+        - '@ng-catbee/monaco-editor'
+        - '@ng-catbee/storage'
+        - '@ng-catbee/utils'
       multiple: true
     validations:
       required: true
@@ -44,7 +44,7 @@ body:
     attributes:
       label: Feature Summary
       description: A short, clear summary of the requested feature.
-      placeholder: e.g. Add support for custom Monaco editor workers
+      placeholder: e.g., Add support for custom Monaco editor web workers or persistent indexedDB quota alerts.
     validations:
       required: true
 
@@ -54,7 +54,7 @@ body:
       label: Problem Statement (Optional)
       description: Is your feature request related to a problem?
       placeholder: |
-        Explain the issue you're facing that this feature would solve.
+        Explain the issue or limitation you're facing that this feature would solve.
     validations:
       required: false
 
@@ -62,9 +62,13 @@ body:
     id: solution
     attributes:
       label: Proposed Solution
-      description: How should this work? Provide detailed behavior if possible.
+      description: How should this work? Provide detailed behavior or API design if possible.
       placeholder: |
-        Describe the approach or API you’d like to see.
+        Describe the approach or API you’d like to see. Include TypeScript/Angular code snippets where applicable:
+
+        ```ts
+        // Example proposed usage
+        ```
     validations:
       required: true
 
@@ -74,9 +78,9 @@ body:
       label: Use Cases / Motivation
       description: Describe who this helps and why it matters.
       placeholder: |
-        - As a developer, I want ...
+        - As an Angular developer, I want ...
         - This enables ...
-        - This improves ...
+        - This improves developer ergonomics / application UX ...
     validations:
       required: true
 
@@ -107,9 +111,9 @@ body:
       label: Acceptance Criteria
       description: Bullet points describing how we'll know this feature is complete.
       placeholder: |
-        - [ ] New API is available
-        - [ ] Supports X scenario
-        - [ ] Documentation updated
+        - [ ] New component/service API is available
+        - [ ] Supports Angular standalone / module setup
+        - [ ] Documentation and demo updated
     validations:
       required: true
 
