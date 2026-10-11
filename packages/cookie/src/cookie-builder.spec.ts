@@ -400,8 +400,11 @@ describe('CookieBuilder', () => {
 
       // TypeScript should only allow these values
       builder.withSameSite('Strict');
+      expect(builder.build()).toContain('SameSite=Strict');
       builder.withSameSite('Lax');
+      expect(builder.build()).toContain('SameSite=Lax');
       builder.withSameSite('None');
+      expect(builder.build()).toContain('SameSite=None');
 
       // This would fail TypeScript compilation:
       // builder.withSameSite('Invalid' as CookieSameSite);
@@ -412,8 +415,11 @@ describe('CookieBuilder', () => {
 
       // TypeScript should only allow these values
       builder.withPriority('Low');
+      expect(builder.build()).toContain('Priority=Low');
       builder.withPriority('Medium');
+      expect(builder.build()).toContain('Priority=Medium');
       builder.withPriority('High');
+      expect(builder.build()).toContain('Priority=High');
 
       // This would fail TypeScript compilation:
       // builder.withPriority('Invalid' as CookiePriority);

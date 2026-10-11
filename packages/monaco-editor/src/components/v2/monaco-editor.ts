@@ -47,7 +47,7 @@ export class CatbeeMonacoEditorV2 extends CatbeeMonacoEditorBaseEditor implement
       if (editor.getValue() !== val) {
         editor.setValue(val);
         if (this.autoFormat()) {
-          this.format();
+          void this.format();
         }
         this.updatePlaceholder();
       }

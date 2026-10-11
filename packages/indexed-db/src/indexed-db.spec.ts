@@ -1081,13 +1081,16 @@ describe('CatbeeIndexedDBService', () => {
     });
 
     it('should handle operations gracefully on server', done => {
-      // SSR testing requires different setup - skip for now
-      done();
+      service.getAll('users').subscribe({
+        complete: () => {
+          expect(service).toBeDefined();
+          done();
+        }
+      });
     });
 
-    it('should not throw errors during SSR', done => {
-      // SSR testing requires different setup - skip for now
-      done();
+    it('should not throw errors during SSR', () => {
+      expect(() => service.initialize(testConfig)).not.toThrow();
     });
   });
 

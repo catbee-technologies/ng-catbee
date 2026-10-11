@@ -413,7 +413,7 @@ export class CatbeeJwtService {
    */
   watchExpiry(token: string, tickMs = 1000) {
     const payload = this.decodePayload(token);
-    if (!payload || !payload?.exp) return of(0).pipe(take(1));
+    if (!payload?.exp) return of(0).pipe(take(1));
 
     const expirationTime = payload.exp;
     return interval(tickMs).pipe(

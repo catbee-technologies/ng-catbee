@@ -258,7 +258,7 @@ export abstract class CatbeeBaseStorageService {
     skipEncoding: boolean = false
   ): number {
     const value = this.get(key, skipDecoding);
-    const parsed = value !== null ? Number(value) : NaN;
+    const parsed = value !== null ? Number(value) : Number.NaN;
     if (!Number.isFinite(parsed)) {
       this.set(key, defaultValue.toString(), skipEncoding);
       return defaultValue;
@@ -405,7 +405,7 @@ export abstract class CatbeeBaseStorageService {
    */
   updateJson<T extends Record<string, unknown>>(key: string, updates: Partial<T>, defaultValue: T | null): void {
     const current = this.getJson<T>(key);
-    this.setJson(key, { ...(defaultValue ?? {}), ...(current ?? {}), ...updates });
+    this.setJson(key, { ...defaultValue, ...current, ...updates });
   }
 
   /**

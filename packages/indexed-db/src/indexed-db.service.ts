@@ -389,14 +389,13 @@ export class CatbeeIndexedDBService {
           return of([]);
         }
         const requests = keys.map(key => this.wrapRequest(store.get(key)).pipe(map(result => result as T)));
-        return requests.length
-          ? requests.length === 1
-            ? requests[0].pipe(map(result => [result]))
-            : requests.reduce(
-                (acc, obs) => acc.pipe(switchMap(arr => obs.pipe(map(res => [...arr, res])))),
-                of([] as T[])
-              )
-          : of([]);
+        if (requests.length === 1) {
+          return requests[0].pipe(map(result => [result]));
+        }
+        return requests.reduce(
+          (acc, obs) => acc.pipe(switchMap(arr => obs.pipe(map(res => [...arr, res])))),
+          of([] as T[])
+        );
       })
     );
   }
@@ -977,7 +976,7 @@ export class CatbeeIndexedDBService {
       this.database = null;
     }
 
-    return firstValueFrom(this.openDatabase());
+    return await firstValueFrom(this.openDatabase());
   }
 
   /**

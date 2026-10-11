@@ -65,8 +65,8 @@ export class QueryBuilder<T> {
    * @param storeName Object-store name inside IndexedDB
    */
   constructor(
-    private db: CatbeeIndexedDBService,
-    private storeName: string
+    private readonly db: CatbeeIndexedDBService,
+    private readonly storeName: string
   ) {}
 
   /**

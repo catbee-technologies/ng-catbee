@@ -109,17 +109,17 @@ export class CookieBuilder {
    * Sets the expiration timestamp.
    *
    * @param expires - Date object or milliseconds from now
-   * @throws Error if Date is invalid or number is not finite
+   * @throws TypeError if Date is invalid or number is not finite
    */
   public withExpires(expires: Date | number): this {
     if (expires instanceof Date) {
       if (Number.isNaN(expires.getTime())) {
-        throw new Error('Invalid Date object provided for expires.');
+        throw new TypeError('Invalid Date object provided for expires.');
       }
       this.expires = expires;
     } else {
       if (!Number.isFinite(expires)) {
-        throw new Error('Expires must be a finite number of milliseconds.');
+        throw new TypeError('Expires must be a finite number of milliseconds.');
       }
       this.expires = new Date(Date.now() + expires);
     }
@@ -130,11 +130,11 @@ export class CookieBuilder {
    * Sets Max-Age in seconds.
    *
    * @param seconds - Maximum age in seconds (must be finite, negative values set to 0)
-   * @throws Error if seconds is not a finite number
+   * @throws TypeError if seconds is not a finite number
    */
   public withMaxAge(seconds: number): this {
     if (!Number.isFinite(seconds)) {
-      throw new Error('Max-Age must be a finite number.');
+      throw new TypeError('Max-Age must be a finite number.');
     }
     this.maxAge = Math.max(0, Math.floor(seconds));
     return this;
