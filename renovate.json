@@ -1,11 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "group:monorepos"],
-  "onboarding": true,
-  "onboardingConfig": {
-    "extends": ["config:recommended"]
-  },
-  "timezone": "Asia/Kolkata",
+  "timezone": "UTC",
   "prHourlyLimit": 5,
   "prConcurrentLimit": 5,
   "packageRules": [
@@ -21,46 +17,34 @@
     },
     {
       "groupName": "angular packages",
-      "matchPackageNames": ["^@angular", "^angular", "^ng-", "^ngx-"]
+      "matchPackageNames": ["@angular/**", "angular**", "ng-*", "ngx-*"]
     },
     {
       "groupName": "eslint packages",
       "matchPackageNames": [
-        "^eslint", 
-        "^@eslint", 
-        "^@angular-eslint", 
-        "^@typescript-eslint", 
-        "^typescript-eslint", 
-        "eslint-.*", 
-        "eslint-plugin-.*"
+        "eslint**",
+        "@eslint/**",
+        "@angular-eslint/**",
+        "@typescript-eslint/**",
+        "typescript-eslint",
+        "eslint-**"
       ]
-    },
-    {
-      "groupName": "rxjs packages",
-      "matchPackageNames": ["^rxjs"]
     },
     {
       "groupName": "test packages",
-      "matchPackageNames": [
-        "^karma", 
-        "karma-.*", 
-        "^jasmine", 
-        "jasmine-.*", 
-        "^@types/jasmine" 
-      ]
+      "matchPackageNames": ["karma**", "jasmine**", "@types/jasmine"]
     },
     {
       "groupName": "catbee packages",
-      "matchPackageNames": ["^@catbee"]
+      "matchPackageNames": ["@catbee/**"]
     },
     {
       "groupName": "ng catbee packages",
-      "matchPackageNames": ["^@ng-catbee"]
+      "matchPackageNames": ["@ng-catbee/**"]
     }
   ],
   "addLabels": ["type: dependencies", "status: needs-review"],
   "reviewers": ["catbee-technologies/catbee-admins"],
-  "assignees": ["catbee-technologies/catbee-admins"],
   "branchPrefix": "dependency/",
   "rangeStrategy": "bump",
   "rebaseWhen": "behind-base-branch",
